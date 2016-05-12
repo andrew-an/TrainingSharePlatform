@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-type" content="html/text" charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="style3.css">
+	<title>创建一个新的活动</title>
+</head>
+<body>
+    <div id="head">
+    	<label>新建活动</label>
+    </div>
+    <div id="wrapper">
+    	<div class="activity_title">
+    		<label style="margin-left: 15px;margin-top:5px;color: black;font-size: 25px">活动标题</label><br>
+    		<textarea name="activitytitle" style="width: 95%;height: 40%;bottom: 5px; margin:15px;margin-top: 5px;font-size: 20px"></textarea>
+    	</div>
+    	<div class="activity_content">
+    		 <label style="margin-left: 15px;margin-top:5px;color: black;font-size: 25px">活动内容</label><br>
+    		<textarea name="activitytitle" style="width: 95%;height: 80%;bottom: 5px; margin:15px;margin-top: 5px;font-size: 20px"></textarea>
+    	</div>
+    	<div class="activity_location">
+    		<label style="margin-left: 15px;margin-top:5px;color: black;font-size: 25px">活动地点</label>
+    		A31<input type="radio" id="radio1" name="location" checked style="font-size: 20px">
+    		A32<input type="radio" id="radio1" name="location"  style="font-size: 20px">
+    		A33<input type="radio" id="radio1" name="location"  style="font-size: 20px">
+    		A21<input type="radio" id="radio1" name="location"  style="font-size: 20px">
+    		A22<input type="radio" id="radio1" name="location"  style="font-size: 20px">
+    		A23<input type="radio" id="radio1" name="location"  style="font-size: 20px">
+    		待定<input type="radio" id="radio1" name="location"  style="font-size: 20px">
+    	</div>
+    	<div class="activity_time">
+    		<label style="margin-left: 15px;margin-top:5px;color: black;font-size: 25px">活动时间</label>
+    		开始：<input type="datetime-local" name="starttime" value="" ></input>
+    		        结束：<input type="datetime-local" name="endtime" value="" />
+    	</div>
+    	<div class="activity_button">
+    		<input type="submit" value="保存" class="button" style="margin-right: 30px"></input>
+    		<input type="submit" value="取消" class="button" ></input>
+    	</div>
+
+    </div>
+    <div id="footer">
+    	
+    </div>
+</body>
+</html>

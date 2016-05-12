@@ -1,0 +1,85 @@
+body{
+	background-image: url(images/bgimage.jpg);
+	background-repeat: no-repeat;
+}
+#head{
+	width: 80%;
+	height: 80px;
+	/*background-color: blue;*/
+	margin:auto;
+	text-align: center;
+}
+
+#wrapper{
+	width: 79%;
+	position: absolute;
+	top: 88px;
+	bottom: 60px;
+	left: 10.5%;
+    /*background-color: white;*/
+    margin: auto;
+}
+
+#footer{
+	width: 79%;
+	height: 60px;
+	position: fixed;
+	bottom: 0px;
+	/*background-color: gray;*/
+	margin: auto;
+	left: 10.5%;
+}
+
+#head label{
+    text-align: center;
+	color: orange;
+	font-size: 40px;
+	font-weight: bold;
+}
+
+.activity_title{
+    width: 100%;
+    height: 20%;
+    /*background-color: #111;*/
+}
+.activity_content{
+    width: 100%;
+    height: 50%;
+    /*background-color: #222;*/
+}
+.activity_location{
+    width: 100%;
+    height: 10%;
+    /*background-color: #444;*/
+}
+.activity_time{
+    width: 100%;
+    height: 10%;
+   /* background-color: #666;*/
+}
+.activity_button{
+    width: 100%;
+    height: 10%;
+    /*background-color: #888;*/
+    text-align: center;
+}
+.button{
+
+	font-size: 14pt;
+    color: #003399;
+    border: 1px #003399 solid;
+    color: #006699;
+    border-bottom: #93bee2 1px solid;
+    border-left: #93bee2 1px solid;
+    border-right: #93bee2 1px solid;
+    border-top: #93bee2 1px solid;
+    /*background-image: url(../images/bluebuttonbg.gif);*/
+    background-color: orange;
+    cursor: hand;
+    font-style: normal;
+    width: 70px;
+    height: 30px;
+/*    margin-right: 216px;
+    margin-bottom: 10px;*/
+    border-radius: 5px;
+}
