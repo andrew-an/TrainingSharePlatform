@@ -32,15 +32,17 @@
 			
 			<%
 		    	ArrayList titleList = (ArrayList)session.getAttribute("activityTitle");//"Wearable 第二季度内部培训分享会";
-		    	Iterator it = titleList.iterator();
-		    	while(it.hasNext())
-		   		{
-			    	String title = (String)it.next();
-			    	String titleName = title.substring(0,title.indexOf(","));
-			    	String completeFlag = title.substring(title.indexOf(",")+1, title.indexOf(",")+2);
-			    	
-			    	if(completeFlag.equals("0"))
-			    	{
+		    	if(titleList != null)
+		    	{
+		    		Iterator it = titleList.iterator();		    		
+			    	while(it.hasNext())
+			   		{
+				    	String title = (String)it.next();
+				    	String titleName = title.substring(0,title.indexOf(","));
+				    	String completeFlag = title.substring(title.indexOf(",")+1, title.indexOf(",")+2);
+				    	
+				    	if(completeFlag.equals("0"))
+				    	{
 			%>
 						<div class="activity">
 						    <img class="img_title_logo" src="images/titlelogo.png"/>
@@ -48,17 +50,18 @@
 						    <img class="img_title_status" src="images/new.png"/>
 						</div>
 		    <%
-			    	}
-			    	else
-			    	{
+				    	}
+				    	else
+				    	{
 			%>
 				    	<div class="activity">
 						    <img class="img_title_logo" src="images/titlelogo.png"/>
 							<a class="activity_title_old" href=""><%= titleName%></a>
 						</div>
 		    <%
-			    	}
-		   		}
+				    	}
+			   		}
+		    	}
 			%>
 			
 			

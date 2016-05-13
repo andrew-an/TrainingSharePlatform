@@ -16,7 +16,7 @@ public class DBConnect {
     {
     	try{
     		Class.forName("com.mysql.jdbc.Driver");
-    		String url = "jdbc:mysql://127.0.0.1:3306/trainShare";
+    		String url = "jdbc:mysql://localhost:3306/trainshare";
     		ct = DriverManager.getConnection(url,"root","123456");
     	}
     	catch(Exception ex)
@@ -79,17 +79,44 @@ public class DBConnect {
     //添加一个新活动信息
     public String AddNewAcivity(ActivityBean ab)
     {
-        //psmt = ct.prepareStatement("insert activity values("+ab.getId()+ab.getTitle()+ab.getDetails()+ab.);
-    	
-    	//id;
-        //private String title;
-    	//private String details;
-        //private int memberId;
-        //private int meetingRomId;
-        //private String startTime;
-        //private String endTime;
-        //private String remak;
-        //private String recordTime;
-    	return null;
+    	try{
+    		String strsql = "insert into activity(title,details,memberId,meetingRomId,startTime,endTime,remark)values('"
+            		+ab.getTitle()+"','"+ab.getDetails()+"',"+ab.getMemberId()+","+
+                    +ab.getMeetingRomId()+",'"+ab.getStartTime()+"','"+ab.getEndTime()+"','"+ab.getRemak()+"')";
+    		System.out.println(strsql);
+            psmt = ct.prepareStatement(strsql);
+            int rows = psmt.executeUpdate();
+            if(rows>0)
+            {
+            	return "成功";
+            }
+    	}
+    	catch(Exception ex)
+    	{
+    		ex.printStackTrace();
+    	}
+    	return "失败";
+    }
+    
+    //根据会议室名称查询ID
+    public int QueryMeetingRomId(String strMeetingRoom)
+    {
+    	int id = 0;
+    	try{
+    		//System.out.println(strMeetingRoom);
+    		psmt = ct.prepareStatement("select id from meetingrom where roomName='"+strMeetingRoom+"'");
+    		
+    		ResultSet rs = psmt.executeQuery();
+    		if(rs.next())
+    		{
+    			//System.out.println(rs.getString(1));
+    			id = Integer.parseInt(rs.getString(1));
+    		}
+    	}
+    	catch(Exception ex)
+    	{
+    		ex.printStackTrace();
+    	}
+    	return id;
     }
 }
