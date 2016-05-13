@@ -4,8 +4,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-//import java.util.ArrayList;
+import java.util.ArrayList;
+
+import com.trainingshare.model.ActivityBean;
 import com.trainingshare.model.UserInfoBean;
+
 public class DBConnect {
     Connection ct = null;
     PreparedStatement psmt = null;
@@ -21,6 +24,8 @@ public class DBConnect {
     		ex.printStackTrace();
     	}
     }
+    
+    //检查用户合法性
     public UserInfoBean checkUser(String username, String password)
     {
     	try{
@@ -49,5 +54,42 @@ public class DBConnect {
     		ex.printStackTrace();
     	}
 		return null;
+    }
+    
+    //返回活动列表
+    public ArrayList GetActivityTitle()
+    {
+    	ArrayList al = new ArrayList();
+    	try{
+    		psmt = ct.prepareStatement("select Title, CompleteFlag from activity order by id desc");
+    		//psmt.setString(1, username);
+    		ResultSet rs = psmt.executeQuery();
+    		while(rs.next())
+    		{
+				String title = rs.getString(1)+","+rs.getString(2);
+				al.add(title);
+    		}
+    	}
+    	catch(Exception ex){
+    		ex.printStackTrace();
+    	}
+		return al;
+    }
+    
+    //添加一个新活动信息
+    public String AddNewAcivity(ActivityBean ab)
+    {
+        //psmt = ct.prepareStatement("insert activity values("+ab.getId()+ab.getTitle()+ab.getDetails()+ab.);
+    	
+    	//id;
+        //private String title;
+    	//private String details;
+        //private int memberId;
+        //private int meetingRomId;
+        //private String startTime;
+        //private String endTime;
+        //private String remak;
+        //private String recordTime;
+    	return null;
     }
 }

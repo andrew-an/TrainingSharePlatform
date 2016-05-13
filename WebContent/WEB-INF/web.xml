@@ -17,4 +17,14 @@
     <servlet-name>LoginClServlet</servlet-name>
     <url-pattern>/loginClServlet</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>NewActivityCl</servlet-name>
+    <servlet-class>com.trainingshare.servlet.NewActivityCl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>NewActivityCl</servlet-name>
+    <url-pattern>/newactivitycl</url-pattern>
+  </servlet-mapping>
+  
 </web-app>

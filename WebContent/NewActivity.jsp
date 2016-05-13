@@ -1,0 +1,59 @@
+<%@ page language="java" contentType="text/html; charset=utf-8"
+    pageEncoding="utf-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<Link rel="stylesheet" type="text/css" href="style3.css"/>
+<title>创建新活动</title>
+<script type="text/javascript">
+    function window_load()
+    {
+    	var myDate = new Date();
+    	document.getElementById("datetime-starttime").valueAsDate  = myDate;
+    	document.getElementById("datetime-endtime").valueAsDate  = myDate.setDate(myDate.getDate()+10);
+    	//alert(myDate);
+    }
+</script>
+</head>
+<body onload="window_load()">
+    <form action="newactivitycl" method="post">
+	    <div id="head">
+	    	<label>新建活动</label>
+	    </div>
+	    <div id="wrapper">
+	    	<div class="activity_title">
+	    		<label style="margin-left: 15px;margin-top:5px;color: black;font-size: 25px">活动标题</label><br>
+	    		<textarea name="activitytitle" style="width: 95%;height: 40%;bottom: 5px; margin:15px;margin-top: 5px;font-size: 20px"></textarea>
+	    	</div>
+	    	<div class="activity_content">
+	    		 <label style="margin-left: 15px;margin-top:5px;color: black;font-size: 25px">活动内容</label><br>
+	    		<textarea name="activitycontent" style="width: 95%;height: 80%;bottom: 5px; margin:15px;margin-top: 5px;font-size: 20px"></textarea>
+	    	</div>
+	    	<div class="activity_location">
+	    		<label style="margin-left: 15px;margin-top:5px;color: black;font-size: 25px">活动地点</label>
+	    		<input type="radio" value="A31" name="location" checked style="font-size: 20px"/>A31
+	    		<input type="radio" value="A32" name="location"  style="font-size: 20px"/>A32
+	    		<input type="radio" value="A33" name="location"  style="font-size: 20px"/>A33
+	    		<input type="radio" value="A21" name="location"  style="font-size: 20px"/>A21
+	    		<input type="radio" value="A22" name="location"  style="font-size: 20px"/>A22
+	    		<input type="radio" value="A23" name="location"  style="font-size: 20px"/>A23
+	    		<input type="radio" value="pending" name="location"  style="font-size: 20px"/>待定
+	    	</div>
+	    	<div class="activity_time">
+	    		<label style="margin-left: 15px;margin-top:5px;color: black;font-size: 25px">活动时间</label>
+	    		开始：<input type="date" id="datetime-starttime" name="starttime" />
+	    		        结束：<input type="date" id="datetime-endtime" name="endtime" />
+	    	</div>
+	    	<div class="activity_button">
+	    		<button type="submit"  class="button" style="margin-right: 30px" >Save</button>
+	    		<button type="button" class="button" onclick="window.location.href='Main.jsp'">Cancel</button>
+	    	</div>
+	
+	    </div>
+	    <div id="footer">
+	    	
+	    </div>
+    </form>
+</body>
+</html>
