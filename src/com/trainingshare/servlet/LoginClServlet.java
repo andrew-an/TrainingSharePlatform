@@ -38,6 +38,7 @@ public class LoginClServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		try{
+			
 			HttpSession session = request.getSession();
 			String name = request.getParameter("username");
 			String pwd = request.getParameter("password");
@@ -45,6 +46,7 @@ public class LoginClServlet extends HttpServlet {
 			UserInfoBean user = dbc.checkUser(name, pwd);
 			if(user != null)
 			{
+				//session.setMaxInactiveInterval(5);
 				session.setAttribute("workNumber", user.getWorkNumber());
 				session.setAttribute("userName", name);
 				session.setAttribute("activityTitle", dbc.GetActivityTitle());
@@ -53,7 +55,8 @@ public class LoginClServlet extends HttpServlet {
 			else
 			{
 				response.sendRedirect("Login.jsp");
-			}			
+			}
+			
 		}
 		catch(Exception ex)
 		{

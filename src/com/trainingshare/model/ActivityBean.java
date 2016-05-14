@@ -4,8 +4,8 @@ public class ActivityBean {
     private int id;
     private String title;
 	private String details;
-    private int memberId;
-    private int meetingRomId;
+    private int membersId;
+    private int meetingRoomId;
     private String startTime;
     private String endTime;
     private String remark;
@@ -28,17 +28,17 @@ public class ActivityBean {
 	public void setDetails(String details) {
 		this.details = details;
 	}
-	public int getMemberId() {
-		return memberId;
+	public int getMembersId() {
+		return membersId;
 	}
-	public void setMemberId(int memberId) {
-		this.memberId = memberId;
+	public void setMembersId(int membersId) {
+		this.membersId = membersId;
 	}
-	public int getMeetingRomId() {
-		return meetingRomId;
+	public int getMeetingRoomId() {
+		return meetingRoomId;
 	}
-	public void setMeetingRomId(int meetingRomId) {
-		this.meetingRomId = meetingRomId;
+	public void setMeetingRoomId(int meetingRoomId) {
+		this.meetingRoomId = meetingRoomId;
 	}
 	public String getStartTime() {
 		return startTime;

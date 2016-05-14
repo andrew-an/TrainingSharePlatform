@@ -1,11 +1,16 @@
 package com.trainingshare.servlet;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.trainingshare.db.DBConnect;
 
 /**
  * Servlet implementation class MainClServlet
@@ -35,7 +40,37 @@ public class MainClServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		//doGet(request, response);
+		response.setContentType("text/html;charset=utf-8");
+		response.setCharacterEncoding("utf-8"); 
+		
+		String title = request.getParameter("title");
+		//title = new String(title.getBytes("iso-8859-1"),"utf-8");
+		DBConnect dbc = new DBConnect();
+		//根据点击的标题，取得该活动的Id
+		int id = dbc.GetMembersIdByTitle(title);
+		//System.out.println(id);
+		if(id != 0)
+		{
+			ArrayList activityContentList = new ArrayList();
+			//根据活动Id，获得参加该活动的所有人员Id
+			ArrayList al = dbc.GetAllMembers(id);
+			
+			Iterator it = al.iterator();
+			while(it.hasNext())
+			{
+				int memberId = Integer.parseInt((String)it.next());
+				//System.out.println(id+","+memberId);
+				ArrayList acb = dbc.GetActivityContentByMemberId(id,memberId);
+				activityContentList.add(acb);
+			}
+			request.setAttribute("activityContentList",activityContentList);
+			request.getRequestDispatcher("ActivityContent.jsp").forward(request,response);
+			
+		}
+		else
+		{
+			request.getRequestDispatcher("Main.jsp").forward(request,response);
+		}
 	}
 
 }

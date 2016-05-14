@@ -15,8 +15,8 @@ public class MeetingRomBean {
 	public String getRomName() {
 		return roomName;
 	}
-	public void setRomName(String romName) {
-		this.roomName = romName;
+	public void setRomName(String roomName) {
+		this.roomName = roomName;
 	}
 	public String getLocation() {
 		return location;

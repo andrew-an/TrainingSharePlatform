@@ -2,10 +2,12 @@ package com.trainingshare.model;
 
 public class ActivityContentBean {
     private int id;
-    private String memberName;
+    private int activityId;
+    private int memberId;
     private String title;
     private String filePath;
     private String uploadFlag;
+    private String remark;
     private String recordTime;
 	public int getId() {
 		return id;
@@ -13,11 +15,17 @@ public class ActivityContentBean {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getMemberName() {
-		return memberName;
+	public int getActivityId() {
+		return activityId;
 	}
-	public void setMemberName(String memberName) {
-		this.memberName = memberName;
+	public void setActivityId(int activityId) {
+		this.activityId = activityId;
+	}
+	public int getMemberId() {
+		return memberId;
+	}
+	public void setMemberId(int memberId) {
+		this.memberId = memberId;
 	}
 	public String getTitle() {
 		return title;
@@ -37,10 +45,17 @@ public class ActivityContentBean {
 	public void setUploadFlag(String uploadFlag) {
 		this.uploadFlag = uploadFlag;
 	}
+	public String getRemark() {
+		return remark;
+	}
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
 	public String getRecordTime() {
 		return recordTime;
 	}
 	public void setRecordTime(String recordTime) {
 		this.recordTime = recordTime;
 	}
+	
 }

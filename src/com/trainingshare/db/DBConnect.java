@@ -6,8 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-import com.trainingshare.model.ActivityBean;
-import com.trainingshare.model.UserInfoBean;
+import com.trainingshare.model.*;
 
 public class DBConnect {
     Connection ct = null;
@@ -17,7 +16,7 @@ public class DBConnect {
     	try{
     		Class.forName("com.mysql.jdbc.Driver");
     		String url = "jdbc:mysql://localhost:3306/trainshare";
-    		ct = DriverManager.getConnection(url,"root","123456");
+    		ct = DriverManager.getConnection("jdbc:mysql://localhost:3306/trainshare?user=root&password=123456&useUnicode=true&characterEncoding=utf-8");
     	}
     	catch(Exception ex)
     	{
@@ -80,10 +79,10 @@ public class DBConnect {
     public String AddNewAcivity(ActivityBean ab)
     {
     	try{
-    		String strsql = "insert into activity(title,details,memberId,meetingRomId,startTime,endTime,remark)values('"
-            		+ab.getTitle()+"','"+ab.getDetails()+"',"+ab.getMemberId()+","+
-                    +ab.getMeetingRomId()+",'"+ab.getStartTime()+"','"+ab.getEndTime()+"','"+ab.getRemak()+"')";
-    		System.out.println(strsql);
+    		String strsql = "insert into activity(title,details,membersId,meetingRoomId,startTime,endTime,remark)values('"
+            		+ab.getTitle()+"','"+ab.getDetails()+"',"+ab.getMembersId()+","+
+                    +ab.getMeetingRoomId()+",'"+ab.getStartTime()+"','"+ab.getEndTime()+"','"+ab.getRemak()+"')";
+    		//System.out.println(strsql);
             psmt = ct.prepareStatement(strsql);
             int rows = psmt.executeUpdate();
             if(rows>0)
@@ -104,7 +103,7 @@ public class DBConnect {
     	int id = 0;
     	try{
     		//System.out.println(strMeetingRoom);
-    		psmt = ct.prepareStatement("select id from meetingrom where roomName='"+strMeetingRoom+"'");
+    		psmt = ct.prepareStatement("select id from meetingroom where roomName='"+strMeetingRoom+"'");
     		
     		ResultSet rs = psmt.executeQuery();
     		if(rs.next())
@@ -118,5 +117,99 @@ public class DBConnect {
     		ex.printStackTrace();
     	}
     	return id;
+    }
+    
+    //根据活动标题选择活动参与人的人员表id
+    public int GetMembersIdByTitle(String activityTitle)
+    {
+    	int id=0;
+    	try{
+    		String strsql = "select MembersId from activity where Title='"+activityTitle+"'";
+    		strsql = new String(strsql.getBytes("iso-8859-1"),"utf-8");
+    		//System.out.println(strsql);
+    		psmt = ct.prepareStatement(strsql);
+    		ResultSet rs = psmt.executeQuery();
+    		if(rs.next())
+    		{
+    			id = rs.getInt(1);
+    		}
+    	}
+    	catch(Exception ex)
+    	{
+    		ex.printStackTrace();
+    	}
+    	return id;
+    }
+    
+    //根据人员列表id返回所有人员名
+    public ArrayList GetAllMembers(int id)
+    {
+    	ArrayList membersList = new ArrayList();
+    	try{
+    		
+    		String strsql = "select MemberList from members where Id="+id;
+    		psmt = ct.prepareStatement(strsql);
+    		ResultSet rs = psmt.executeQuery();
+    		if(rs.next())
+    		{
+    			String[] members = rs.getString(1).split(",");
+    			for(int i=0; i<members.length;i++)
+    			{
+    				membersList.add(members[i]);
+    			}
+    		}
+    	}
+    	catch(Exception ex)
+    	{
+    		ex.printStackTrace();
+    	}
+    	return membersList;
+    }
+    
+    //获取活动详情——某活动中某个人的活动详情
+    public ArrayList GetActivityContentByMemberId(int activityId, int memberId)
+    {
+    	ArrayList al = new ArrayList();
+    	try
+    	{
+    		String strsql = "select MemberId,Title,FilePath,UploadFlag from activitycontent where ActivityId="+activityId+" and MemberId="+memberId;
+    		
+    		psmt = ct.prepareStatement(strsql);
+    		ResultSet rs = psmt.executeQuery();
+    		if(rs.next())
+    		{
+    			String memberName = GetMemberName(Integer.parseInt(rs.getString(1)));
+    			al.add(memberName);
+    			al.add(rs.getString(2));
+    			al.add(rs.getString(3));
+    			al.add(rs.getString(4));
+    			//System.out.println(al);
+    		}
+    	}
+    	catch(Exception ex)
+    	{
+    		ex.printStackTrace();
+    	}
+    	return al;
+    }
+    
+    public String GetMemberName(int memberId)
+    {
+    	String memberName=null;
+    	try
+    	{
+    		String strsql = "select UserName from userinfo where Id="+memberId;
+    		psmt = ct.prepareStatement(strsql);
+    		ResultSet rs = psmt.executeQuery();
+    		if(rs.next())
+    		{
+    			memberName = rs.getString(1);
+    		}
+    	}
+    	catch(Exception ex)
+    	{
+    		ex.printStackTrace();
+    	}
+    	return memberName;
     }
 }

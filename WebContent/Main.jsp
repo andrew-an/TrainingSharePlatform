@@ -5,12 +5,13 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title>主界面</title>
 	<link rel="stylesheet" type="text/css" href="style2.css">
-	<script type="text/javascript">
-	    function CreateNewActivity(){
-	    	
-	    	
+	
+	<% 
+	    if(null == session.getAttribute("userName")||session.equals(""))
+	    {	
+	    	response.sendRedirect("Login.jsp");	    	
 	    }
-	</script>
+	%>
 </head>
 <body>
 	<div id="head">
@@ -29,42 +30,41 @@
 				<img class="img_title_logo" src="images/titlelogo.png"/>
 				<a class="activity_title_old" href=""></a>
 			</div> -->
-			
-			<%
-		    	ArrayList titleList = (ArrayList)session.getAttribute("activityTitle");//"Wearable 第二季度内部培训分享会";
-		    	if(titleList != null)
-		    	{
-		    		Iterator it = titleList.iterator();		    		
-			    	while(it.hasNext())
-			   		{
-				    	String title = (String)it.next();
-				    	String titleName = title.substring(0,title.indexOf(","));
-				    	String completeFlag = title.substring(title.indexOf(",")+1, title.indexOf(",")+2);
-				    	
-				    	if(completeFlag.equals("0"))
-				    	{
-			%>
-						<div class="activity">
-						    <img class="img_title_logo" src="images/titlelogo.png"/>
-						    <a class="activity_title_new" href=""><%= titleName%></a>
-						    <img class="img_title_status" src="images/new.png"/>
-						</div>
-		    <%
-				    	}
-				    	else
-				    	{
-			%>
-				    	<div class="activity">
-						    <img class="img_title_logo" src="images/titlelogo.png"/>
-							<a class="activity_title_old" href=""><%= titleName%></a>
-						</div>
-		    <%
-				    	}
-			   		}
-		    	}
-			%>
-			
-			
+			<form action="",method="post">
+				<%
+			    	ArrayList titleList = (ArrayList)session.getAttribute("activityTitle");//"Wearable 第二季度内部培训分享会";
+			    	if(titleList != null)
+			    	{
+			    		Iterator it = titleList.iterator();		    		
+				    	while(it.hasNext())
+				   		{
+					    	String title = (String)it.next();
+					    	String titleName = title.substring(0,title.indexOf(","));
+					    	String completeFlag = title.substring(title.indexOf(",")+1, title.indexOf(",")+2);
+					    	
+					    	if(completeFlag.equals("0"))
+					    	{
+				%>
+							<div class="activity">
+							    <img class="img_title_logo" src="images/titlelogo.png"/>
+							    <a class="activity_title_new" href="mainclservlet?title=<%=titleName %>"><%= titleName%></a>
+							    <img class="img_title_status" src="images/new.png"/>
+							</div>
+			    <%
+					    	}
+					    	else
+					    	{
+				%>
+					    	<div class="activity">
+							    <img class="img_title_logo" src="images/titlelogo.png"/>
+								<a class="activity_title_old" href="mainclservlet?title=<%=titleName %>"><%= titleName%></a>
+							</div>
+			    <%
+					    	}
+				   		}
+			    	}
+				%>
+			</form>
 		</div>
 		<div class="side">
 			

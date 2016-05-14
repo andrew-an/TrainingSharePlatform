@@ -1,11 +1,13 @@
 package com.trainingshare.servlet;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.trainingshare.db.DBConnect;
 import com.trainingshare.model.ActivityBean;
@@ -53,15 +55,17 @@ public class NewActivityCl extends HttpServlet {
 			ActivityBean ab = new ActivityBean();
 			ab.setTitle(activityTitle);
 			ab.setDetails(activityContent);
-			ab.setMemberId(1);
+			ab.setMembersId(1);
 			response.getWriter().println("½×¶Î1");
-			ab.setMeetingRomId(dbc.QueryMeetingRomId(activityLocation));
+			ab.setMeetingRoomId(dbc.QueryMeetingRomId(activityLocation));
 			ab.setStartTime(activityStartTime);
 			ab.setEndTime(activityEndTime);
 			ab.setRemak("");
 			response.getWriter().println(ab);
 			if(dbc.AddNewAcivity(ab).equals("³É¹¦"))
 			{
+				HttpSession session = request.getSession();
+				session.setAttribute("activityTitle", dbc.GetActivityTitle());
 				response.sendRedirect("Main.jsp");
 			}
 		}

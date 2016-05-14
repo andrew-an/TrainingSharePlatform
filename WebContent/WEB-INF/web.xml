@@ -27,4 +27,13 @@
     <url-pattern>/newactivitycl</url-pattern>
   </servlet-mapping>
   
+  <servlet>
+    <servlet-name>MainClServlet</servlet-name>
+    <servlet-class>com.trainingshare.servlet.MainClServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>MainClServlet</servlet-name>
+    <url-pattern>/mainclservlet</url-pattern>
+  </servlet-mapping>
+  
 </web-app>
