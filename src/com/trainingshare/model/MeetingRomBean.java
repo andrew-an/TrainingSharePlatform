@@ -2,7 +2,7 @@ package com.trainingshare.model;
 
 public class MeetingRomBean {
     private int id;
-    private String romName;
+    private String roomName;
     private String location;
     private String remark;
     private String recordTime;
@@ -13,10 +13,10 @@ public class MeetingRomBean {
 		this.id = id;
 	}
 	public String getRomName() {
-		return romName;
+		return roomName;
 	}
 	public void setRomName(String romName) {
-		this.romName = romName;
+		this.roomName = romName;
 	}
 	public String getLocation() {
 		return location;

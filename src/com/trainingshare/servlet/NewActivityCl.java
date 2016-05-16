@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.trainingshare.db.DBConnect;
+import com.trainingshare.model.ActivityBean;
 
 /**
  * Servlet implementation class NewActivityCl
@@ -42,13 +43,27 @@ public class NewActivityCl extends HttpServlet {
 		String activityLocation = request.getParameter("location");
 		String activityStartTime = request.getParameter("starttime");
 		String activityEndTime = request.getParameter("endtime");
+		
 		if(!activityTitle.equals(null)&&!activityTitle.equals("")
 		    &&!activityContent.equals(null)&&!activityContent.equals("")
 			&&!activityStartTime.equals(null)&&!activityStartTime.equals("")
 			&&!activityEndTime.equals(null)&&!activityEndTime.equals(""))
 		{
 			DBConnect dbc = new DBConnect();
-			
+			ActivityBean ab = new ActivityBean();
+			ab.setTitle(activityTitle);
+			ab.setDetails(activityContent);
+			ab.setMemberId(1);
+			response.getWriter().println("½×¶Î1");
+			ab.setMeetingRomId(dbc.QueryMeetingRomId(activityLocation));
+			ab.setStartTime(activityStartTime);
+			ab.setEndTime(activityEndTime);
+			ab.setRemak("");
+			response.getWriter().println(ab);
+			if(dbc.AddNewAcivity(ab).equals("³É¹¦"))
+			{
+				response.sendRedirect("Main.jsp");
+			}
 		}
 	}
 

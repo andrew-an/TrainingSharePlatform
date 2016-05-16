@@ -8,7 +8,7 @@ public class ActivityBean {
     private int meetingRomId;
     private String startTime;
     private String endTime;
-    private String remak;
+    private String remark;
     private String recordTime;
 	public int getId() {
 		return id;
@@ -53,10 +53,10 @@ public class ActivityBean {
 		this.endTime = endTime;
 	}
 	public String getRemak() {
-		return remak;
+		return remark;
 	}
-	public void setRemak(String remak) {
-		this.remak = remak;
+	public void setRemak(String remark) {
+		this.remark = remark;
 	}
 	public String getRecordTime() {
 		return recordTime;
