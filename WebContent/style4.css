@@ -30,11 +30,18 @@ body{
 	left: 10.5%;
 }
 
-#head label{
+#activitytitle{
     text-align: center;
 	color: orange;
 	font-size: 40px;
 	font-weight: bold;
+}
+
+#loginUser{
+	float:left;
+	font-weight:bold;
+	font-style:normal;
+	color:red;
 }
 
 table.imagetable {
@@ -48,6 +55,7 @@ table.imagetable {
 }
 table.imagetable th {
 	background:#b5cfd2 url(images/cell-blue.jpg);
+	background-size:cover;
 	border-width: 1px;
 	padding: 8px;
 	border-style: solid;
@@ -60,4 +68,23 @@ table.imagetable td {
 	border-style: solid;
 	border-color: #999999;
 	text-align: center;
+}
+#head button{
+	font-size: 14pt;
+    color: #003399;
+    border: 1px #003399 solid;
+    color: #006699;
+    border-bottom: #93bee2 1px solid;
+    border-left: #93bee2 1px solid;
+    border-right: #93bee2 1px solid;
+    border-top: #93bee2 1px solid;
+    /*background-image: url(../images/bluebuttonbg.gif);*/
+    background-color: orange;
+    cursor: hand;
+    font-style: normal;
+    width: 120px;
+    height: 30px;
+    float: right;
+    margin-right: 6px;
+    border-radius: 5px;
 }

@@ -5,7 +5,6 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title>主界面</title>
 	<link rel="stylesheet" type="text/css" href="style2.css">
-	
 	<% 
 	    if(null == session.getAttribute("userName")||session.equals(""))
 	    {	
@@ -16,7 +15,7 @@
 <body>
 	<div id="head">
         <h2 style="text-align: center;color: orange;margin-top:3px">Wearable内部培训分享平台</h2>
-        <label id="loginUser"><%=session.getAttribute("userName") %>&nbsp<%=session.getAttribute("workNumber") %></label>
+        <label id="loginUser"><%=session.getAttribute("userName") %> <%=session.getAttribute("workNumber") %></label>
         <button name="addNewActivity" onclick="window.location.href='NewActivity.jsp'">create</button>
 	</div>
 	<div id="wrapper">

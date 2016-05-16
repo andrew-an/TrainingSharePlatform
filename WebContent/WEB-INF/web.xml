@@ -17,7 +17,6 @@
     <servlet-name>LoginClServlet</servlet-name>
     <url-pattern>/loginClServlet</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <servlet-name>NewActivityCl</servlet-name>
     <servlet-class>com.trainingshare.servlet.NewActivityCl</servlet-class>
@@ -26,7 +25,6 @@
     <servlet-name>NewActivityCl</servlet-name>
     <url-pattern>/newactivitycl</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <servlet-name>MainClServlet</servlet-name>
     <servlet-class>com.trainingshare.servlet.MainClServlet</servlet-class>
@@ -36,4 +34,12 @@
     <url-pattern>/mainclservlet</url-pattern>
   </servlet-mapping>
   
+  <servlet>
+    <servlet-name>ActivityContentClServlet</servlet-name>
+    <servlet-class>com.trainingshare.servlet.ActivityContentClServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ActivityContentClServlet</servlet-name>
+    <url-pattern>/activitycontentclservlet</url-pattern>
+  </servlet-mapping>
 </web-app>

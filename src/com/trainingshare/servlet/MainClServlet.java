@@ -51,17 +51,17 @@ public class MainClServlet extends HttpServlet {
 		//System.out.println(id);
 		if(id != 0)
 		{
-			ArrayList activityContentList = new ArrayList();
+			ArrayList<ArrayList<String>> activityContentList = new ArrayList<ArrayList<String>>();
 			//根据活动Id，获得参加该活动的所有人员Id
-			ArrayList al = dbc.GetAllMembers(id);
-			
-			Iterator it = al.iterator();
+			ArrayList<String> al = dbc.GetAllMembers(id);
+			//System.out.println(al);
+			Iterator<String> it = al.iterator();
 			while(it.hasNext())
 			{
 				int memberId = Integer.parseInt((String)it.next());
 				//System.out.println(id+","+memberId);
-				ArrayList acb = dbc.GetActivityContentByMemberId(id,memberId);
-				activityContentList.add(acb);
+				ArrayList<String> al_activity = dbc.GetActivityContentByMemberId(id,memberId);
+				activityContentList.add(al_activity);
 			}
 			request.setAttribute("activityContentList",activityContentList);
 			request.getRequestDispatcher("ActivityContent.jsp").forward(request,response);

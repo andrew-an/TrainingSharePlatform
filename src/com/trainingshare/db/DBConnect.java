@@ -15,7 +15,6 @@ public class DBConnect {
     {
     	try{
     		Class.forName("com.mysql.jdbc.Driver");
-    		String url = "jdbc:mysql://localhost:3306/trainshare";
     		ct = DriverManager.getConnection("jdbc:mysql://localhost:3306/trainshare?user=root&password=123456&useUnicode=true&characterEncoding=utf-8");
     	}
     	catch(Exception ex)
@@ -56,12 +55,11 @@ public class DBConnect {
     }
     
     //返回活动列表
-    public ArrayList GetActivityTitle()
+    public ArrayList<String> GetActivityTitle()
     {
-    	ArrayList al = new ArrayList();
+    	ArrayList<String> al = new ArrayList<String>();
     	try{
     		psmt = ct.prepareStatement("select Title, CompleteFlag from activity order by id desc");
-    		//psmt.setString(1, username);
     		ResultSet rs = psmt.executeQuery();
     		while(rs.next())
     		{
@@ -82,7 +80,6 @@ public class DBConnect {
     		String strsql = "insert into activity(title,details,membersId,meetingRoomId,startTime,endTime,remark)values('"
             		+ab.getTitle()+"','"+ab.getDetails()+"',"+ab.getMembersId()+","+
                     +ab.getMeetingRoomId()+",'"+ab.getStartTime()+"','"+ab.getEndTime()+"','"+ab.getRemak()+"')";
-    		//System.out.println(strsql);
             psmt = ct.prepareStatement(strsql);
             int rows = psmt.executeUpdate();
             if(rows>0)
@@ -126,7 +123,6 @@ public class DBConnect {
     	try{
     		String strsql = "select MembersId from activity where Title='"+activityTitle+"'";
     		strsql = new String(strsql.getBytes("iso-8859-1"),"utf-8");
-    		//System.out.println(strsql);
     		psmt = ct.prepareStatement(strsql);
     		ResultSet rs = psmt.executeQuery();
     		if(rs.next())
@@ -142,9 +138,9 @@ public class DBConnect {
     }
     
     //根据人员列表id返回所有人员名
-    public ArrayList GetAllMembers(int id)
+    public ArrayList<String> GetAllMembers(int id)
     {
-    	ArrayList membersList = new ArrayList();
+    	ArrayList<String> membersList = new ArrayList<String>();
     	try{
     		
     		String strsql = "select MemberList from members where Id="+id;
@@ -167,9 +163,9 @@ public class DBConnect {
     }
     
     //获取活动详情——某活动中某个人的活动详情
-    public ArrayList GetActivityContentByMemberId(int activityId, int memberId)
+    public ArrayList<String> GetActivityContentByMemberId(int activityId, int memberId)
     {
-    	ArrayList al = new ArrayList();
+    	ArrayList<String> al = new ArrayList<String>();
     	try
     	{
     		String strsql = "select MemberId,Title,FilePath,UploadFlag from activitycontent where ActivityId="+activityId+" and MemberId="+memberId;
@@ -183,7 +179,6 @@ public class DBConnect {
     			al.add(rs.getString(2));
     			al.add(rs.getString(3));
     			al.add(rs.getString(4));
-    			//System.out.println(al);
     		}
     	}
     	catch(Exception ex)
@@ -192,7 +187,7 @@ public class DBConnect {
     	}
     	return al;
     }
-    
+    //根据成员Id获取成员名称
     public String GetMemberName(int memberId)
     {
     	String memberName=null;
@@ -211,5 +206,27 @@ public class DBConnect {
     		ex.printStackTrace();
     	}
     	return memberName;
+    }
+    
+    //更新某成员的活动主题
+    public Boolean UpdateActivityContent(String activityContentBefore, String activityContent)
+    {
+    	Boolean ret=false;
+    	try{
+        	String sql = "update activitycontent set Title='"+activityContent+"' where Title='"+activityContentBefore+"'";
+        	sql = new String(sql.getBytes("iso-8859-1"),"utf-8");
+        	psmt = ct.prepareStatement(sql);  
+        	int result = psmt.executeUpdate();
+        	if(result>0)
+        	{
+        		ret=true;
+        	}
+    	}
+    	catch(Exception ex)
+    	{
+    		ex.printStackTrace();
+    	}
+    	
+    	return ret;
     }
 }

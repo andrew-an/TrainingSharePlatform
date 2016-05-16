@@ -33,7 +33,7 @@ body{
 #head label{
     text-align: center;
 	color: orange;
-	font-size: 40px;
+	font-size: 100px;
 	font-weight: bold;
 }
 
@@ -79,7 +79,7 @@ body{
     font-style: normal;
     width: 80px;
     height: 30px;
-/*    margin-right: 216px;
+/*  margin-right: 216px;
     margin-bottom: 10px;*/
     border-radius: 5px;
 }
