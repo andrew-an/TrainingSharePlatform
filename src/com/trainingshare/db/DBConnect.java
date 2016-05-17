@@ -168,17 +168,17 @@ public class DBConnect {
     	ArrayList<String> al = new ArrayList<String>();
     	try
     	{
-    		String strsql = "select MemberId,Title,FilePath,UploadFlag from activitycontent where ActivityId="+activityId+" and MemberId="+memberId;
+    		String strsql = "select Title,FilePath,UploadFlag from activitycontent where ActivityId="+activityId+" and MemberId="+memberId;
     		
     		psmt = ct.prepareStatement(strsql);
     		ResultSet rs = psmt.executeQuery();
     		if(rs.next())
     		{
-    			String memberName = GetMemberName(Integer.parseInt(rs.getString(1)));
-    			al.add(memberName);
-    			al.add(rs.getString(2));
-    			al.add(rs.getString(3));
-    			al.add(rs.getString(4));
+    			String memberName = GetMemberName(memberId);
+    			al.add(memberName);//成员名
+    			al.add(rs.getString(1));//主题名称
+    			al.add(rs.getString(2));//上传文件路径
+    			al.add(rs.getString(3));//是否上传标志
     		}
     	}
     	catch(Exception ex)

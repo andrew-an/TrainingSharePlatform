@@ -41,21 +41,17 @@ public class ActivityContentClServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		String activityContentBefore = request.getParameter("activityContentBefore");
 		String activityContent = request.getParameter("activityContent");
-		//activityContent = new String(activityContent.getBytes("iso-8859-1"),"utf-8");
-		//System.out.println(activityContentBefore+","+activityContent);
+		System.out.println(activityContentBefore);
+		System.out.println(activityContent);
 		DBConnect dbc = new DBConnect();
 		Boolean ret=false;
 		ret = dbc.UpdateActivityContent(activityContentBefore, activityContent);	
 		if(ret == true)
 		{
-			//activityContent = new String(activityContent.getBytes("iso-8859-1"),"utf-8");
-			//System.out.println(activityContent);
 		    response.getWriter().print(activityContent);
 		}
 		else
 		{
-			//activityContentBefore = new String(activityContentBefore.getBytes("iso-8859-1"),"utf-8");
-			//System.out.println(activityContentBefore);
 			response.getWriter().print(activityContentBefore);
 		}
 		return;

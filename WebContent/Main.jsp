@@ -20,21 +20,12 @@
 	</div>
 	<div id="wrapper">
         <div class="main">
- 			<!--<div class="activity">
-				<img class="img_title_logo" src="images/titlelogo.png"/>
-				<a class="activity_title_new" href=""></a>
-				<img class="img_title_status" src="images/new.png"/>
-			</div>
-			<div class="activity">
-				<img class="img_title_logo" src="images/titlelogo.png"/>
-				<a class="activity_title_old" href=""></a>
-			</div> -->
-			<form action="",method="post">
+			<form action="" method="post">
 				<%
-			    	ArrayList titleList = (ArrayList)session.getAttribute("activityTitle");//"Wearable 第二季度内部培训分享会";
+			    	ArrayList<String> titleList = (ArrayList<String>)session.getAttribute("activityTitle");//"Wearable 第二季度内部培训分享会";
 			    	if(titleList != null)
 			    	{
-			    		Iterator it = titleList.iterator();		    		
+			    		Iterator<String> it = titleList.iterator();		    		
 				    	while(it.hasNext())
 				   		{
 					    	String title = (String)it.next();

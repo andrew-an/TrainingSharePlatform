@@ -59,7 +59,6 @@ public class MainClServlet extends HttpServlet {
 			while(it.hasNext())
 			{
 				int memberId = Integer.parseInt((String)it.next());
-				//System.out.println(id+","+memberId);
 				ArrayList<String> al_activity = dbc.GetActivityContentByMemberId(id,memberId);
 				activityContentList.add(al_activity);
 			}
