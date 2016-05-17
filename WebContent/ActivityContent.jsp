@@ -12,137 +12,205 @@
 	    	response.sendRedirect("Login.jsp");	    	
 	    }
 	%>
-        <script type="text/javascript" language="javascript" charset="utf-8" src="/upload.js">
-        	function AddMyTitle()
-	        {
-        		var name = document.getElementById("loginUser").innerHTML.split(" ",2)[0];
-	        	var tab = document.getElementById("mytitle");
-	        	for(var i=1; i<tab.rows.length; i++)
-        		{
-	        		//alert(tab.rows[i].cells[0].innerHTML);
-        			if(tab.rows[i].cells[0].innerHTML == name)
-        			{
-        				alert("请执行编辑操作！");
-        				break;
-        			}
-        		}
-	        	if(i == tab.rows.length)
-	        	{
-		        	var row = tab.insertRow(tab.rows.length);
-		        	var nameCell = row.insertCell(row.cells.length);
-		        	var titleCell = row.insertCell(row.cells.length);
-		        	var fileCell = row.insertCell(row.cells.length);
-		        	
-		        	nameCell.innerHTML = name;
-		        	titleCell.innerHTML = "双击输入或更新你的标题";
-		        	fileCell.innerHTML = "未上传";
-
-
-		        	titleCell.ondblclick = function dblclickEvent(){editRowCell(titleCell)};
-		        	if(window.addEventListener){
-		        		titleCell.addEnevtListener('ondblclick',editRowCell(titleCell),false);
-		        		//titleCell.addEnevtListener('ondblclick',function dblclickEvent(){_edit.IN(titleCell,'index.html?act=edit',3)},false);
-		        	}
-		        	else
-		        	{
-		        		titleCell.attachEvent('ondblclick',editRowCell(titleCell));
-		        		//titleCell.attachEvent('ondblclick',function dblclickEvent(){_edit.IN(titleCell,'index.html?act=edit',3)});
-		        	}
-	        	}
-	        }
-        
-	        function UpdateActivityContent(obj,str1,str2)
-	        {
-	        	
-	        	//先插入数据库，再更新显示
-			      var xmlhttp;
-				  if(window.XMLHttpRequest)
-				  {
-					  xmlhttp = new XMLHttpRequest();
-				  }
-				  else
-				  {
-					  xmlhttp=new ActivityXObject("Microsoft.XMLHTTP");
-				  }
-				  xmlhttp.onreadystatechange = function()
-				  {
-					  
-					  if(xmlhttp.readyState==4 && xmlhttp.status == 200)
-					  {
-						  obj.innerHTML = str2;//数据库更新完成，则显示更改后的值
-					  }
-				  }
-				  xmlhttp.open("POST","ActivityContentClServlet?activityContentBefore="+str1+"&activityContent="+str2,true);
-				  xmlhttp.send();
-	        }
-			function editRowCell(obj) 
+    <script type="text/javascript" language="javascript" charset="utf-8">
+      function AddMyTitle()
+      {
+	     	var name = document.getElementById("loginUser").innerHTML.split(" ",2)[0];
+	      	var tab = document.getElementById("mytitle");
+	      	for(var i=1; i<tab.rows.length; i++)
+	     		{
+	      		//alert(tab.rows[i].cells[0].innerHTML);
+	     			if(tab.rows[i].cells[0].innerHTML == name)
+	     			{
+	     				alert("请执行编辑操作！");
+	     				break;
+	     			}
+	     		}
+	      	if(i == tab.rows.length)
+	      	{
+		       	var row = tab.insertRow(tab.rows.length);
+		       	var nameCell = row.insertCell(row.cells.length);
+		       	var titleCell = row.insertCell(row.cells.length);
+		       	var fileCell = row.insertCell(row.cells.length);
+		       	
+		       	nameCell.innerHTML = name;
+		       	titleCell.innerHTML = "双击输入或更新你的标题";
+		       	fileCell.innerHTML = "未上传";
+		
+		
+		       	titleCell.ondblclick = function dblclickEvent(){editRowCell(titleCell)};
+		       	if(window.addEventListener){
+		       		titleCell.addEnevtListener('ondblclick',editRowCell(titleCell),false);
+		       		//titleCell.addEnevtListener('ondblclick',function dblclickEvent(){_edit.IN(titleCell,'index.html?act=edit',3)},false);
+		       	}
+		       	else
+		       	{
+		       		titleCell.attachEvent('ondblclick',editRowCell(titleCell));
+		       		//titleCell.attachEvent('ondblclick',function dblclickEvent(){_edit.IN(titleCell,'index.html?act=edit',3)});
+		       	}
+	      	}
+      }
+     
+      function UpdateActivityContent(obj,str1,str2)
+      {
+	      	//先插入数据库，再更新显示
+	      var xmlhttp;
+		  if(window.XMLHttpRequest)
+		  {
+			  xmlhttp = new XMLHttpRequest();
+		  }
+		  else
+		  {
+			  xmlhttp=new ActivityXObject("Microsoft.XMLHTTP");
+		  }
+		  xmlhttp.onreadystatechange = function()
+		  {
+			  
+			  if(xmlhttp.readyState==4 && xmlhttp.status == 200)
+			  {
+				  obj.innerHTML = str2;//数据库更新完成，则显示更改后的值
+			  }
+		  }
+		  xmlhttp.open("POST","ActivityContentClServlet?activityContentBefore="+str1+"&activityContent="+str2,true);
+		  xmlhttp.send();
+      }
+	function editRowCell(obj) 
+	{
+	    var tag = obj.firstChild.tagName;
+		if (typeof(tag) != "undefined" && (tag == "INPUT" || tag == "TEXTAREA"))
+			return;
+		var org = obj.innerHTML;
+		var orglen = org.replace(/[^\x00-\xff]/g,'**').length;
+		if (obj.offsetHeight <= 22) 
+		{
+			  var val = window.ActiveXObject ? obj.innerText : obj.textContent;
+			  var txt = document.createElement("INPUT");
+			  txt.value = val.trim();
+			  txt.style.background = "#FFC";
+			  txt.style.width = obj.offsetWidth + "px" ;
+			  obj.innerHTML = "";
+			  obj.appendChild(txt);
+			  txt.focus();
+			  txt.onblur = function(e)
+			  {
+				  var txtvalue = txt.value.trim();
+			      if(txtvalue.length>35 || txtvalue.length==0 || txtvalue == "空")
+			      {
+			    	 alert("输入内容不能为空且不能超过35个字符"); 
+			    	 return;
+			      }
+			      else if(val != txtvalue)
+			      {
+			    	  //先插入数据库，再更新到界面上
+			    	  UpdateActivityContent(obj,val,txtvalue);
+			      }
+			      else
+			      {
+			    	  obj.innerHTML = txtvalue;
+			      }
+			  }
+	    }
+	    else
+	    {
+	    	//取出该单元格内容
+			var content = obj.innerHTML;
+			var html = document.createElement('TEXTAREA');
+			html.style.width = obj.offsetWidth + "px";
+			html.style.height = obj.offsetHeight + "px";
+			obj.innerHTML = "";
+			//将大单元格内容付给textarea
+			html.value = content.trim();
+			obj.appendChild(html);
+			html.focus();
+			html.onblur = function(e)
 			{
-			    var tag = obj.firstChild.tagName;
-				if (typeof(tag) != "undefined" && (tag == "INPUT" || tag == "TEXTAREA"))
-					return;
-				var org = obj.innerHTML;
-				var orglen = org.replace(/[^\x00-\xff]/g,'**').length;
-				if (obj.offsetHeight <= 22) 
-				{
-					  var val = window.ActiveXObject ? obj.innerText : obj.textContent;
-					  var txt = document.createElement("INPUT");
-					  txt.value = val.trim();
-					  txt.style.background = "#FFC";
-					  txt.style.width = obj.offsetWidth + "px" ;
-					  obj.innerHTML = "";
-					  obj.appendChild(txt);
-					  txt.focus();
-					  txt.onblur = function(e)
-					  {
-						  var txtvalue = txt.value.trim();
-					      if(txtvalue.length>35 || txtvalue.length==0 || txtvalue == "空")
-					      {
-					    	 alert("输入内容不能为空且不能超过35个字符"); 
-					    	 return;
-					      }
-					      else if(val != txtvalue)
-					      {
-					    	  //先插入数据库，再更新到界面上
-					    	  UpdateActivityContent(obj,val,txtvalue);
-					      }
-					      else
-					      {
-					    	  obj.innerHTML = txtvalue;
-					      }
-					  }
-			    }
-			    else
+				var htmlvalue = html.value.trim(); 
+				if(htmlvalue.length>35 || htmlvalue.length==0 || htmlvalue == "空")
 			    {
-			    	//取出该单元格内容
-					var content = obj.innerHTML;
-					var html = document.createElement('TEXTAREA');
-					html.style.width = obj.offsetWidth + "px";
-					html.style.height = obj.offsetHeight + "px";
-					obj.innerHTML = "";
-					//将大单元格内容付给textarea
-					html.value = content.trim();
-					obj.appendChild(html);
-					html.focus();
-					html.onblur = function(e)
-					{
-						var htmlvalue = html.value.trim(); 
-						if(htmlvalue.length>35 || htmlvalue.length==0 || htmlvalue == "空")
-					    {
-					    	 alert("输入内容不能为空且不能超过35个字符");
-					    	 return;
-					    }
-						else if(content != htmlvalue)
-						{
-							UpdateActivityContent(obj,content,htmlvalue);
-						}
-						else
-						{
-							obj.innerHTML = htmlvalue;
-						}
-			    	}
+			    	 alert("输入内容不能为空且不能超过35个字符");
+			    	 return;
 			    }
+				else if(content != htmlvalue)
+				{
+					UpdateActivityContent(obj,content,htmlvalue);
+				}
+				else
+				{
+					obj.innerHTML = htmlvalue;
+				}
+	    	}
+	    }
+	}
+	
+	function uploadAndSubmit()
+	{
+		var uploadSuccess = function(data,xhr)
+		{
+			alert(data);
+			alert(document.getElementById("uploadfilename"));
+			if(data == "上传成功！")
+			{
+				document.getElementById("uploadfilename").innerHTML = file.name;
 			}
-		</script>
+		}
+		var uploadProgress = function(event,position,total,percent)
+		{
+			 //document.getElementById("bytesRead").textContent = event.loaded; 
+			 //alert("上传完成！");
+			 console.log(percent);
+		}
+		
+		var formData = new FormData();
+		var form = document.forms["upForm"]; 
+		var file = form["upFile"].files[0]; 
+		var filename =  encodeURI(encodeURI(file.name));
+		//var filename=file.name;
+		//alert(file.name);
+		formData.append('upload', file);
+		//额外数据
+		formData.append('para1','value1');
+		
+		var xhr;
+		if(window.XMLHttpRequest)
+		{
+			xhr = new XMLHttpRequest();
+		}
+		else if(window.ActiveXObject)
+		{
+			xhr = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		xhr.open('POST', "ActivityContentClServlet?fileName=" + filename );
+		// xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+		// xhr.setRequestHeader("Content-Type", "text/html;charset=utf-8");
+		xhr.upload.onloadstart = function(){
+			//document.getElementById("bytesTotal").textContent = file.size; 
+		}
+		//上传进度
+		xhr.upload.onprogress = function(event)
+		{
+			var percent = 0,position = event.loaded || event.position,total = event.total;
+			if (event.lengthComputable) 
+			{
+				percent = Math.ceil(position / total * 100);
+			}
+			uploadProgress(event,position,total,percent);
+		};
+		//上传结果
+		xhr.onload = function()
+		{
+			if (xhr.readyState === 4) 
+			{
+				if (xhr.status === 200)
+				{
+					uploadSuccess(xhr.responseText, xhr);
+				}
+			}
+
+		};
+		xhr.send(formData);
+		return false;
+	}
+</script>
 </head>
 <body>
 	<div id="head">
@@ -189,9 +257,9 @@
 			%>			
 						<td>
 							<form id="upForm" name="upForm" action="javascript:uploadAndSubmit();" method="post" enctype="multipart/form-data">
-								<label><%=name %></label><br>
-								<a href="javascript:uploadAndSubmit();" class="a-upload">
-									<input type="file" name="upFile" id="upFile"><%=buttonName %>
+								<label id="uploadfilename"><%=name %></label><br>
+								<a href="" class="a-upload">
+									<input type="file" name="upFile" id="upFile" onchange="uploadAndSubmit();"><%=buttonName %>
 								</a>
 							</form>
 						
