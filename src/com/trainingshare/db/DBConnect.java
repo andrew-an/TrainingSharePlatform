@@ -229,4 +229,50 @@ public class DBConnect {
     	
     	return ret;
     }
+    
+    //存储上传文件的路径
+    public Boolean UpdateUploadFilePath(String filePath, String activityContent)
+    {
+    	Boolean ret=false;
+    	try{
+    		filePath = "D:\\\\TrainingShare\\\\" + filePath;
+        	String sql = "update activitycontent set FilePath='"+filePath+"', UploadFlag='1' where Title='"+activityContent+"'";
+        	//sql = new String(sql.getBytes("iso-8859-1"),"utf-8");
+        	psmt = ct.prepareStatement(sql);  
+        	int result = psmt.executeUpdate();
+        	if(result>0)
+        	{
+        		ret=true;
+        	}
+    	}
+    	catch(Exception ex)
+    	{
+    		ex.printStackTrace();
+    	}
+    	return ret;
+    }
+    
+    //获取某次活动的所有成员分享的主题
+    public ArrayList<String> GetAllTitleById(int activityId)
+    {
+    	ArrayList<String> al = new ArrayList<String>();
+    	try
+    	{
+    		String strsql = "select FilePath from activitycontent where ActivityId="+activityId;
+    		psmt = ct.prepareStatement(strsql);
+    		ResultSet rs = psmt.executeQuery();
+    		while(rs.next())
+    		{
+    			String filePath = rs.getString(1);
+    			if(null != filePath && !filePath.equals(""))
+    				al.add(rs.getString(1));
+    		}
+    		System.out.println(al.size());
+    	}
+    	catch(Exception ex)
+    	{
+    		ex.printStackTrace();
+    	}
+    	return al;
+    }
 }

@@ -15,7 +15,7 @@
 <body>
 	<div id="head">
         <h2 style="text-align: center;color: orange;margin-top:3px">Wearable内部培训分享平台</h2>
-        <label id="loginUser"><%=session.getAttribute("userName") %> <%=session.getAttribute("workNumber") %></label>
+        <label id="loginUser">登录用户:<%=session.getAttribute("userName")%></label>
         <button name="addNewActivity" onclick="window.location.href='NewActivity.jsp'">create</button>
 	</div>
 	<div id="wrapper">

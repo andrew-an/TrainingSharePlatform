@@ -59,23 +59,21 @@ public class ActivityContentClServlet extends HttpServlet {
 			}
 		}
 		
-		String fileName = (String)request.getParameter("fileName"); 
-		if(null != fileName)
+		String fileName = (String)request.getParameter("fileName");
+		if(null != fileName && null != activityContent)
 		{
 			BufferedInputStream fileIn = new BufferedInputStream(request.getInputStream()); 
-			//String fn = (String)request.getParameter("fileName"); 
-			String fn = URLDecoder.decode((String)request.getParameter("fileName"),"utf-8");
-			//System.out.println(fn);  
+			fileName = URLDecoder.decode(fileName,"utf-8"); 
+			activityContent = URLDecoder.decode(activityContent,"utf-8"); 
 			byte[] buf = new byte[1024];
 			//接收文件上传并保存到 d:\
-			File file = new File("d:/" + fn); 
+			File file = new File("d:/TrainingShare/" + fileName); 
 			BufferedOutputStream fileOut = new BufferedOutputStream(new FileOutputStream(file));
 			int fileReadAllLength = 0;//保存总共传输的字节数，判断文件是否全部传输完成
 			while (true) 
 			{ 
 				// 读取数据
 				int bytesIn = fileIn.read(buf, 0, 1024); 
-				//System.out.println(bytesIn); 
 				if (bytesIn == -1) 
 				{ 
 					break; 
@@ -88,13 +86,16 @@ public class ActivityContentClServlet extends HttpServlet {
 			}
 			fileOut.flush(); 
 			fileOut.close();
-			//System.out.print(file.getAbsolutePath()); 
-			//System.out.print(file.length()+" ");
-			//System.out.print(fileReadAllLength);
 			if(fileReadAllLength == file.length())
-				response.getWriter().write("上传成功！");
+			{
+				DBConnect dbc = new DBConnect();
+				if(dbc.UpdateUploadFilePath(fileName.trim(), activityContent.trim()) == true)
+					response.getWriter().write("上传成功!");
+				else
+					response.getWriter().write("数据更新失败!");
+			}
 			else
-				response.getWriter().write("上传失败！");
+				response.getWriter().write("上传失败!");
 		}
 		return;
 	}

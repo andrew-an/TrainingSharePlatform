@@ -47,7 +47,7 @@ public class LoginClServlet extends HttpServlet {
 			if(user != null)
 			{
 				//session.setMaxInactiveInterval(5);
-				session.setAttribute("workNumber", user.getWorkNumber());
+				//session.setAttribute("workNumber", user.getWorkNumber());
 				session.setAttribute("userName", name);
 				session.setAttribute("activityTitle", dbc.GetActivityTitle());
 				response.sendRedirect("Main.jsp");

@@ -19,7 +19,7 @@
 	      	var tab = document.getElementById("mytitle");
 	      	for(var i=1; i<tab.rows.length; i++)
 	     		{
-	      		//alert(tab.rows[i].cells[0].innerHTML);
+	      			//alert(tab.rows[i].cells[0].innerHTML);
 	     			if(tab.rows[i].cells[0].innerHTML == name)
 	     			{
 	     				alert("请执行编辑操作！");
@@ -144,15 +144,21 @@
 	
 	function uploadAndSubmit()
 	{
+		//取得当前用户名称
+		var user = document.getElementById("loginUser").innerHTML;				
+		user = user.slice(user.indexOf(":")+1,user.length);
+		
+		//上传成功后执行
 		var uploadSuccess = function(data,xhr)
 		{
-			alert(data);
-			alert(document.getElementById("uploadfilename"));
-			if(data == "上传成功！")
+			if(data == "上传成功!")
 			{
-				document.getElementById("uploadfilename").innerHTML = file.name;
+				//根据不同用户的label显示选择的文件名
+				document.getElementById("uploadfilename"+user).innerHTML = file.name;
 			}
+			alert(data);
 		}
+		//上传过程中执行
 		var uploadProgress = function(event,position,total,percent)
 		{
 			 //document.getElementById("bytesRead").textContent = event.loaded; 
@@ -160,15 +166,14 @@
 			 console.log(percent);
 		}
 		
+		//找到当前用户的Form
+		var formId = "upForm"+user;
 		var formData = new FormData();
-		var form = document.forms["upForm"]; 
-		var file = form["upFile"].files[0]; 
+		var form = document.forms[formId];
+		var file = form["upFile"].files[0];
+		//alert(form["upFile"].);
 		var filename =  encodeURI(encodeURI(file.name));
-		//var filename=file.name;
-		//alert(file.name);
 		formData.append('upload', file);
-		//额外数据
-		formData.append('para1','value1');
 		
 		var xhr;
 		if(window.XMLHttpRequest)
@@ -179,11 +184,13 @@
 		{
 			xhr = new ActiveXObject("Microsoft.XMLHTTP");
 		}
-		xhr.open('POST', "ActivityContentClServlet?fileName=" + filename );
-		// xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-		// xhr.setRequestHeader("Content-Type", "text/html;charset=utf-8");
+		
+		var titlename = document.getElementById("titlename"+user).innerHTML;
+		titlename = encodeURI(encodeURI(titlename));
+		
+		xhr.open('POST', "ActivityContentClServlet?fileName=" + filename+"&activityContent="+titlename);
 		xhr.upload.onloadstart = function(){
-			//document.getElementById("bytesTotal").textContent = file.size; 
+			//document.getElementById("bytesTotal").textContent = file.size;
 		}
 		//上传进度
 		xhr.upload.onprogress = function(event)
@@ -198,34 +205,50 @@
 		//上传结果
 		xhr.onload = function()
 		{
-			if (xhr.readyState === 4) 
+			if (xhr.readyState === 4)
 			{
 				if (xhr.status === 200)
 				{
 					uploadSuccess(xhr.responseText, xhr);
 				}
 			}
-
 		};
 		xhr.send(formData);
 		return false;
 	}
+	/*function load()
+	{
+		//alert(window.frames["hrong"].location.href);
+		//var str="file:///D:/TrainingShare/RSA.rar";     
+		//window.frames["hrong"].location.href=str;
+		document.getElementById("hrong").src = "file:///D:/TrainingShare/RSA.rar";
+		sa();
+	}
+	function sa()
+	{
+		if(window.frames["hrong"].document.readyState != "complete")   
+	        setTimeout("sa()",   100);   
+	    else   
+	      window.frames["hrong"].document.execCommand('SaveAs');  
+	}*/
+	
 </script>
 </head>
 <body>
 	<div id="head">
     	<label id="activitytitle">活动参与详情</label><br>
-    	<label id="loginUser"><%=session.getAttribute("userName") %> <%=session.getAttribute("workNumber") %></label>
+    	<label id="loginUser">登录用户:<%=session.getAttribute("userName")%></label>
     	<!-- <button name="addMyTitle" onclick="AddMyTitle()">add my title</button> -->
     </div>
     <div id="wrapper">
 		<table class="imagetable" id="mytitle">
 			<tr>
-				<th style="width: 15%;font-size:20px">参 与 人</th>
+				<th style="width: 10%;font-size:20px">参与人</th>
 				<th style="width: 70%;font-size:20px">培 训 主 题</th>
-				<th style="width: 15%;font-size:20px">资 料 上 传</th>
+				<th style="width: 20%;font-size:20px">资 料 上 传</th>
 			</tr>
 			<% 
+			    String activityId = (String)request.getAttribute("activityId");
 			    String loginUser = (String)session.getAttribute("userName");
 			    ArrayList<ArrayList<String>> al = (ArrayList<ArrayList<String>>)(request.getAttribute("activityContentList"));
 			    Iterator<ArrayList<String>> it = al.iterator();
@@ -237,42 +260,45 @@
 			    	String titleName = activityContentList.get(1);
 			    	String filePath = activityContentList.get(2);
 			    	String uploadFlag = activityContentList.get(3);
-			%>    	
-				    <tr>
-						<td><%=memberName%></td>
-						<td style="font-size:20px;color:<%=memberName.equals(loginUser)?"red":"black" %>" 
-						ondblclick=<%=memberName.equals(loginUser)?"editRowCell(this)":null %>; >
-						<%=titleName%>
-						</td>
-			<%
-						String name = "未上传";
-						//String imagename = "";
-						String buttonName = "点击上传";
-				        if(uploadFlag.equals("1"))
-				        {
-				        	name = filePath.substring(0,10);
-				        	//imagename = "images/file_complete.png";
-				        	buttonName = "点击更新";
-				        }
-			%>			
-						<td>
-							<form id="upForm" name="upForm" action="javascript:uploadAndSubmit();" method="post" enctype="multipart/form-data">
-								<label id="uploadfilename"><%=name %></label><br>
-								<a href="" class="a-upload">
-									<input type="file" name="upFile" id="upFile" onchange="uploadAndSubmit();"><%=buttonName %>
+			%>
+					<form name="upForm<%=memberName.equals(loginUser)?loginUser:"" %>" action="javascript:uploadAndSubmit();" method="post" enctype="multipart/form-data">    	
+					    <tr>
+							<td id="membername"><%=memberName%></td>
+							<td id="titlename<%=memberName.equals(loginUser)?loginUser:"" %>"
+								style="font-size:20px;color:<%=memberName.equals(loginUser)?"red":"black" %>" 
+								ondblclick=<%=memberName.equals(loginUser)?"editRowCell(this);":null %>>
+								<%=titleName%>
+							</td>
+				<%
+							String name = "未上传";
+							//String imagename = "";
+							String buttonName = "点击上传";
+					        if(uploadFlag.equals("1"))
+					        {
+					        	name = filePath.substring(filePath.lastIndexOf("\\")+1,filePath.length());
+					        	//imagename = "images/file_complete.png";
+					        	buttonName = "点击更新";
+					        }
+				%>			
+							<td>
+								<label id="uploadfilename<%=memberName.equals(loginUser)?loginUser:"" %>"><%=name %></label><br>
+								<a style="display:<%=memberName.equals(loginUser)?"inline-block":"none" %>" class="a-upload">
+									<input type="file" name="upFile" onchange="uploadAndSubmit();"><%=buttonName %>
 								</a>
-							</form>
-						
-						</td>
-					</tr> 
+							</td>
+						</tr> 
+					</form>
 			<%
 			    }			
-			%> 
+			%>
 		</table>
-    	
+		<br>
+		<form action="zipdownloadservlet?activityId=<%=activityId%>" method="post">
+			<button id="LoadAllPackage">下载全部附件 </button>
+		</form>
     </div>
+    
     <div id="footer">
-
     </div>
 </body>
 </html>

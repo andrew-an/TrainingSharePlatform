@@ -33,7 +33,6 @@
     <servlet-name>MainClServlet</servlet-name>
     <url-pattern>/mainclservlet</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <servlet-name>ActivityContentClServlet</servlet-name>
     <servlet-class>com.trainingshare.servlet.ActivityContentClServlet</servlet-class>
@@ -41,5 +40,13 @@
   <servlet-mapping>
     <servlet-name>ActivityContentClServlet</servlet-name>
     <url-pattern>/activitycontentclservlet</url-pattern>
+  </servlet-mapping>
+    <servlet>
+    <servlet-name>zipDownloadServlet</servlet-name>
+    <servlet-class>com.trainingshare.servlet.zipDownloadServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>zipDownloadServlet</servlet-name>
+    <url-pattern>/zipdownloadservlet</url-pattern>
   </servlet-mapping>
 </web-app>

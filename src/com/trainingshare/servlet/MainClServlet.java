@@ -48,13 +48,11 @@ public class MainClServlet extends HttpServlet {
 		DBConnect dbc = new DBConnect();
 		//根据点击的标题，取得该活动的Id
 		int id = dbc.GetMembersIdByTitle(title);
-		//System.out.println(id);
 		if(id != 0)
 		{
 			ArrayList<ArrayList<String>> activityContentList = new ArrayList<ArrayList<String>>();
 			//根据活动Id，获得参加该活动的所有人员Id
 			ArrayList<String> al = dbc.GetAllMembers(id);
-			//System.out.println(al);
 			Iterator<String> it = al.iterator();
 			while(it.hasNext())
 			{
@@ -62,6 +60,7 @@ public class MainClServlet extends HttpServlet {
 				ArrayList<String> al_activity = dbc.GetActivityContentByMemberId(id,memberId);
 				activityContentList.add(al_activity);
 			}
+			request.setAttribute("activityId", Integer.toString(id));
 			request.setAttribute("activityContentList",activityContentList);
 			request.getRequestDispatcher("ActivityContent.jsp").forward(request,response);
 			
