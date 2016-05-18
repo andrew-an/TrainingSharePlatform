@@ -33,8 +33,9 @@ body{
 #head label{
     text-align: center;
 	color: orange;
-	font-size: 100px;
+	font-size: 40px;
 	font-weight: bold;
+	margin-top:auto;
 }
 
 .activity_title{
@@ -44,7 +45,7 @@ body{
 }
 .activity_content{
     width: 100%;
-    height: 50%;
+    height: 40%;
     /*background-color: #222;*/
 }
 .activity_location{
@@ -56,6 +57,11 @@ body{
     width: 100%;
     height: 10%;
    /* background-color: #666;*/
+}
+.activity_members{
+    width: 100%;
+    height: 10%;
+    /*background-color: #666;*/
 }
 .activity_button{
     width: 100%;

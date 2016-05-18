@@ -12,7 +12,36 @@
     	var myDate = new Date();
     	document.getElementById("datetime-starttime").valueAsDate  = myDate;
     	document.getElementById("datetime-endtime").valueAsDate  = myDate.setDate(myDate.getDate()+10);
-    	//alert(myDate);
+
+    	var div = document.getElementById("activity_members");
+	    var oInput = div.getElementsByTagName("input");
+		var oLabel = div.getElementsByTagName("label")[1];
+		var isCheckAll = function ()
+		{
+			for (var i = 1, n = 0; i < oInput.length; i++)
+			{
+				oInput[i].checked && n++	
+			}
+			oInput[0].checked = n == oInput.length - 1;
+			oLabel.innerHTML = oInput[0].checked ? "全不选" : "全选&nbsp"
+		};
+		//全选/全不选
+		oInput[0].onclick = function ()
+		{
+			for (var i = 1; i < oInput.length; i++)
+			{
+				oInput[i].checked = this.checked			
+			}
+			isCheckAll()
+		};
+		//根据复选个数更新全选框状态
+		for (var i = 1; i < oInput.length; i++)
+		{
+			oInput[i].onclick = function ()	
+			{
+				isCheckAll();
+			}	
+		}
     }
 </script>
 </head>
@@ -23,15 +52,15 @@
 	    </div>
 	    <div id="wrapper">
 	    	<div class="activity_title">
-	    		<label style="margin-left: 15px;margin-top:5px;color: black;font-size: 25px">活动标题</label><br>
-	    		<textarea name="activitytitle" style="width: 95%;height: 40%;bottom: 5px; margin:15px;margin-top: 5px;font-size: 20px"></textarea>
+	    		<label style="margin-left: 15px;margin-top:5px;color: black;font-size: 25px">标题</label><br>
+	    		<textarea name="activitytitle" style="width: 95%;height: 40%;bottom: 5px; margin-left:15px;margin-top: 5px;font-size: 20px"></textarea>
 	    	</div>
 	    	<div class="activity_content">
-	    		 <label style="margin-left: 15px;margin-top:5px;color: black;font-size: 25px">活动内容</label><br>
-	    		<textarea name="activitycontent" style="width: 95%;height: 80%;bottom: 5px; margin:15px;margin-top: 5px;font-size: 20px"></textarea>
+	    		 <label style="margin-left: 15px;margin-top:5px;color: black;font-size: 25px">内容</label><br>
+	    		<textarea name="activitycontent" style="width: 95%;height: 75%;bottom: 5px; margin-left:15px;margin-top: 5px;font-size: 20px"></textarea>
 	    	</div>
 	    	<div class="activity_location">
-	    		<label style="margin-left: 15px;margin-top:5px;color: black;font-size: 25px">活动地点</label>
+	    		<label style="margin-left:15px;margin-top:5px;color: black;font-size: 25px">地点</label>
 	    		<input type="radio" value="A31" name="location" checked style="font-size: 20px"/>A31
 	    		<input type="radio" value="A32" name="location"  style="font-size: 20px"/>A32
 	    		<input type="radio" value="A33" name="location"  style="font-size: 20px"/>A33
@@ -41,9 +70,23 @@
 	    		<input type="radio" value="pending" name="location"  style="font-size: 20px"/>待定
 	    	</div>
 	    	<div class="activity_time">
-	    		<label style="margin-left: 15px;margin-top:5px;color: black;font-size: 25px">活动时间</label>
+	    		<label style="margin-left: 15px;margin-top:5px;color: black;font-size: 25px">时间</label>
 	    		开始：<input type="date" id="datetime-starttime" name="starttime" />
 	    		        结束：<input type="date" id="datetime-endtime" name="endtime" />
+	    	</div>
+	    	<div id="activity_members" class="activity_members">
+	    	    <label style="margin-left: 15px;margin-top:5px;color: black;font-size: 25px">参与人</label>
+	    	    
+	    	    <input type="checkbox" id="item"><label>全选&nbsp</label>
+	    	    <input type="checkbox" id="item"><label>andrew</label>
+	    	    <input type="checkbox" id="item"><label>Carl</label>
+	    	    <input type="checkbox" id="item"><label>vigoss</label>
+	    	    <input type="checkbox" id="item"><label>sasa</label>
+	    	    <input type="checkbox" id="item"><label>snowy</label>
+	    	    <input type="checkbox" id="item"><label>bruce</label>
+	    	    <input type="checkbox" id="item"><label>wilson</label>
+	    	    <input type="checkbox" id="item"><label>tiger</label>
+	    	    <br><br>
 	    	</div>
 	    	<div class="activity_button">
 	    		<button type="submit"  class="button" style="margin-right: 30px" >Save</button>
