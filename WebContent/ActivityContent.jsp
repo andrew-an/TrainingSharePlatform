@@ -13,45 +13,8 @@
 	    }
 	%>
     <script type="text/javascript" language="javascript" charset="utf-8">
-      function AddMyTitle()
-      {
-	     	var name = document.getElementById("loginUser").innerHTML.split(" ",2)[0];
-	      	var tab = document.getElementById("mytitle");
-	      	for(var i=1; i<tab.rows.length; i++)
-	     		{
-	      			//alert(tab.rows[i].cells[0].innerHTML);
-	     			if(tab.rows[i].cells[0].innerHTML == name)
-	     			{
-	     				alert("请执行编辑操作！");
-	     				break;
-	     			}
-	     		}
-	      	if(i == tab.rows.length)
-	      	{
-		       	var row = tab.insertRow(tab.rows.length);
-		       	var nameCell = row.insertCell(row.cells.length);
-		       	var titleCell = row.insertCell(row.cells.length);
-		       	var fileCell = row.insertCell(row.cells.length);
-		       	
-		       	nameCell.innerHTML = name;
-		       	titleCell.innerHTML = "双击输入或更新你的标题";
-		       	fileCell.innerHTML = "未上传";
-		
-		
-		       	titleCell.ondblclick = function dblclickEvent(){editRowCell(titleCell)};
-		       	if(window.addEventListener){
-		       		titleCell.addEnevtListener('ondblclick',editRowCell(titleCell),false);
-		       		//titleCell.addEnevtListener('ondblclick',function dblclickEvent(){_edit.IN(titleCell,'index.html?act=edit',3)},false);
-		       	}
-		       	else
-		       	{
-		       		titleCell.attachEvent('ondblclick',editRowCell(titleCell));
-		       		//titleCell.attachEvent('ondblclick',function dblclickEvent(){_edit.IN(titleCell,'index.html?act=edit',3)});
-		       	}
-	      	}
-      }
      
-      function UpdateActivityContent(obj,str1,str2)
+      function UpdateActivityContent(obj,str1,str2,activityId,loginUser)
       {
 	      	//先插入数据库，再更新显示
 	      var xmlhttp;
@@ -71,10 +34,14 @@
 				  obj.innerHTML = str2;//数据库更新完成，则显示更改后的值
 			  }
 		  }
-		  xmlhttp.open("POST","ActivityContentClServlet?activityContentBefore="+str1+"&activityContent="+str2,true);
+		  xmlhttp.open("POST","ActivityContentClServlet?activityId="+activityId
+				  +"&loginUser="+loginUser
+				  +"&activityContentBefore="+str1
+				  +"&activityContent="+str2
+				  ,true);
 		  xmlhttp.send();
       }
-	function editRowCell(obj) 
+	function editRowCell(obj,activityId,loginUser) 
 	{
 	    var tag = obj.firstChild.tagName;
 		if (typeof(tag) != "undefined" && (tag == "INPUT" || tag == "TEXTAREA"))
@@ -102,7 +69,7 @@
 			      else if(val != txtvalue)
 			      {
 			    	  //先插入数据库，再更新到界面上
-			    	  UpdateActivityContent(obj,val,txtvalue);
+			    	  UpdateActivityContent(obj,val,txtvalue,activityId,loginUser);
 			      }
 			      else
 			      {
@@ -132,7 +99,7 @@
 			    }
 				else if(content != htmlvalue)
 				{
-					UpdateActivityContent(obj,content,htmlvalue);
+					UpdateActivityContent(obj,content,htmlvalue,activityId,loginUser);
 				}
 				else
 				{
@@ -142,7 +109,7 @@
 	    }
 	}
 	
-	function uploadAndSubmit()
+	function uploadAndSubmit(activityId,loginUser)
 	{
 		//取得当前用户名称
 		var user = document.getElementById("loginUser").innerHTML;				
@@ -188,7 +155,10 @@
 		var titlename = document.getElementById("titlename"+user).innerHTML;
 		titlename = encodeURI(encodeURI(titlename));
 		
-		xhr.open('POST', "ActivityContentClServlet?fileName=" + filename+"&activityContent="+titlename);
+		xhr.open('POST', "ActivityContentClServlet?activityId="+activityId
+				  +"&loginUser="+loginUser
+				  +"&fileName=" + filename
+				  +"&activityContent="+titlename);
 		xhr.upload.onloadstart = function(){
 			//document.getElementById("bytesTotal").textContent = file.size;
 		}
@@ -258,16 +228,18 @@
 			    	activityContentList = (ArrayList<String>)it.next();
 			    	String memberName = activityContentList.get(0);
 			    	String titleName = activityContentList.get(1);
+			    	//titleName = titleName.trim().equals("")?"双击输入或编辑标题":titleName;
+			    	System.out.println(titleName);
 			    	String filePath = activityContentList.get(2);
 			    	String uploadFlag = activityContentList.get(3);
 			%>
-					<form name="upForm<%=memberName.equals(loginUser)?loginUser:"" %>" action="javascript:uploadAndSubmit();" method="post" enctype="multipart/form-data">    	
+					<form name="upForm<%=memberName.equals(loginUser)?loginUser:"" %>" method="post" enctype="multipart/form-data">    	
 					    <tr>
 							<td id="membername"><%=memberName%></td>
 							<td id="titlename<%=memberName.equals(loginUser)?loginUser:"" %>"
 								style="font-size:20px;color:<%=memberName.equals(loginUser)?"red":"black" %>" 
-								ondblclick=<%=memberName.equals(loginUser)?"editRowCell(this);":null %>>
-								<%=titleName%>
+								ondblclick="editRowCell(this,'<%=activityId %>','<%=loginUser %>')"; >
+								<%= titleName %>
 							</td>
 				<%
 							String name = "未上传";
@@ -283,7 +255,7 @@
 							<td>
 								<label id="uploadfilename<%=memberName.equals(loginUser)?loginUser:"" %>"><%=name %></label><br>
 								<a style="display:<%=memberName.equals(loginUser)?"inline-block":"none" %>" class="a-upload">
-									<input type="file" name="upFile" onchange="uploadAndSubmit();"><%=buttonName %>
+									<input type="file" name="upFile" onchange="uploadAndSubmit('<%=activityId %>','<%=loginUser %>');"><%=buttonName %>
 								</a>
 							</td>
 						</tr> 

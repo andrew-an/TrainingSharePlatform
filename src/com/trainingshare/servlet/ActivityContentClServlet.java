@@ -39,16 +39,20 @@ public class ActivityContentClServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		response.setContentType("text/html;charset=utf-8");
 		response.setCharacterEncoding("UTF-8");
 		
+		String activityId = request.getParameter("activityId");
+		String memberName = request.getParameter("loginUser");
+		//System.out.println(activityId+","+memberName);
 		String activityContentBefore = request.getParameter("activityContentBefore");
 		String activityContent = request.getParameter("activityContent");
 		
-		if(null != activityContentBefore && null != activityContent)
+		if(null!=activityId && null!= memberName && null != activityContentBefore && null != activityContent)
 		{
 			DBConnect dbc = new DBConnect();
 			Boolean ret=false;
-			ret = dbc.UpdateActivityContent(activityContentBefore, activityContent);	
+			ret = dbc.UpdateActivityContent(activityId,memberName,activityContentBefore, activityContent);	
 			if(ret == true)
 			{
 			    response.getWriter().print(activityContent);
@@ -60,7 +64,7 @@ public class ActivityContentClServlet extends HttpServlet {
 		}
 		
 		String fileName = (String)request.getParameter("fileName");
-		if(null != fileName && null != activityContent)
+		if(null!=activityId && null!= memberName && null != fileName && null != activityContent)
 		{
 			BufferedInputStream fileIn = new BufferedInputStream(request.getInputStream()); 
 			fileName = URLDecoder.decode(fileName,"utf-8"); 
@@ -89,7 +93,7 @@ public class ActivityContentClServlet extends HttpServlet {
 			if(fileReadAllLength == file.length())
 			{
 				DBConnect dbc = new DBConnect();
-				if(dbc.UpdateUploadFilePath(fileName.trim(), activityContent.trim()) == true)
+				if(dbc.UpdateUploadFilePath(activityId,memberName, fileName.trim(), activityContent.trim()) == true)
 					response.getWriter().write("上传成功!");
 				else
 					response.getWriter().write("数据更新失败!");

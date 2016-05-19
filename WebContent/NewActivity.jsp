@@ -57,7 +57,7 @@
 	    	</div>
 	    	<div class="activity_content">
 	    		 <label style="margin-left: 15px;margin-top:5px;color: black;font-size: 25px">内容</label><br>
-	    		<textarea name="activitycontent" style="width: 95%;height: 75%;bottom: 5px; margin-left:15px;margin-top: 5px;font-size: 20px"></textarea>
+	    		<textarea name="activitydetails" style="width: 95%;height: 75%;bottom: 5px; margin-left:15px;margin-top: 5px;font-size: 20px"></textarea>
 	    	</div>
 	    	<div class="activity_location">
 	    		<label style="margin-left:15px;margin-top:5px;color: black;font-size: 25px">地点</label>
@@ -78,14 +78,10 @@
 	    	    <label style="margin-left: 15px;margin-top:5px;color: black;font-size: 25px">参与人</label>
 	    	    
 	    	    <input type="checkbox" id="item"><label>全选&nbsp</label>
-	    	    <input type="checkbox" id="item"><label>andrew</label>
-	    	    <input type="checkbox" id="item"><label>Carl</label>
-	    	    <input type="checkbox" id="item"><label>vigoss</label>
-	    	    <input type="checkbox" id="item"><label>sasa</label>
-	    	    <input type="checkbox" id="item"><label>snowy</label>
-	    	    <input type="checkbox" id="item"><label>bruce</label>
-	    	    <input type="checkbox" id="item"><label>wilson</label>
-	    	    <input type="checkbox" id="item"><label>tiger</label>
+	    	    <input type="checkbox" id="item" name="item" value="andrew"><label>andrew</label>
+	    	    <input type="checkbox" id="item" name="item" value="Carl"><label>Carl</label>
+	    	    <input type="checkbox" id="item" name="item" value="vigoss"><label>vigoss</label>
+	    	    <input type="checkbox" id="item" name="item" value="snowy"><label>snowy</label>
 	    	    <br><br>
 	    	</div>
 	    	<div class="activity_button">

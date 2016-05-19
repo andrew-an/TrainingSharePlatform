@@ -1,8 +1,10 @@
 package com.trainingshare.servlet;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -48,6 +50,13 @@ public class LoginClServlet extends HttpServlet {
 			{
 				//session.setMaxInactiveInterval(5);
 				//session.setAttribute("workNumber", user.getWorkNumber());
+				Cookie ckUserName = new Cookie("username",name);
+				Cookie ckPasswrod = new Cookie("password",pwd);
+				ckUserName.setMaxAge(7*24*3600);
+				ckPasswrod.setMaxAge(7*24*3600);
+				response.addCookie(ckUserName); 
+				response.addCookie(ckPasswrod);
+				
 				session.setAttribute("userName", name);
 				session.setAttribute("activityTitle", dbc.GetActivityTitle());
 				response.sendRedirect("Main.jsp");
@@ -63,5 +72,5 @@ public class LoginClServlet extends HttpServlet {
 			ex.printStackTrace();
 		}
 	}
-
+	
 }

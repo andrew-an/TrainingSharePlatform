@@ -2,7 +2,7 @@ package com.trainingshare.model;
 
 public class ActivityContentBean {
     private int id;
-    private int activityId;
+    private int membersId;
     private int memberId;
     private String title;
     private String filePath;
@@ -15,11 +15,11 @@ public class ActivityContentBean {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getActivityId() {
-		return activityId;
+	public int getMembersId() {
+		return membersId;
 	}
-	public void setActivityId(int activityId) {
-		this.activityId = activityId;
+	public void setMembersId(int membersId) {
+		this.membersId = membersId;
 	}
 	public int getMemberId() {
 		return memberId;
@@ -57,5 +57,6 @@ public class ActivityContentBean {
 	public void setRecordTime(String recordTime) {
 		this.recordTime = recordTime;
 	}
+	
 	
 }

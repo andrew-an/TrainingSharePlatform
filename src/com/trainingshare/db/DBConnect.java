@@ -1,5 +1,6 @@
 package com.trainingshare.db;
 
+import java.security.MessageDigest;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -23,6 +24,29 @@ public class DBConnect {
     	}
     }
     
+    //MD5加密算法
+    public static String getMD5(String message) {  
+        MessageDigest messageDigest = null;  
+        StringBuffer md5StrBuff = new StringBuffer();  
+        try {  
+            messageDigest = MessageDigest.getInstance("MD5");  
+            messageDigest.reset();  
+            messageDigest.update(message.getBytes("UTF-8"));  
+               
+            byte[] byteArray = messageDigest.digest();  
+            for (int i = 0; i < byteArray.length; i++)   
+            {  
+                if (Integer.toHexString(0xFF & byteArray[i]).length() == 1)  
+                    md5StrBuff.append("0").append(Integer.toHexString(0xFF & byteArray[i]));  
+                else 
+                    md5StrBuff.append(Integer.toHexString(0xFF & byteArray[i]));  
+            }  
+        } catch (Exception e) {  
+            throw new RuntimeException();  
+        }  
+        return md5StrBuff.toString().toUpperCase();//字母大写  
+    }   
+	
     //检查用户合法性
     public UserInfoBean checkUser(String username, String password)
     {
@@ -33,7 +57,7 @@ public class DBConnect {
     		if(rs.next())
     		{
     			String pwd = (String)rs.getString("Password");
-    			if(pwd.equals(password))
+    			if(pwd.equals(getMD5(password)))
     			{
     				UserInfoBean user = new UserInfoBean();
     				user.setId(Integer.parseInt(rs.getString(1)));
@@ -53,7 +77,26 @@ public class DBConnect {
     	}
 		return null;
     }
-    
+    //根据姓名查找Id号
+    public int GetUserId(String userName)
+    {
+    	int id=0;
+    	try{
+    		String strsql = "select Id from userinfo where UserName='"+userName+"'";
+    		strsql = new String(strsql.getBytes("iso-8859-1"),"utf-8");
+    		psmt = ct.prepareStatement(strsql);
+    		ResultSet rs = psmt.executeQuery();
+    		while(rs.next())
+    		{
+    			id = rs.getInt(1);
+    		}
+    	}
+    	catch(Exception ex)
+    	{
+    		ex.printStackTrace();
+    	}
+    	return id;
+    }
     //返回活动列表
     public ArrayList<String> GetActivityTitle()
     {
@@ -73,25 +116,57 @@ public class DBConnect {
 		return al;
     }
     
-    //添加一个新活动信息
-    public String AddNewAcivity(ActivityBean ab)
+    //添加一个新活动信息,返回新添加的获得Id号
+    public int AddNewAcivity(ActivityBean ab)
     {
+    	int ret=0;
     	try{
     		String strsql = "insert into activity(title,details,membersId,meetingRoomId,startTime,endTime,remark)values('"
-            		+ab.getTitle()+"','"+ab.getDetails()+"',"+ab.getMembersId()+","+
+            		+ab.getTitle()+"','"+ab.getDetails()+"',"+ab.getMembersId()+","
                     +ab.getMeetingRoomId()+",'"+ab.getStartTime()+"','"+ab.getEndTime()+"','"+ab.getRemak()+"')";
+    		strsql = new String(strsql.getBytes("iso-8859-1"),"utf-8");
             psmt = ct.prepareStatement(strsql);
             int rows = psmt.executeUpdate();
             if(rows>0)
             {
-            	return "成功";
+            	strsql = "select LAST_INSERT_ID() as Id from activity";
+            	psmt = ct.prepareStatement(strsql);
+            	ResultSet rs = psmt.executeQuery();
+            	while(rs.next())
+            	{
+            		ret = rs.getInt("Id");
+            	}
             }
     	}
     	catch(Exception ex)
     	{
     		ex.printStackTrace();
     	}
-    	return "失败";
+    	return ret;
+    }
+    
+    //添加一个新的活动内容详情
+    public Boolean AddNewAcivityContent(ActivityContentBean acb)
+    {
+    	Boolean ret = false;
+    	try{
+    		String strsql = "insert into activitycontent(MembersId,MemberId,Title,FilePath,UploadFlag,Remark)values("
+            		+acb.getMembersId()+","+acb.getMemberId()+",'"+acb.getTitle()+"','"
+                    +acb.getFilePath()+"','"+acb.getUploadFlag()+"','"+acb.getRemark()+"')";
+    		strsql = new String(strsql.getBytes("iso-8859-1"),"utf-8");
+    		System.out.println(strsql);
+            psmt = ct.prepareStatement(strsql);
+            int rows = psmt.executeUpdate();
+            if(rows>0)
+            {
+            	ret=true;
+            }
+    	}
+    	catch(Exception ex)
+    	{
+    		ex.printStackTrace();
+    	}
+    	return ret;
     }
     
     //根据会议室名称查询ID
@@ -116,7 +191,27 @@ public class DBConnect {
     	return id;
     }
     
-    //根据活动标题选择活动参与人的人员表id
+    //根据活动标题获取人员列表Id号
+    public int GetActivityIdByTitle(String activityTitle)
+    {
+    	int id=0;
+    	try{
+    		String strsql = "select ActivityId from activity where Title='"+activityTitle+"'";
+    		strsql = new String(strsql.getBytes("iso-8859-1"),"utf-8");
+    		psmt = ct.prepareStatement(strsql);
+    		ResultSet rs = psmt.executeQuery();
+    		if(rs.next())
+    		{
+    			id = rs.getInt(1);
+    		}
+    	}
+    	catch(Exception ex)
+    	{
+    		ex.printStackTrace();
+    	}
+    	return id;
+    }
+    //根据活动标题获取人员列表Id号
     public int GetMembersIdByTitle(String activityTitle)
     {
     	int id=0;
@@ -136,14 +231,33 @@ public class DBConnect {
     	}
     	return id;
     }
-    
-    //根据人员列表id返回所有人员名
-    public ArrayList<String> GetAllMembers(int id)
+    //根据活动标题获取人员列表Id号
+    public int GetMembersIdByactivityId(int activityId)
+    {
+    	int id=0;
+    	try{
+    		String strsql = "select MembersId from activity where Id="+activityId;
+    		//strsql = new String(strsql.getBytes("iso-8859-1"),"utf-8");
+    		psmt = ct.prepareStatement(strsql);
+    		ResultSet rs = psmt.executeQuery();
+    		if(rs.next())
+    		{
+    			id = rs.getInt(1);
+    		}
+    	}
+    	catch(Exception ex)
+    	{
+    		ex.printStackTrace();
+    	}
+    	return id;
+    }
+    //根据Id号获得参加该活动的所有人员名
+    public ArrayList<String> GetAllMembersById(int membersId)
     {
     	ArrayList<String> membersList = new ArrayList<String>();
     	try{
     		
-    		String strsql = "select MemberList from members where Id="+id;
+    		String strsql = "select MemberList from members where Id="+membersId;
     		psmt = ct.prepareStatement(strsql);
     		ResultSet rs = psmt.executeQuery();
     		if(rs.next())
@@ -162,13 +276,13 @@ public class DBConnect {
     	return membersList;
     }
     
-    //获取活动详情——某活动中某个人的活动详情
-    public ArrayList<String> GetActivityContentByMemberId(int activityId, int memberId)
+    //获取活动详情——某活动中所有人的信息内容（标题，上传文件等）
+    public ArrayList<String> GetActivityContentByMemberId(int membersId, int memberId)
     {
     	ArrayList<String> al = new ArrayList<String>();
     	try
     	{
-    		String strsql = "select Title,FilePath,UploadFlag from activitycontent where ActivityId="+activityId+" and MemberId="+memberId;
+    		String strsql = "select Title,FilePath,UploadFlag from activitycontent where MembersId="+membersId+" and MemberId="+memberId;
     		
     		psmt = ct.prepareStatement(strsql);
     		ResultSet rs = psmt.executeQuery();
@@ -209,11 +323,17 @@ public class DBConnect {
     }
     
     //更新某成员的活动主题
-    public Boolean UpdateActivityContent(String activityContentBefore, String activityContent)
+    public Boolean UpdateActivityContent(String activityId, String memberName,String activityContentBefore, String activityContent)
     {
     	Boolean ret=false;
     	try{
-        	String sql = "update activitycontent set Title='"+activityContent+"' where Title='"+activityContentBefore+"'";
+    		System.out.println(activityId);
+    		int membersId = GetMembersIdByactivityId(Integer.parseInt(activityId));
+    		int userId = GetUserId(memberName);
+        	String sql = "update activitycontent set Title='"+activityContent
+        			    +"' where MembersId="+membersId
+        			    +" and memberId="+userId
+        			    +" and Title='"+activityContentBefore+"'";
         	sql = new String(sql.getBytes("iso-8859-1"),"utf-8");
         	psmt = ct.prepareStatement(sql);  
         	int result = psmt.executeUpdate();
@@ -231,12 +351,18 @@ public class DBConnect {
     }
     
     //存储上传文件的路径
-    public Boolean UpdateUploadFilePath(String filePath, String activityContent)
+    public Boolean UpdateUploadFilePath(String activityId, String memberName, String filePath, String activityContent)
     {
     	Boolean ret=false;
     	try{
+    		
+    		int membersId = GetMembersIdByactivityId(Integer.parseInt(activityId));
+    		int userId = GetUserId(memberName);
     		filePath = "D:\\\\TrainingShare\\\\" + filePath;
-        	String sql = "update activitycontent set FilePath='"+filePath+"', UploadFlag='1' where Title='"+activityContent+"'";
+        	String sql = "update activitycontent set FilePath='"+filePath+"', UploadFlag='1'"
+        			   +" where MembersId="+membersId
+    			       +" and memberId="+userId
+    			       +" and Title='"+activityContent+"'";
         	//sql = new String(sql.getBytes("iso-8859-1"),"utf-8");
         	psmt = ct.prepareStatement(sql);  
         	int result = psmt.executeUpdate();
@@ -258,21 +384,78 @@ public class DBConnect {
     	ArrayList<String> al = new ArrayList<String>();
     	try
     	{
-    		String strsql = "select FilePath from activitycontent where ActivityId="+activityId;
+    		String strsql = "select T1.FilePath from activitycontent as T1 inner join activity as T2 on "
+    					  + "T1.MembersId=T2.MembersId where T2.Id="+activityId;
     		psmt = ct.prepareStatement(strsql);
     		ResultSet rs = psmt.executeQuery();
     		while(rs.next())
     		{
     			String filePath = rs.getString(1);
     			if(null != filePath && !filePath.equals(""))
-    				al.add(rs.getString(1));
+    				al.add(filePath);
     		}
-    		System.out.println(al.size());
     	}
     	catch(Exception ex)
     	{
     		ex.printStackTrace();
     	}
     	return al;
+    }
+    
+    //从userinfo表中获取与姓名对应的所有Id号
+    public ArrayList<Integer> GetMemberIdByName(String[] memberName)
+    {
+    	ArrayList<Integer> al = new ArrayList<Integer>();
+    	try
+    	{
+    		String strsql = "SELECT Id FROM userinfo WHERE";
+    		for(int i=0; i<memberName.length; i++)
+    			strsql += " UserName='"+memberName[i]+"' OR";
+    		if(memberName.length>0 && strsql.endsWith(" OR"))
+    			strsql = strsql.substring(0, strsql.length()-3);//去掉最后面的“ OR”
+    		
+    		psmt = ct.prepareStatement(strsql);
+    		ResultSet rs = psmt.executeQuery();
+    		while(rs.next())
+    		{
+    			int id = rs.getInt(1);
+    			if(0 != id)
+    			{
+    				al.add(id);
+    			}
+    		}
+    	}
+    	catch(Exception ex)
+    	{
+    		ex.printStackTrace();
+    	}
+    	return al;
+    }
+    
+    //更新members表,返回新插入行的Id值
+    public int UpdateMembersTable(String memberList)
+    {
+    	int ret=0;   
+    	try{
+        	String strsql = "insert into members(MemberList) values('"+memberList+"')";
+        	strsql = new String(strsql.getBytes("iso-8859-1"),"utf-8");
+        	psmt = ct.prepareStatement(strsql);
+        	int rows = psmt.executeUpdate();
+        	if(rows>0)
+        	{
+        		strsql = "select LAST_INSERT_ID() as Id from members";
+        		psmt = ct.prepareStatement(strsql);
+        		ResultSet result = psmt.executeQuery();
+        		while(result.next())
+        		{
+        			ret = result.getInt("Id");
+        		}
+        	}
+    	}
+    	catch(Exception ex)
+    	{
+    	    ex.printStackTrace();
+    	}
+    	return ret;
     }
 }
