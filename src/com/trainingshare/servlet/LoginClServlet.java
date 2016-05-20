@@ -78,14 +78,15 @@ public class LoginClServlet extends HttpServlet {
 				
 				session.setAttribute("userName", name);
 				session.setAttribute("activityTitle", dbc.GetActivityTitle());
-				
-				response.sendRedirect("Main.jsp");
+				//response.sendRedirect("Main.jsp");
+				getServletContext().getRequestDispatcher("/Main.jsp").forward(request, response);
 			}
 			else
 			{
-				response.sendRedirect("Login.jsp");
+				//request.setAttribute("errorinfo", "login_faild");
+				//getServletContext().getRequestDispatcher("/Login.jsp").forward(request, response);
+				response.sendRedirect("Login.jsp?errorinfo=login_faild");
 			}
-			
 		}
 		catch(Exception ex)
 		{

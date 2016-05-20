@@ -41,7 +41,7 @@
     <servlet-name>ActivityContentClServlet</servlet-name>
     <url-pattern>/activitycontentclservlet</url-pattern>
   </servlet-mapping>
-    <servlet>
+  <servlet>
     <servlet-name>zipDownloadServlet</servlet-name>
     <servlet-class>com.trainingshare.servlet.zipDownloadServlet</servlet-class>
   </servlet>
@@ -49,4 +49,14 @@
     <servlet-name>zipDownloadServlet</servlet-name>
     <url-pattern>/zipdownloadservlet</url-pattern>
   </servlet-mapping>
+  
+    <servlet>
+    <servlet-name>ChangePasswordServlet</servlet-name>
+    <servlet-class>com.trainingshare.servlet.ChangePasswordServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ChangePasswordServlet</servlet-name>
+    <url-pattern>/changepasswordservlet</url-pattern>
+  </servlet-mapping>
+  
 </web-app>

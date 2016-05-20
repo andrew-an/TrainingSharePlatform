@@ -77,6 +77,32 @@ public class DBConnect {
     	}
 		return null;
     }
+    //更新用户密码
+    public Boolean UpdatePassword(String username, String pwd_new)
+    {
+    	Boolean ret=false;
+    	try
+    	{
+    		if(null!=username && null!=pwd_new)
+    		{
+        		pwd_new = getMD5(pwd_new);
+        		String strsql = "update userinfo set PassWord='"+pwd_new+"' where UserName='"+username+"'";
+        		strsql = new String(strsql.getBytes("iso-8859-1"),"utf-8");
+        		psmt = ct.prepareStatement(strsql);
+        		int result = psmt.executeUpdate();
+        		if(result > 0)
+        		{
+        			//System.out.println("密码更改成功");
+        			ret = true;
+        		}    			
+    		}
+    	}
+    	catch(Exception ex)
+    	{
+    		ex.printStackTrace();
+    	}
+    	return ret;    	
+    }
     //根据姓名查找Id号
     public int GetUserId(String userName)
     {
@@ -154,7 +180,6 @@ public class DBConnect {
             		+acb.getMembersId()+","+acb.getMemberId()+",'"+acb.getTitle()+"','"
                     +acb.getFilePath()+"','"+acb.getUploadFlag()+"','"+acb.getRemark()+"')";
     		strsql = new String(strsql.getBytes("iso-8859-1"),"utf-8");
-    		System.out.println(strsql);
             psmt = ct.prepareStatement(strsql);
             int rows = psmt.executeUpdate();
             if(rows>0)
@@ -327,7 +352,6 @@ public class DBConnect {
     {
     	Boolean ret=false;
     	try{
-    		System.out.println(activityId);
     		int membersId = GetMembersIdByactivityId(Integer.parseInt(activityId));
     		int userId = GetUserId(memberName);
         	String sql = "update activitycontent set Title='"+activityContent

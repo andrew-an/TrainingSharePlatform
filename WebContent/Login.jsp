@@ -13,32 +13,46 @@
    			pwd.value = "";
 		}
 		window.onload = refresh;*/
-		$(document).ready(function(){
-			 alert("ok");
-			  location.reload();
-			});
+		function ChangePassword(src)
+		{
+			var openee = window.open (src+"?username=andrew","newwindow", 'height='+250+',,innerHeight='+250
+						+',width='+400+',innerWidth='+400+',top='+window.screen.height/2.5+',left='
+						+window.screen.width/2.5+',toolbar=no,menubar=no,scrollbars=auto,resizeable=no,location=no,status=no');   
+		}   
 	</script>
 	<%
+		String error = (String)request.getParameter("errorinfo");
+		if(null != error && error.equals("login_faild"))
+		{
+			error = "用户名或密码错误";
+		}
+		else
+		{
+			error=" ";
+		}
+		
+		//System.out.println(error);
 	    String userName = "";
 		String password = "";
 		Cookie[] cookies = request.getCookies();
-		for(Cookie ck:cookies)
+		if(cookies.length>0)
 		{
-			if(ck.getName().equals("username"))
+			for(Cookie ck:cookies)
 			{
-				userName = ck.getValue();
-				if(!password.equals(""))
-					break;
-			}
-			else if(ck.getName().equals("password"))
-			{
-				password = ck.getValue();
-				if(!userName.equals(""))
-					break;
+				if(ck.getName().equals("username"))
+				{
+					userName = ck.getValue();
+					if(!password.equals(""))
+						break;
+				}
+				else if(ck.getName().equals("password"))
+				{
+					password = ck.getValue();
+					if(!userName.equals(""))
+						break;
+				}
 			}
 		}
-		System.out.println(userName);
-		System.out.println(password);
 	%>
 </head>
 <body>
@@ -64,12 +78,14 @@
 					<div style="padding: 10px;"></div>
 					<div class="logincontent">
 					    <form action="loginClServlet" method="post" >
-						           欢迎登录<br><br><br>
+						           欢迎登录<br><br>
 							用户名：<input type="text" id="username" name="username" value=<%=userName %>><br><br>
-							密&nbsp码：<input type="password"  id="password" name="password" value=<%=password %>><br><br>
+							密&nbsp码：<input type="password" style="margin-bottom:10px" id="password" name="password" value=<%=password %>><br>
+							<label style="display:inline-block;color:red;margin-bottom:5px;padding:0px"><%=error %></label><br>
 							记住密码<input type="checkbox" value="on" name="checkbox_keeppwd" <%=userName!=""?"checked":"" %>>
 							自动登录<input type="checkbox" value="on" name="checkbox_autologin"><br><br>
-							<input type="submit" value="登   录" style="width:240px;height:30px;font-size: 15" >	    	
+							<input type="submit" value="登   录" style="width:80px;height:30px;font-size: 15;margin-right:30px" >
+							<input type="button" value="修改密码" style="width:80px;height:30px;font-size: 15" onclick="ChangePassword('ChangePassword.jsp','修改密码','400','200')">	    	
 					    </form>
 					</div>
 				</div>

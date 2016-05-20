@@ -229,7 +229,7 @@
 			    	String memberName = activityContentList.get(0);
 			    	String titleName = activityContentList.get(1);
 			    	//titleName = titleName.trim().equals("")?"双击输入或编辑标题":titleName;
-			    	System.out.println(titleName);
+			    	//System.out.println(titleName);
 			    	String filePath = activityContentList.get(2);
 			    	String uploadFlag = activityContentList.get(3);
 			%>
