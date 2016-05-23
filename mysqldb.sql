@@ -103,13 +103,14 @@ CREATE TABLE `userinfo` (
   `PassWord` varchar(32) DEFAULT NULL,
   `Sex` varchar(20) DEFAULT NULL,
   `Email` varchar(40) DEFAULT NULL,
+  `AdministratorFlag` varchar(2) DEFAULT '0',
   `Remark` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 /*Data for the table `userinfo` */
 
-insert  into `userinfo`(`Id`,`WorkNumber`,`UserName`,`RealName`,`PassWord`,`Sex`,`Email`,`Remark`) values (1,'0320879','andrew','安健逞','E10ADC3949BA59ABBE56E057F20F883E','mail','andrew.an@goertek.com',''),(2,'0320878','Carl','巩元鹏','123456','mail','carl.gong@goertek.com',NULL),(3,'0320870','vigoss','王永胜','123456','mail','vigoss.wang@goertek.com',NULL),(4,'0320871','snowy','王雪梅','123456','femail','snowy.wang@goertek.com',NULL);
+insert  into `userinfo`(`Id`,`WorkNumber`,`UserName`,`RealName`,`PassWord`,`Sex`,`Email`,`AdministratorFlag`,`Remark`) values (1,'0320879','andrew','安健逞','E10ADC3949BA59ABBE56E057F20F883E','mail','andrew.an@goertek.com','1',''),(2,'0320878','Carl','巩元鹏','E10ADC3949BA59ABBE56E057F20F883E','mail','carl.gong@goertek.com',NULL,NULL),(3,'0320870','vigoss','王永胜','123456','mail','vigoss.wang@goertek.com',NULL,NULL),(4,'0320871','snowy','王雪梅','123456','femail','snowy.wang@goertek.com',NULL,NULL);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
