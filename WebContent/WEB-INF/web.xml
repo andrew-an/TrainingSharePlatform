@@ -15,7 +15,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>LoginClServlet</servlet-name>
-    <url-pattern>/loginClServlet</url-pattern>
+    <url-pattern>/loginclservlet</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>NewActivityCl</servlet-name>

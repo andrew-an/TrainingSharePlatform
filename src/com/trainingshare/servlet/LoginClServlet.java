@@ -44,12 +44,13 @@ public class LoginClServlet extends HttpServlet {
 			HttpSession session = request.getSession();
 			String name = request.getParameter("username");
 			String pwd = request.getParameter("password");
-
+			//System.out.println("密码为："+pwd);
 			DBConnect dbc = new DBConnect();
 			UserInfoBean user = dbc.checkUser(name, pwd);
+			//用户名密码验证成功
 			if(user != null)
 			{
-				//session.setMaxInactiveInterval(5);
+				
 				//session.setAttribute("workNumber", user.getWorkNumber());
 				String checkbox = request.getParameter("checkbox_keeppwd");
 				if(null != checkbox && checkbox.equals("on"))
@@ -57,8 +58,6 @@ public class LoginClServlet extends HttpServlet {
 					//如果选中自动登录，则添加cookie
 					Cookie ckUserName = new Cookie("username",name);
 					Cookie ckPasswrod = new Cookie("password",pwd);
-					ckUserName.setMaxAge(7*24*3600);
-					ckPasswrod.setMaxAge(7*24*3600);
 					response.addCookie(ckUserName); 
 					response.addCookie(ckPasswrod);
 				}
@@ -76,16 +75,19 @@ public class LoginClServlet extends HttpServlet {
 					}
 				}
 				
-				session.setAttribute("userName", name);
-				session.setAttribute("activityTitle", dbc.GetActivityTitle());
-				//response.sendRedirect("Main.jsp");
+				request.setAttribute("userName", name);
+				request.setAttribute("administratorFlag", user.getAdministratorFlag());
+				request.setAttribute("activityTitle", dbc.GetActivityTitle());
+				//设置自动登录保留时间
+				request.setAttribute("autologin", true);
+				session.setMaxInactiveInterval(7*24*3600);
+				
 				getServletContext().getRequestDispatcher("/Main.jsp").forward(request, response);
 			}
 			else
 			{
-				//request.setAttribute("errorinfo", "login_faild");
-				//getServletContext().getRequestDispatcher("/Login.jsp").forward(request, response);
-				response.sendRedirect("Login.jsp?errorinfo=login_faild");
+				request.setAttribute("errorinfo", "login_faild");
+				getServletContext().getRequestDispatcher("/Login.jsp").forward(request, response);
 			}
 		}
 		catch(Exception ex)

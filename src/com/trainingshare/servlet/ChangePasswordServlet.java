@@ -40,38 +40,35 @@ public class ChangePasswordServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub		
 		DBConnect dbc = new DBConnect();
-		String username = (String)request.getParameter("username");
-		String password_old = (String)request.getParameter("password_old");
-		System.out.println(username);
-		System.out.println(password_old);
-		PrintWriter out = response.getWriter();
+		String username = (String)request.getParameter("uname");
+		String password_old = (String)request.getParameter("pwd_old");
+		
 		if(null!=username && !username.equals("") && null!=password_old && !password_old.equals(""))
 		{
+			System.out.println("第一次跳转成功");
+			//判断用户更改密码时输入的原密码是否正确
 			if(dbc.checkUser(username, password_old) != null)
 			{
-				out.print("success");
+				response.getWriter().write("success");
 			}
 			else
 			{
-				out.print("failed");
+				response.getWriter().write("failed");
 			}
-			out.flush();
-			out.close();
 		}
 		else
 		{
-			username = (String)request.getAttribute("username");
-			String password_new = (String)request.getAttribute("password_new");
+			String password_new = (String)request.getParameter("pwd_new");
 			if(dbc.UpdatePassword(username, password_new) == true)
 			{
-				request.setAttribute("return", "success");
+				response.getWriter().write("success");
 			}
 			else
 			{
-				request.setAttribute("return", "failed");
+				response.getWriter().write("failed");
 			}
-			request.getRequestDispatcher("ChangePassword.jsp").forward(request,response);
 		}
+		return;
 	}
 
 }

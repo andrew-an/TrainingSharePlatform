@@ -8,6 +8,7 @@ public class UserInfoBean {
     private String password;
     private String sex;
     private String email;
+    private String administratorFlag;
     private String remark;
 	public int getId() {
 		return id;
@@ -51,11 +52,18 @@ public class UserInfoBean {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	public String getAdministratorFlag() {
+		return administratorFlag;
+	}
+	public void setAdministratorFlag(String administratorFlag) {
+		this.administratorFlag = administratorFlag;
+	}
 	public String getRemark() {
 		return remark;
 	}
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
+	
 	
 }

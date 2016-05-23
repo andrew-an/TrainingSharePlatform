@@ -47,6 +47,10 @@
 </head>
 <body onload="window_load()">
     <form action="newactivitycl" method="post">
+	    <div style="float:right;margin-right:10px;">
+			<a href="Main.jsp" style="font-size:14px;z-index:1;text-decoration:none">返回</a>
+			<a href="Login.jsp?relogin=true" style="font-size:14px;text-decoration:none">退出登录</a>
+		</div>
 	    <div id="head">
 	    	<label>新建活动</label>
 	    </div>

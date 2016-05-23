@@ -7,9 +7,12 @@
 <link rel="stylesheet" type="text/css" href="style4.css">
 <title>活动内容</title>
 	<% 
-	    if(null == session.getAttribute("userName")||session.equals(""))
+		String uname = (String)request.getAttribute("username");
+		System.out.println("uname的值为："+uname);
+	    if(null == uname || uname.equals(""))
 	    {	
-	    	response.sendRedirect("Login.jsp");	    	
+	    	response.sendRedirect("Login.jsp");
+	    	
 	    }
 	%>
     <script type="text/javascript" language="javascript" charset="utf-8">
@@ -205,9 +208,14 @@
 </script>
 </head>
 <body>
+	<div style="float:right;margin-right:10px;">
+		<a href="Main.jsp" style="font-size:14px;z-index:1;text-decoration:none">返回</a>
+		<a href="Login.jsp?relogin=true" style="font-size:14px;text-decoration:none">退出登录</a>
+	</div>
+
 	<div id="head">
     	<label id="activitytitle">活动参与详情</label><br>
-    	<label id="loginUser">登录用户:<%=session.getAttribute("userName")%></label>
+    	<label id="loginUser">登录用户:<%=uname%></label>
     	<!-- <button name="addMyTitle" onclick="AddMyTitle()">add my title</button> -->
     </div>
     <div id="wrapper">

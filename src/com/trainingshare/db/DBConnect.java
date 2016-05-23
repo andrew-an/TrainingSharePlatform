@@ -67,7 +67,8 @@ public class DBConnect {
     				user.setPassword(rs.getString(5));
     				user.setSex(rs.getString(6));
     				user.setEmail(rs.getString(7));
-    				user.setRemark(rs.getString(8));
+    				user.setAdministratorFlag(rs.getString(8));
+    				user.setRemark(rs.getString(9));
     				return user;
     			}
     		}

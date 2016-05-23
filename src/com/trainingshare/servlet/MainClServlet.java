@@ -63,7 +63,9 @@ public class MainClServlet extends HttpServlet {
 			int activityId = dbc.GetMembersIdByTitle(title);
 			if(0 != activityId)
 				request.setAttribute("activityId", Integer.toString(activityId));
+			
 			request.setAttribute("activityContentList",activityContentList);
+			request.setAttribute("username", request.getParameter("username"));
 			request.getRequestDispatcher("ActivityContent.jsp").forward(request,response);
 			
 		}

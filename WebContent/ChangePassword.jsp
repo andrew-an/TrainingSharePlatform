@@ -12,7 +12,10 @@
 	</style>
 	<script>
 		var user = opener.document.getElementById("username").value;
-		
+		String.prototype.trim = function() 
+		{
+			return this.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+		}
 		function cancel()
 		{
 			window.close();
@@ -24,21 +27,39 @@
 			var password_old = document.getElementById("password_old");
 			var password_new = document.getElementById("password_new");
 			var password_again = document.getElementById("password_again");
-			//判断所有输入项是否都不为空值
+			//判断用户名输入是否为空
 			if(null!=username.value && username.value!="")
 			{
 				username.className="";
-				if(null!=password_old.value && password_old.value!="")
+				//判断原密码输入是否为空
+				if(null!=password_old.value && password_old.value.trim()!="")
 				{
 					password_old.className="";
-					if(null!=password_new.value && password_new.value!="")
+					//判断新密码输入是否为空
+					if(null!=password_new.value && password_new.value.trim()!="")
 					{
 						password_new.className="";
-						if(null!=password_again.value && password_again.value!="")
+						if(null!=password_again.value && password_again.value.trim()!="")
 						{
 							password_again.className="";
-							//先判断原密码是否正确
-							validatePwd(username.value, password_old.value,password_new.value, password_again.value);
+							//判断新旧密码是否不同
+							if(password_old.value.trim() != password_new.value.trim())
+							{
+								//判断两次输入的新密码输入是否相同
+								if(password_new.value.trim() == password_again.value.trim())
+								{
+									//判断原密码是否正确
+									validatePwd(username.value.trim(), password_old.value,password_new.value.trim(), password_again.value.trim());
+								}
+								else
+								{
+									alert("两次新密码输入不一致！");
+								}
+							}
+							else
+							{
+								alert("新旧密码不能相同！");
+							}
 						}
 						else
 						{
@@ -74,53 +95,75 @@
 			}
 			xmlhttp.onreadystatechange = function()
 			{
-				if(xmlhttp.readyState==4 && xmlhttp.status == 200)
+				if(xmlhttp.readyState==4)
 				{
-					alert(xmlhttp.responseText);
-					if(xmlhttp.responseText == "success")
+					if(xmlhttp.status == 200)
 					{
-						alert("ok");
-						//判断原密码与新密码是否相同
-						if(pwd_old != pwd_new)
+						if(xmlhttp.responseText == "success")
 						{
-							if(pwd_new == pwd_again)
-							{
-								window.location.href="changepasswordservlet";
-							}
-							else
-								alert("两次输入密码不相同");
+							//window.location.href = "changepasswordservlet";
+							changePwd(uname, pwd_new);
 						}
 						else
 						{
-							alert("原密码与新密码不能相同！");
+							alert("原密码输入不正确！");
 						}
 					}
-					//window.location.href="changepasswordservlet";
 				}
 			}
-			xmlhttp.open("POST","changepasswordservlet?username="+uname+"&passwordold="+pwd_old,true);
+			xmlhttp.open("POST","changepasswordservlet?uname="+uname+"&pwd_old="+pwd_old,true);
+			xmlhttp.send();
+		}
+		function changePwd(uname, pwd_new)
+		{
+			var xmlhttp;
+			if(window.XMLHttpRequest)
+			{
+				xmlhttp = new XMLHttpRequest();
+			}
+			else
+			{
+				xmlhttp = new ActivityXObject("Microsoft.XMLHTTP");
+			}
+			xmlhttp.onreadystatechange = function()
+			{
+				if(xmlhttp.readyState==4)
+				{
+					if(xmlhttp.status == 200)
+					{
+						if(xmlhttp.responseText == "success")
+						{
+							alert("密码修改成功");
+						}
+						else
+						{
+							alert("密码修改失败");
+						}
+					}
+				}
+			}
+			xmlhttp.open("POST","changepasswordservlet?uname="+uname+"&pwd_new="+pwd_new,true);
 			xmlhttp.send();
 		}
 	</script>
 	<%
-		String result = (String)request.getAttribute("result");
-		if(null != result)
-		{
-			if(result.equals("success"))
-			{
-				out.println("密码更改成功！");
-			}
-			else
-			{
-				out.println("密码更改失败");
-			}
-		}
-		
+		//String result = (String)request.getAttribute("return");
+		//if(null != result)
+		//{
+		//	if(result.equals("success"))
+		//	{
+		//		out.println("密码更改成功！");
+		//	}
+		//	else
+		//	{
+		//		out.println("密码更改失败");
+		//	}
+		//}
 	%>
 <title>Insert title here</title>
 </head>
 <body>
-	<form action="changepasswordservlet" method="post">
+	<!-- <form action="" method="post"> -->
 		<div style="text-align:center;margin:auto">
 			<br>
 			用  户  名: <input type="text" id="username" name="username" value=""><br><br>
@@ -131,8 +174,8 @@
 			<button onclick="cancel()" style="width:60px;height:30px;font-size: 13">取消</button><br>
 		</div>
 		<script>
-			//document.all["username"].value = user;
+			document.all["username"].value = user;
 		</script>
-	</form>
+	<!-- </form> -->
 </body>
 </html>

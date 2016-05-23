@@ -21,37 +21,48 @@
 		}   
 	</script>
 	<%
-		String error = (String)request.getParameter("errorinfo");
+		String reloadflag = "";
+		String error = "";
+	    String userName = "";
+		String password = "";
+		String autoLogin= "";
+		reloadflag = (String)request.getParameter("relogin");
+		error = (String)request.getAttribute("errorinfo");
 		if(null != error && error.equals("login_faild"))
 		{
+			request.removeAttribute("errorinfo");
 			error = "用户名或密码错误";
 		}
 		else
 		{
 			error=" ";
-		}
-		
-		//System.out.println(error);
-	    String userName = "";
-		String password = "";
-		Cookie[] cookies = request.getCookies();
-		if(cookies.length>0)
-		{
-			for(Cookie ck:cookies)
+			Cookie[] cookies = request.getCookies();
+			if(cookies.length>0)
 			{
-				if(ck.getName().equals("username"))
+				for(Cookie ck:cookies)
 				{
-					userName = ck.getValue();
-					if(!password.equals(""))
-						break;
-				}
-				else if(ck.getName().equals("password"))
-				{
-					password = ck.getValue();
-					if(!userName.equals(""))
-						break;
+					if(ck.getName().equals("username"))
+					{
+						userName = ck.getValue();
+						if(!password.equals(""))
+							break;
+					}
+					else if(ck.getName().equals("password"))
+					{
+						password = ck.getValue();
+						if(!userName.equals(""))
+							break;
+					}
 				}
 			}
+			autoLogin = (String)session.getAttribute("autologin");
+		}
+		if(null!=reloadflag && reloadflag.equals("true"))
+		{
+			error="";
+			userName="";
+			password="";
+			autoLogin="";
 		}
 	%>
 </head>
@@ -60,41 +71,43 @@
 	<div id="head">
 		<h1 >Wearable内部培训分享平台</h1>
 	</div>
+
 	<div id="wrapper">
  		<div class="left">
 			<div class="left_top"></div>
 			<div class="left_bottom"><img src="images/logo.png" /></div>
 		</div>
-
 		<div class="right">
 			<div class="right_top"></div>
-
 			<div class="right_center">
-			<!-- <div style="background-color: gray;height: 33%"></div><div style="background-color: green;height: 33%"></div><div style="background-color: black;height: 33%"></div> -->
-
-
 				<div class="right_center1"></div>
 				<div class="right_center2">
 					<div style="padding: 10px;"></div>
 					<div class="logincontent">
-					    <form action="loginClServlet" method="post" >
+					    <form action="loginclservlet" method="post" >
 						           欢迎登录<br><br>
 							用户名：<input type="text" id="username" name="username" value=<%=userName %>><br><br>
 							密&nbsp码：<input type="password" style="margin-bottom:10px" id="password" name="password" value=<%=password %>><br>
 							<label style="display:inline-block;color:red;margin-bottom:5px;padding:0px"><%=error %></label><br>
-							记住密码<input type="checkbox" value="on" name="checkbox_keeppwd" <%=userName!=""?"checked":"" %>>
-							自动登录<input type="checkbox" value="on" name="checkbox_autologin"><br><br>
+							<input type="checkbox" value="on" id= "checkbox_keeppwd" name="checkbox_keeppwd" <%=userName!=""?"checked":"" %>>记住密码
+							<input type="checkbox" value="on" id="checkbox_autologin" name="checkbox_autologin" <%=autoLogin=="true"?"checked":"" %>>两周内自动登录<br><br>
 							<input type="submit" value="登   录" style="width:80px;height:30px;font-size: 15;margin-right:30px" >
 							<input type="button" value="修改密码" style="width:80px;height:30px;font-size: 15" onclick="ChangePassword('ChangePassword.jsp','修改密码','400','200')">	    	
 					    </form>
+					    <script type="text/javascript">
+					    	var uname = document.getElementById("username");
+					    	var pwd = document.getElementById("password");
+					    	if(document.getElementById("checkbox_autologin").checked == true)
+					    	{
+					    		if(null!=uname&&uname!="" && null!=pwd&&pwd!="")
+					    			document.forms[0].submit();
+					    	}
+					    </script>
 					</div>
 				</div>
 				<div class="right_center3"></div>
 			</div>
-
-			<div class="right_bottom"></div> 
-
-
+			<div class="right_bottom"></div>
 		</div>
 	</div>
 	<div id="footer" style="text-align: center;">
