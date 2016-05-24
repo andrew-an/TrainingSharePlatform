@@ -49,12 +49,11 @@ public class LoginClServlet extends HttpServlet {
 			//用户名密码验证成功
 			if(user != null)
 			{
-				
-				//session.setAttribute("workNumber", user.getWorkNumber());
-				String checkbox = request.getParameter("checkbox_keeppwd");
-				if(null != checkbox && checkbox.equals("on"))
+				String checkbox_keepwd = request.getParameter("checkbox_keeppwd");
+				String checkbox_autologin = request.getParameter("checkbox_autologin");
+				//记住用户名密码
+				if(null != checkbox_keepwd && checkbox_keepwd.equals("on"))
 				{
-					//如果选中自动登录，则添加cookie
 					Cookie ckUserName = new Cookie("username",name);
 					Cookie ckPasswrod = new Cookie("password",pwd);
 					response.addCookie(ckUserName); 
@@ -62,7 +61,6 @@ public class LoginClServlet extends HttpServlet {
 				}
 				else
 				{
-					//如果自动登录未选中，则删除cookie
 					Cookie[] cookies = request.getCookies();
 					for(Cookie ck:cookies)
 					{
@@ -73,13 +71,33 @@ public class LoginClServlet extends HttpServlet {
 						}
 					}
 				}
+				//自动登录
+				if(null != checkbox_autologin && checkbox_autologin.equals("on"))
+				{
+					Cookie ckAutoLogin = new Cookie("autologin", "true");
+					response.addCookie(ckAutoLogin);
+					ckAutoLogin.setMaxAge(7*24*3600);
+				}
+				else
+				{
+					//如果自动登录未选中，则删除cookie
+					Cookie[] cookies = request.getCookies();
+					for(Cookie ck:cookies)
+					{
+						if(ck.getName().equals("autologin"))
+						{
+							ck.setMaxAge(0);
+							response.addCookie(ck);
+							break;
+						}
+					}
+				}
+				//request.setAttribute("administratorFlag", user.getAdministratorFlag());
+				request.setAttribute("activityTitleList", dbc.GetActivityTitle());
 				
-				request.setAttribute("userName", name);
-				request.setAttribute("administratorFlag", user.getAdministratorFlag());
-				request.setAttribute("activityTitle", dbc.GetActivityTitle());
-				//设置自动登录保留时间
-				request.setAttribute("autologin", true);
-				session.setMaxInactiveInterval(7*24*3600);
+			    session.setAttribute("username", name);
+			    session.setAttribute("administratorFlag", user.getAdministratorFlag());
+			    session.setMaxInactiveInterval(1800);//用户名信息保留30分钟
 				
 				getServletContext().getRequestDispatcher("/Main.jsp").forward(request, response);
 			}

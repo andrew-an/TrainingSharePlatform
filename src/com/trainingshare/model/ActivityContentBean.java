@@ -5,6 +5,8 @@ public class ActivityContentBean {
     private int membersId;
     private int memberId;
     private String title;
+    private int MeetingRoomId;
+    private String StartTime;
     private String filePath;
     private String uploadFlag;
     private String remark;
@@ -32,6 +34,18 @@ public class ActivityContentBean {
 	}
 	public void setTitle(String title) {
 		this.title = title;
+	}
+	public int getMeetingRoomId() {
+		return MeetingRoomId;
+	}
+	public void setMeetingRoomId(int meetingRoomId) {
+		MeetingRoomId = meetingRoomId;
+	}
+	public String getStartTime() {
+		return StartTime;
+	}
+	public void setStartTime(String startTime) {
+		StartTime = startTime;
 	}
 	public String getFilePath() {
 		return filePath;

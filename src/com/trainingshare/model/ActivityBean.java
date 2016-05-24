@@ -5,7 +5,6 @@ public class ActivityBean {
     private String title;
 	private String details;
     private int membersId;
-    private int meetingRoomId;
     private String startTime;
     private String endTime;
     private String remark;
@@ -33,12 +32,6 @@ public class ActivityBean {
 	}
 	public void setMembersId(int membersId) {
 		this.membersId = membersId;
-	}
-	public int getMeetingRoomId() {
-		return meetingRoomId;
-	}
-	public void setMeetingRoomId(int meetingRoomId) {
-		this.meetingRoomId = meetingRoomId;
 	}
 	public String getStartTime() {
 		return startTime;

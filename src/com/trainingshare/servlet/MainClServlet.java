@@ -51,21 +51,11 @@ public class MainClServlet extends HttpServlet {
 		if(membersId != 0)
 		{
 			ArrayList<ArrayList<String>> activityContentList = new ArrayList<ArrayList<String>>();
-			//根据Id，获得参加该活动的所有人员Id
-			ArrayList<String> al = dbc.GetAllMembersById(membersId);
-			Iterator<String> it = al.iterator();
-			while(it.hasNext())
-			{
-				int memberId = Integer.parseInt((String)it.next());
-				ArrayList<String> al_activity = dbc.GetActivityContentByMemberId(membersId, memberId);
-				activityContentList.add(al_activity);
-			}
-			int activityId = dbc.GetMembersIdByTitle(title);
-			if(0 != activityId)
-				request.setAttribute("activityId", Integer.toString(activityId));
-			
+			//根据活动的Id号，获得该活动的所有人员的主题，上传资料等内容
+			activityContentList = dbc.GetActivityContentByMembersId(membersId);
+			request.setAttribute("membersId", Integer.toString(membersId));
 			request.setAttribute("activityContentList",activityContentList);
-			request.setAttribute("username", request.getParameter("username"));
+			request.setAttribute("titlename", new String(title.getBytes("iso-8859-1"),"utf-8"));
 			request.getRequestDispatcher("ActivityContent.jsp").forward(request,response);
 			
 		}

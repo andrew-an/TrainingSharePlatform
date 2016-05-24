@@ -42,16 +42,16 @@ public class ActivityContentClServlet extends HttpServlet {
 		response.setContentType("text/html;charset=utf-8");
 		response.setCharacterEncoding("UTF-8");
 		
-		String activityId = request.getParameter("activityId");
+		String membersId = request.getParameter("membersId");
 		String memberName = request.getParameter("loginUser");
 		String activityContentBefore = request.getParameter("activityContentBefore");
 		String activityContent = request.getParameter("activityContent");
 		
-		if(null!=activityId && null!= memberName && null != activityContentBefore && null != activityContent)
+		if(null!=membersId && null!= memberName && null != activityContentBefore && null != activityContent)
 		{
 			DBConnect dbc = new DBConnect();
 			Boolean ret=false;
-			ret = dbc.UpdateActivityContent(activityId,memberName,activityContentBefore, activityContent);	
+			ret = dbc.UpdateActivityContent(membersId,memberName,activityContentBefore, activityContent);	
 			if(ret == true)
 			{
 			    response.getWriter().print(activityContent);
@@ -63,7 +63,7 @@ public class ActivityContentClServlet extends HttpServlet {
 		}
 		
 		String fileName = (String)request.getParameter("fileName");
-		if(null!=activityId && null!= memberName && null != fileName && null != activityContent)
+		if(null!=membersId && null!= memberName && null != fileName && null != activityContent)
 		{
 			BufferedInputStream fileIn = new BufferedInputStream(request.getInputStream()); 
 			fileName = URLDecoder.decode(fileName,"utf-8"); 
@@ -92,7 +92,7 @@ public class ActivityContentClServlet extends HttpServlet {
 			if(fileReadAllLength == file.length())
 			{
 				DBConnect dbc = new DBConnect();
-				if(dbc.UpdateUploadFilePath(activityId,memberName, fileName.trim(), activityContent.trim()) == true)
+				if(dbc.UpdateUploadFilePath(membersId,memberName, fileName.trim(), activityContent.trim()) == true)
 					response.getWriter().write("上传成功!");
 				else
 					response.getWriter().write("数据更新失败!");

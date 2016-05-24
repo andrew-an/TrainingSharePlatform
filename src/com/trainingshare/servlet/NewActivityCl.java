@@ -47,7 +47,6 @@ public class NewActivityCl extends HttpServlet {
 		
 		String activityTitle = request.getParameter("activitytitle");
 		String activityDetails = request.getParameter("activitydetails");
-		String activityLocation = request.getParameter("location");
 		String activityStartTime = request.getParameter("starttime");
 		String activityEndTime = request.getParameter("endtime");
 		String[] memberName = request.getParameterValues("item");
@@ -67,7 +66,6 @@ public class NewActivityCl extends HttpServlet {
 				ab.setTitle(activityTitle);
 				ab.setDetails(activityDetails);
 				ab.setMembersId(membersId);
-				ab.setMeetingRoomId(dbc.QueryMeetingRomId(activityLocation));
 				ab.setStartTime(activityStartTime);
 				ab.setEndTime(activityEndTime);
 				ab.setRemak("");
@@ -78,7 +76,7 @@ public class NewActivityCl extends HttpServlet {
 					ArrayList<String> alMembersList = dbc.GetAllMembersById(membersId);
 					if(null != alMembersList && alMembersList.size()>0)
 					{
-						int i=0;
+						/*int i=0;
 						for(; i<alMembersList.size(); i++)
 						{
 							ActivityContentBean acb = new ActivityContentBean();
@@ -96,12 +94,16 @@ public class NewActivityCl extends HttpServlet {
 						}
 						if(i == alMembersList.size())
 						{
-							HttpSession session = request.getSession();
-							session.setAttribute("activityTitle", dbc.GetActivityTitle());
-							response.sendRedirect("Main.jsp");
+							//获取所有互动列表
+							request.setAttribute("activityTitleList", dbc.GetActivityTitle());
+							//System.out.println(dbc.GetActivityTitle().size());
+							//response.sendRedirect("Main.jsp");
+							request.getRequestDispatcher("Main.jsp").forward(request,response);
 						}
 						else
-							response.sendRedirect("NewActivity.jsp");
+							response.sendRedirect("NewActivity.jsp");*/
+						request.setAttribute("activityTitleList", dbc.GetActivityTitle());
+						request.getRequestDispatcher("Main.jsp").forward(request,response);
 					}
 					else
 						response.sendRedirect("NewActivity.jsp");

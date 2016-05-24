@@ -45,12 +45,12 @@ public class zipDownloadServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
 		// TODO Auto-generated method stub
-		String activityId = request.getParameter("activityId");
+		String membersId = request.getParameter("membersId");
 		response.setContentType("APPLICATION/OCTET-STREAM");  
 		response.setHeader("Content-Disposition","attachment; filename="+this.getZipFilename());
 		ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());
 		DBConnect dbc = new DBConnect();
-		ArrayList<String> al = dbc.GetAllTitleById(Integer.parseInt(activityId));
+		ArrayList<String> al = dbc.GetAllUploadFilePathById(Integer.parseInt(membersId));
 		if(al.size()>0)
 		{
 			int fileNums = 0;

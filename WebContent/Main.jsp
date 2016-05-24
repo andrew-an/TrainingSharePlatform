@@ -6,12 +6,12 @@
 	<title>主界面</title>
 	<link rel="stylesheet" type="text/css" href="style2.css">
 	<% 
-		String uname = (String)request.getAttribute("userName");
+		String uname = (String)session.getAttribute("username");
 	    if(null == uname || uname.equals(""))
 	    {	
 	    	response.sendRedirect("Login.jsp");
 	    }
-	    String adminFlag = (String)request.getAttribute("administratorFlag");
+	    String adminFlag = (String)session.getAttribute("administratorFlag");
 	%>
 </head>
 <body>
@@ -20,15 +20,16 @@
 		<a href="Login.jsp?relogin=true" style="font-size:14px;text-decoration:none">退出登录</a>
 	</div>
 	<div id="head">
-        <h2 style="text-align: center;color: orange;margin-top:3px">Wearable内部培训分享平台</h2>
+        <label id="title">Wearable内部培训分享平台</label><br>
         <label id="loginUser">登录用户:<%=uname%></label>
-        <button name="addNewActivity" style="display:<%=null==adminFlag||adminFlag=="0"?"none":""%>" onclick="window.location.href='NewActivity.jsp'">create</button>
+        <button name="addNewActivity" style="display:<%=null!=adminFlag&&adminFlag.equals("1")?"":"none"%>" onclick="window.location.href='NewActivity.jsp'">创建</button>
 	</div>
 	<div id="wrapper">
         <div class="main">
 			<form action="" method="post">
 				<%
-			    	ArrayList<String> titleList = (ArrayList<String>)request.getAttribute("activityTitle");//"Wearable 第二季度内部培训分享会";
+			    	ArrayList<String> titleList = (ArrayList<String>)request.getAttribute("activityTitleList");//"Wearable 第二季度内部培训分享会";
+			    	
 			    	if(titleList != null)
 			    	{
 			    		Iterator<String> it = titleList.iterator();		    		
@@ -37,7 +38,6 @@
 					    	String title = (String)it.next();
 					    	String titleName = title.substring(0,title.indexOf(","));
 					    	String completeFlag = title.substring(title.indexOf(",")+1, title.indexOf(",")+2);
-					    	
 					    	if(completeFlag.equals("0"))
 					    	{
 				%>

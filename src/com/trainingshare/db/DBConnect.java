@@ -147,9 +147,9 @@ public class DBConnect {
     {
     	int ret=0;
     	try{
-    		String strsql = "insert into activity(title,details,membersId,meetingRoomId,startTime,endTime,remark)values('"
-            		+ab.getTitle()+"','"+ab.getDetails()+"',"+ab.getMembersId()+","
-                    +ab.getMeetingRoomId()+",'"+ab.getStartTime()+"','"+ab.getEndTime()+"','"+ab.getRemak()+"')";
+    		String strsql = "insert into activity(title,details,membersId,startTime,endTime,remark)values('"
+            		+ab.getTitle()+"','"+ab.getDetails()+"',"+ab.getMembersId()
+            		+",'"+ab.getStartTime()+"','"+ab.getEndTime()+"','"+ab.getRemak()+"')";
     		strsql = new String(strsql.getBytes("iso-8859-1"),"utf-8");
             psmt = ct.prepareStatement(strsql);
             int rows = psmt.executeUpdate();
@@ -176,9 +176,10 @@ public class DBConnect {
     {
     	Boolean ret = false;
     	try{
-    		String strsql = "insert into activitycontent(MembersId,MemberId,Title,FilePath,UploadFlag,Remark)values("
-            		+acb.getMembersId()+","+acb.getMemberId()+",'"+acb.getTitle()+"','"
-                    +acb.getFilePath()+"','"+acb.getUploadFlag()+"','"+acb.getRemark()+"')";
+    		String strsql = "insert into activitycontent(MembersId,MemberId,Title,MeetingRoomId,StartTime,FilePath,UploadFlag,Remark)values("
+            		+acb.getMembersId()+","+acb.getMemberId()+",'"+acb.getTitle()+"',"
+            		+acb.getMeetingRoomId()+",'"+acb.getStartTime()+"','"
+            		+acb.getFilePath()+"','"+acb.getUploadFlag()+"','"+acb.getRemark()+"')";
     		strsql = new String(strsql.getBytes("iso-8859-1"),"utf-8");
             psmt = ct.prepareStatement(strsql);
             int rows = psmt.executeUpdate();
@@ -300,29 +301,31 @@ public class DBConnect {
     }
     
     //获取活动详情——某活动中所有人的信息内容（标题，上传文件等）
-    public ArrayList<String> GetActivityContentByMemberId(int membersId, int memberId)
+    public ArrayList<ArrayList<String>> GetActivityContentByMembersId(int membersId)
     {
-    	ArrayList<String> al = new ArrayList<String>();
+    	ArrayList<ArrayList<String>> contentList = new ArrayList<ArrayList<String>>();
     	try
     	{
-    		String strsql = "select Title,FilePath,UploadFlag from activitycontent where MembersId="+membersId+" and MemberId="+memberId;
+    		String strsql = "select MemberId,Title,FilePath,UploadFlag from activitycontent where MembersId="+membersId + " order by RecordTime desc";
     		
     		psmt = ct.prepareStatement(strsql);
     		ResultSet rs = psmt.executeQuery();
-    		if(rs.next())
+    		while(rs.next())
     		{
-    			String memberName = GetMemberName(memberId);
+    			ArrayList<String> al = new ArrayList<String>();
+    			String memberName = GetMemberName(rs.getInt(1));
     			al.add(memberName);//成员名
-    			al.add(rs.getString(1));//主题名称
-    			al.add(rs.getString(2));//上传文件路径
-    			al.add(rs.getString(3));//是否上传标志
+    			al.add(rs.getString(2));//主题名称
+    			al.add(rs.getString(3));//上传文件路径
+    			al.add(rs.getString(4));//是否上传标志
+    			contentList.add(al);
     		}
     	}
     	catch(Exception ex)
     	{
     		ex.printStackTrace();
     	}
-    	return al;
+    	return contentList;
     }
     //根据成员Id获取成员名称
     public String GetMemberName(int memberId)
@@ -346,11 +349,10 @@ public class DBConnect {
     }
     
     //更新某成员的活动主题
-    public Boolean UpdateActivityContent(String activityId, String memberName,String activityContentBefore, String activityContent)
+    public Boolean UpdateActivityContent(String membersId, String memberName,String activityContentBefore, String activityContent)
     {
     	Boolean ret=false;
     	try{
-    		int membersId = GetMembersIdByactivityId(Integer.parseInt(activityId));
     		int userId = GetUserId(memberName);
         	String sql = "update activitycontent set Title='"+activityContent
         			    +"' where MembersId="+membersId
@@ -373,12 +375,10 @@ public class DBConnect {
     }
     
     //存储上传文件的路径
-    public Boolean UpdateUploadFilePath(String activityId, String memberName, String filePath, String activityContent)
+    public Boolean UpdateUploadFilePath(String membersId, String memberName, String filePath, String activityContent)
     {
     	Boolean ret=false;
     	try{
-    		
-    		int membersId = GetMembersIdByactivityId(Integer.parseInt(activityId));
     		int userId = GetUserId(memberName);
     		filePath = "D:\\\\TrainingShare\\\\" + filePath;
         	String sql = "update activitycontent set FilePath='"+filePath+"', UploadFlag='1'"
@@ -400,14 +400,13 @@ public class DBConnect {
     	return ret;
     }
     
-    //获取某次活动的所有成员分享的主题
-    public ArrayList<String> GetAllTitleById(int activityId)
+    //获取某次活动的所有成员上传文件路径
+    public ArrayList<String> GetAllUploadFilePathById(int membersId)
     {
     	ArrayList<String> al = new ArrayList<String>();
     	try
     	{
-    		String strsql = "select T1.FilePath from activitycontent as T1 inner join activity as T2 on "
-    					  + "T1.MembersId=T2.MembersId where T2.Id="+activityId;
+    		String strsql = "select FilePath from activitycontent where MembersId="+membersId;
     		psmt = ct.prepareStatement(strsql);
     		ResultSet rs = psmt.executeQuery();
     		while(rs.next())
@@ -472,6 +471,27 @@ public class DBConnect {
         		{
         			ret = result.getInt("Id");
         		}
+        	}
+    	}
+    	catch(Exception ex)
+    	{
+    	    ex.printStackTrace();
+    	}
+    	return ret;
+    }
+    
+    //通过房间号获取会议室表的Id
+    public int GetMeetingRoomIdByName(String roomName)
+    {
+    	int ret=0;   
+    	try{
+        	String strsql = "select Id from meetingroom where RoomName='"+roomName+"'";
+        	strsql = new String(strsql.getBytes("iso-8859-1"),"utf-8");
+        	psmt = ct.prepareStatement(strsql);
+        	ResultSet rs = psmt.executeQuery();
+        	while(rs.next())
+        	{
+        	    ret = rs.getInt(1);
         	}
     	}
     	catch(Exception ex)

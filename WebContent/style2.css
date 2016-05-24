@@ -7,6 +7,7 @@ body{
 	height: 80px;
     /*background-color: blue;*/
     margin:auto;
+    text-align: center;
 }
 
 #wrapper{
@@ -29,6 +30,20 @@ body{
     margin: auto;
 }
 
+#title{
+    text-align: center;
+	color: orange;
+	font-size: 30px;
+	font-weight: bold;
+}
+
+#loginUser{
+	float:left;
+	font-weight:bold;
+	font-style:normal;
+	color:red;
+	padding-top:20px;
+}
 .main{
     width: 80%;
     height: 100%;
@@ -100,12 +115,6 @@ body{
     height: 30px;
     float: right;
     margin-right: 216px;
-    margin-bottom: 3px;
     border-radius: 5px;
 }
-#head label{
-	float:left;
-	font-weight:bold;
-	font-style:normal;
-	color:red;
-}
+

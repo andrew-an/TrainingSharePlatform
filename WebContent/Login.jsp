@@ -15,7 +15,7 @@
 		window.onload = refresh;*/
 		function ChangePassword(src)
 		{
-			var openee = window.open (src+"?username=andrew","newwindow", 'height='+250+',,innerHeight='+250
+			var openee = window.open (src,"newwindow", 'height='+250+',,innerHeight='+250
 						+',width='+400+',innerWidth='+400+',top='+window.screen.height/2.5+',left='
 						+window.screen.width/2.5+',toolbar=no,menubar=no,scrollbars=auto,resizeable=no,location=no,status=no');   
 		}   
@@ -44,18 +44,22 @@
 					if(ck.getName().equals("username"))
 					{
 						userName = ck.getValue();
-						if(!password.equals(""))
-							break;
+						//if(!password.equals(""))
+						//	break;
 					}
 					else if(ck.getName().equals("password"))
 					{
 						password = ck.getValue();
-						if(!userName.equals(""))
-							break;
+						//if(!userName.equals(""))
+						//	break;
+					}
+					else if(ck.getName().equals("autologin"))
+					{
+						autoLogin = ck.getValue();
+						System.out.println("自动登录标志："+autoLogin);
 					}
 				}
 			}
-			autoLogin = (String)session.getAttribute("autologin");
 		}
 		if(null!=reloadflag && reloadflag.equals("true"))
 		{
@@ -90,14 +94,15 @@
 							密&nbsp码：<input type="password" style="margin-bottom:10px" id="password" name="password" value=<%=password %>><br>
 							<label style="display:inline-block;color:red;margin-bottom:5px;padding:0px"><%=error %></label><br>
 							<input type="checkbox" value="on" id= "checkbox_keeppwd" name="checkbox_keeppwd" <%=userName!=""?"checked":"" %>>记住密码
-							<input type="checkbox" value="on" id="checkbox_autologin" name="checkbox_autologin" <%=autoLogin=="true"?"checked":"" %>>两周内自动登录<br><br>
+							<input type="checkbox" value="on" id="checkbox_autologin" name="checkbox_autologin" <%=autoLogin.equals("true")?"checked":"" %>>两周内自动登录<br><br>
 							<input type="submit" value="登   录" style="width:80px;height:30px;font-size: 15;margin-right:30px" >
-							<input type="button" value="修改密码" style="width:80px;height:30px;font-size: 15" onclick="ChangePassword('ChangePassword.jsp','修改密码','400','200')">	    	
+							<input type="button" value="修改密码" style="width:80px;height:30px;font-size: 15" onclick="ChangePassword('ChangePassword.jsp')">	    	
 					    </form>
 					    <script type="text/javascript">
 					    	var uname = document.getElementById("username");
 					    	var pwd = document.getElementById("password");
-					    	if(document.getElementById("checkbox_autologin").checked == true)
+					    	var autologin = document.getElementById("checkbox_autologin");
+					    	if(null != autologin && autologin.checked == true)
 					    	{
 					    		if(null!=uname&&uname!="" && null!=pwd&&pwd!="")
 					    			document.forms[0].submit();

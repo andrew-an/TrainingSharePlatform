@@ -7,16 +7,16 @@
 <link rel="stylesheet" type="text/css" href="style4.css">
 <title>活动内容</title>
 	<% 
-		String uname = (String)request.getAttribute("username");
+		String title = (String)request.getAttribute("titlename");
+		String uname = (String)session.getAttribute("username");
 	    if(null == uname || uname.equals(""))
-	    {	
+	    {
 	    	response.sendRedirect("Login.jsp");
-	    	
 	    }
 	%>
     <script type="text/javascript" language="javascript" charset="utf-8">
      
-      function UpdateActivityContent(obj,str1,str2,activityId,loginUser)
+      function UpdateActivityContent(obj,str1,str2,membersId,loginUser)
       {
 	      	//先插入数据库，再更新显示
 	      var xmlhttp;
@@ -36,14 +36,14 @@
 				  obj.innerHTML = str2;//数据库更新完成，则显示更改后的值
 			  }
 		  }
-		  xmlhttp.open("POST","ActivityContentClServlet?activityId="+activityId
+		  xmlhttp.open("POST","ActivityContentClServlet?membersId="+membersId
 				  +"&loginUser="+loginUser
 				  +"&activityContentBefore="+str1
 				  +"&activityContent="+str2
 				  ,true);
 		  xmlhttp.send();
       }
-	function editRowCell(obj,activityId,loginUser) 
+	function editRowCell(obj,membersId,loginUser) 
 	{
 	    var tag = obj.firstChild.tagName;
 		if (typeof(tag) != "undefined" && (tag == "INPUT" || tag == "TEXTAREA"))
@@ -71,7 +71,7 @@
 			      else if(val != txtvalue)
 			      {
 			    	  //先插入数据库，再更新到界面上
-			    	  UpdateActivityContent(obj,val,txtvalue,activityId,loginUser);
+			    	  UpdateActivityContent(obj,val,txtvalue,membersId,loginUser);
 			      }
 			      else
 			      {
@@ -101,7 +101,7 @@
 			    }
 				else if(content != htmlvalue)
 				{
-					UpdateActivityContent(obj,content,htmlvalue,activityId,loginUser);
+					UpdateActivityContent(obj,content,htmlvalue,membersId,loginUser);
 				}
 				else
 				{
@@ -111,7 +111,7 @@
 	    }
 	}
 	
-	function uploadAndSubmit(activityId,loginUser)
+	function uploadAndSubmit(membersId,loginUser)
 	{
 		//取得当前用户名称
 		var user = document.getElementById("loginUser").innerHTML;				
@@ -157,7 +157,7 @@
 		var titlename = document.getElementById("titlename"+user).innerHTML;
 		titlename = encodeURI(encodeURI(titlename));
 		
-		xhr.open('POST', "ActivityContentClServlet?activityId="+activityId
+		xhr.open('POST', "ActivityContentClServlet?membersId="+membersId
 				  +"&loginUser="+loginUser
 				  +"&fileName=" + filename
 				  +"&activityContent="+titlename);
@@ -203,19 +203,23 @@
 	    else   
 	      window.frames["hrong"].document.execCommand('SaveAs');  
 	}*/
-	
+	function AddNewContent(src)
+	{
+		var openee = window.open (src,"newwindow", 'height='+400+',,innerHeight='+400
+				+',width='+550+',innerWidth='+550+',top='+window.screen.height/5+',left='
+				+window.screen.width/3+',toolbar=no,menubar=no,scrollbars=auto,resizeable=no,location=no,status=no'); 
+	}
 </script>
 </head>
 <body>
 	<div style="float:right;margin-right:10px;">
-		<a href="Main.jsp" style="font-size:14px;z-index:1;text-decoration:none">返回</a>
+		<a href="javascript:history.go(-1);" style="font-size:14px;z-index:1;text-decoration:none" >返回</a>
 		<a href="Login.jsp?relogin=true" style="font-size:14px;text-decoration:none">退出登录</a>
 	</div>
 
 	<div id="head">
-    	<label id="activitytitle">活动参与详情</label><br>
+    	<label id="activitytitle"><%=title%></label><br>
     	<label id="loginUser">登录用户:<%=uname%></label>
-    	<!-- <button name="addMyTitle" onclick="AddMyTitle()">add my title</button> -->
     </div>
     <div id="wrapper">
 		<table class="imagetable" id="mytitle">
@@ -225,51 +229,57 @@
 				<th style="width: 20%;font-size:20px">资 料 上 传</th>
 			</tr>
 			<% 
-			    String activityId = (String)request.getAttribute("activityId");
+			    String MembersId = (String)request.getAttribute("membersId");
 			    ArrayList<ArrayList<String>> al = (ArrayList<ArrayList<String>>)(request.getAttribute("activityContentList"));
-			    Iterator<ArrayList<String>> it = al.iterator();
-			    while(it.hasNext())
+			    System.out.print("活动Id号："+MembersId);
+			    System.out.print("总的活动数量是："+al.size());
+			    if(null!=al && al.size()>0)
 			    {
-			    	ArrayList<String> activityContentList = new ArrayList<String>();
-			    	activityContentList = (ArrayList<String>)it.next();
-			    	String memberName = activityContentList.get(0);
-			    	String titleName = activityContentList.get(1);
-			    	String filePath = activityContentList.get(2);
-			    	String uploadFlag = activityContentList.get(3);
-			%>
-					<form name="upForm<%=memberName.equals(uname)?uname:"" %>" method="post" enctype="multipart/form-data">    	
-					    <tr>
-							<td id="membername"><%=memberName%></td>
-							<td id="titlename<%=memberName.equals(uname)?uname:"" %>"
-								style="font-size:20px;color:<%=memberName.equals(uname)?"red":"black" %>" 
-								ondblclick="editRowCell(this,'<%=activityId %>','<%=uname %>')"; >
-								<%= titleName %>
-							</td>
+				    Iterator<ArrayList<String>> it = al.iterator();
+				    while(it.hasNext())
+				    {
+				    	ArrayList<String> activityContentList = new ArrayList<String>();
+				    	activityContentList = (ArrayList<String>)it.next();
+				    	String memberName = activityContentList.get(0);
+				    	String titleName = activityContentList.get(1);
+				    	String filePath = activityContentList.get(2);
+				    	String uploadFlag = activityContentList.get(3);
+				%>
+						<form name="upForm<%=memberName.equals(uname)?uname:"" %>" method="post" enctype="multipart/form-data">    	
+						    <tr>
+								<td id="membername"><%=memberName%></td>
+								<td id="titlename<%=memberName.equals(uname)?uname:"" %>"
+									style="font-size:20px;color:<%=memberName.equals(uname)?"red":"black" %>" 
+									ondblclick="editRowCell(this,'<%=MembersId %>','<%=uname %>')"; >
+									<%= titleName %>
+								</td>
+					<%
+								String name = "未上传";
+								//String imagename = "";
+								String buttonName = "点击上传";
+						        if(uploadFlag.equals("1"))
+						        {
+						        	name = filePath.substring(filePath.lastIndexOf("\\")+1,filePath.length());
+						        	//imagename = "images/file_complete.png";
+						        	buttonName = "点击更新";
+						        }
+					%>			
+								<td>
+									<label id="uploadfilename<%=memberName.equals(uname)?uname:"" %>"><%=name %></label><br>
+									<a style="display:<%=memberName.equals(uname)?"inline-block":"none" %>" class="a-upload">
+										<input type="file" name="upFile" onchange="uploadAndSubmit('<%=MembersId %>','<%=uname %>');"><%=buttonName %>
+									</a>
+								</td>
+							</tr> 
+						</form>
 				<%
-							String name = "未上传";
-							//String imagename = "";
-							String buttonName = "点击上传";
-					        if(uploadFlag.equals("1"))
-					        {
-					        	name = filePath.substring(filePath.lastIndexOf("\\")+1,filePath.length());
-					        	//imagename = "images/file_complete.png";
-					        	buttonName = "点击更新";
-					        }
-				%>			
-							<td>
-								<label id="uploadfilename<%=memberName.equals(uname)?uname:"" %>"><%=name %></label><br>
-								<a style="display:<%=memberName.equals(uname)?"inline-block":"none" %>" class="a-upload">
-									<input type="file" name="upFile" onchange="uploadAndSubmit('<%=activityId %>','<%=uname %>');"><%=buttonName %>
-								</a>
-							</td>
-						</tr> 
-					</form>
-			<%
-			    }			
+				    }
+			    }
 			%>
 		</table>
 		<br>
-		<form action="zipdownloadservlet?activityId=<%=activityId%>" method="post">
+		<a href="" onclick="AddNewContent('MyNewTitle.jsp?membersId=<%=MembersId%>')"><img alt="" src="images/addnewcontent.png" style="float:left;margin-left:42%;margin-top:10px"></a>
+		<form action="zipdownloadservlet?membersId=<%=MembersId%>" method="post">
 			<button id="LoadAllPackage">下载全部附件 </button>
 		</form>
     </div>

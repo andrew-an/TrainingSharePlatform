@@ -49,8 +49,7 @@
     <servlet-name>zipDownloadServlet</servlet-name>
     <url-pattern>/zipdownloadservlet</url-pattern>
   </servlet-mapping>
-  
-    <servlet>
+  <servlet>
     <servlet-name>ChangePasswordServlet</servlet-name>
     <servlet-class>com.trainingshare.servlet.ChangePasswordServlet</servlet-class>
   </servlet>
@@ -58,5 +57,12 @@
     <servlet-name>ChangePasswordServlet</servlet-name>
     <url-pattern>/changepasswordservlet</url-pattern>
   </servlet-mapping>
-  
+  <servlet>
+    <servlet-name>NewMyTitleServlet</servlet-name>
+    <servlet-class>com.trainingshare.servlet.NewMyTitleServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>NewMyTitleServlet</servlet-name>
+    <url-pattern>/newmytitleservlet</url-pattern>
+  </servlet-mapping>
 </web-app>
