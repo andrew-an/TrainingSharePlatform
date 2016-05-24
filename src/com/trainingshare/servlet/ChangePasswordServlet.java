@@ -45,7 +45,6 @@ public class ChangePasswordServlet extends HttpServlet {
 		
 		if(null!=username && !username.equals("") && null!=password_old && !password_old.equals(""))
 		{
-			System.out.println("第一次跳转成功");
 			//判断用户更改密码时输入的原密码是否正确
 			if(dbc.checkUser(username, password_old) != null)
 			{

@@ -8,7 +8,6 @@
 <title>活动内容</title>
 	<% 
 		String uname = (String)request.getAttribute("username");
-		System.out.println("uname的值为："+uname);
 	    if(null == uname || uname.equals(""))
 	    {	
 	    	response.sendRedirect("Login.jsp");
@@ -227,7 +226,6 @@
 			</tr>
 			<% 
 			    String activityId = (String)request.getAttribute("activityId");
-			    String loginUser = (String)session.getAttribute("userName");
 			    ArrayList<ArrayList<String>> al = (ArrayList<ArrayList<String>>)(request.getAttribute("activityContentList"));
 			    Iterator<ArrayList<String>> it = al.iterator();
 			    while(it.hasNext())
@@ -236,17 +234,15 @@
 			    	activityContentList = (ArrayList<String>)it.next();
 			    	String memberName = activityContentList.get(0);
 			    	String titleName = activityContentList.get(1);
-			    	//titleName = titleName.trim().equals("")?"双击输入或编辑标题":titleName;
-			    	//System.out.println(titleName);
 			    	String filePath = activityContentList.get(2);
 			    	String uploadFlag = activityContentList.get(3);
 			%>
-					<form name="upForm<%=memberName.equals(loginUser)?loginUser:"" %>" method="post" enctype="multipart/form-data">    	
+					<form name="upForm<%=memberName.equals(uname)?uname:"" %>" method="post" enctype="multipart/form-data">    	
 					    <tr>
 							<td id="membername"><%=memberName%></td>
-							<td id="titlename<%=memberName.equals(loginUser)?loginUser:"" %>"
-								style="font-size:20px;color:<%=memberName.equals(loginUser)?"red":"black" %>" 
-								ondblclick="editRowCell(this,'<%=activityId %>','<%=loginUser %>')"; >
+							<td id="titlename<%=memberName.equals(uname)?uname:"" %>"
+								style="font-size:20px;color:<%=memberName.equals(uname)?"red":"black" %>" 
+								ondblclick="editRowCell(this,'<%=activityId %>','<%=uname %>')"; >
 								<%= titleName %>
 							</td>
 				<%
@@ -261,9 +257,9 @@
 					        }
 				%>			
 							<td>
-								<label id="uploadfilename<%=memberName.equals(loginUser)?loginUser:"" %>"><%=name %></label><br>
-								<a style="display:<%=memberName.equals(loginUser)?"inline-block":"none" %>" class="a-upload">
-									<input type="file" name="upFile" onchange="uploadAndSubmit('<%=activityId %>','<%=loginUser %>');"><%=buttonName %>
+								<label id="uploadfilename<%=memberName.equals(uname)?uname:"" %>"><%=name %></label><br>
+								<a style="display:<%=memberName.equals(uname)?"inline-block":"none" %>" class="a-upload">
+									<input type="file" name="upFile" onchange="uploadAndSubmit('<%=activityId %>','<%=uname %>');"><%=buttonName %>
 								</a>
 							</td>
 						</tr> 

@@ -12,7 +12,6 @@
 	    	response.sendRedirect("Login.jsp");
 	    }
 	    String adminFlag = (String)request.getAttribute("administratorFlag");
-	    System.out.println(adminFlag);
 	%>
 </head>
 <body>

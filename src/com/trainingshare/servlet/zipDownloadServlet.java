@@ -46,10 +46,8 @@ public class zipDownloadServlet extends HttpServlet {
 	{
 		// TODO Auto-generated method stub
 		String activityId = request.getParameter("activityId");
-		//System.out.println(activityId);
 		response.setContentType("APPLICATION/OCTET-STREAM");  
-		response.setHeader("Content-Disposition","attachment; filename="+this.getZipFilename());  
-		//System.out.println("in BatchDownload................");
+		response.setHeader("Content-Disposition","attachment; filename="+this.getZipFilename());
 		ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());
 		DBConnect dbc = new DBConnect();
 		ArrayList<String> al = dbc.GetAllTitleById(Integer.parseInt(activityId));

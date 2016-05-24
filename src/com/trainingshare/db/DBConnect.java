@@ -93,7 +93,6 @@ public class DBConnect {
         		int result = psmt.executeUpdate();
         		if(result > 0)
         		{
-        			//System.out.println("密码更改成功");
         			ret = true;
         		}    			
     		}
@@ -200,13 +199,11 @@ public class DBConnect {
     {
     	int id = 0;
     	try{
-    		//System.out.println(strMeetingRoom);
     		psmt = ct.prepareStatement("select id from meetingroom where roomName='"+strMeetingRoom+"'");
     		
     		ResultSet rs = psmt.executeQuery();
     		if(rs.next())
     		{
-    			//System.out.println(rs.getString(1));
     			id = Integer.parseInt(rs.getString(1));
     		}
     	}

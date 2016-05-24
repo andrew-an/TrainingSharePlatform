@@ -44,7 +44,6 @@ public class ActivityContentClServlet extends HttpServlet {
 		
 		String activityId = request.getParameter("activityId");
 		String memberName = request.getParameter("loginUser");
-		//System.out.println(activityId+","+memberName);
 		String activityContentBefore = request.getParameter("activityContentBefore");
 		String activityContent = request.getParameter("activityContent");
 		
