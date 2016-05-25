@@ -43,10 +43,10 @@ public class NewMyTitleServlet extends HttpServlet {
 		DBConnect dbc = new DBConnect();
 		String username = (String)request.getSession().getAttribute("username");
 		String title = request.getParameter("mytitle");
+		String titleoriginal = request.getParameter("titleoriginal");//修改前的标题名称，根据此字段判断是插入操作还是更新操作
 		String time = request.getParameter("time");
 		String location = request.getParameter("roomnumber");
-		System.out.println(title+time+location);
-		if(null!=title && !title.equals("")
+		if(null!=title && !title.equals("") && null!=titleoriginal
 		   && null != time && !time.equals("")
 		   && null != location && !location.equals(""))
 		{
@@ -60,16 +60,31 @@ public class NewMyTitleServlet extends HttpServlet {
 			acb.setFilePath("");
 			acb.setUploadFlag("0");
 			acb.setRemark("");
-			if(dbc.AddNewAcivityContent(acb) == true)
+			//如果原标题为空，则说明此时正在新建标题业务，应该执行插入操作
+			if(titleoriginal.equals(""))
 			{
-				//request.setAttribute("membersId", Integer.toString(membersId));
-				//request.setAttribute("activityContentList", dbc.GetActivityContentByMembersId(membersId));
-				//request.getRequestDispatcher("ActivityContent.jsp").forward(request,response);
-				response.getWriter().write("success");
+				if(dbc.AddNewAcivityContent(acb) == true)
+				{
+					//request.setAttribute("membersId", Integer.toString(membersId));
+					//request.setAttribute("activityContentList", dbc.GetActivityContentByMembersId(membersId));
+					//request.getRequestDispatcher("ActivityContent.jsp").forward(request,response);
+					response.getWriter().write("save_success");
+				}
+				else
+				{
+					response.getWriter().write("save_failed");
+				}
 			}
-			else
+			else//否则执行更新操作
 			{
-				response.getWriter().write("failed");
+				if(dbc.UpdateActivityContentByTitle(titleoriginal, acb))
+				{
+					response.getWriter().write("edit_success");
+				}
+				else
+				{
+					response.getWriter().write("edit_failed");
+				}
 			}
 		}
 		else

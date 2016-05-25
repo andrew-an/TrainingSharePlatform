@@ -44,66 +44,42 @@ public class NewActivityCl extends HttpServlet {
 		
 		response.setContentType("text/html;charset=utf-8");
 		response.setCharacterEncoding("utf-8"); 
-		
+		String title = request.getParameter("title");
 		String activityTitle = request.getParameter("activitytitle");
 		String activityDetails = request.getParameter("activitydetails");
 		String activityStartTime = request.getParameter("starttime");
 		String activityEndTime = request.getParameter("endtime");
 		String[] memberName = request.getParameterValues("item");
-		
-		if(null!=activityTitle && !activityTitle.equals("")
-			&& null != activityDetails && !activityDetails.equals("")
-			&& null != activityStartTime && !activityStartTime.equals("")
-			&& null != activityEndTime && !activityEndTime.equals("")
-			&& null != memberName && memberName.length>0)
+		//通过传递的参数判断此次是表单提交还是ajax交互，如果“活动内容不为空”则说明是表单提交
+		if(null != activityTitle && !activityTitle.equals(""))
 		{
-			//在成员表中添加一条新记录，并得到该记录的Id号
-			int membersId = AddNewMembersTable(memberName);
-			if(membersId>0)
+			//插入表前，先检查数据库是否存在相同记录，禁止用户F5刷新页面，导致重复提交表单
+			if(!new DBConnect().CheckActivityExistorNot(activityTitle))
 			{
-				DBConnect dbc = new DBConnect();
-				ActivityBean ab = new ActivityBean();
-				ab.setTitle(activityTitle);
-				ab.setDetails(activityDetails);
-				ab.setMembersId(membersId);
-				ab.setStartTime(activityStartTime);
-				ab.setEndTime(activityEndTime);
-				ab.setRemak("");
-				//在活动内容表中添加一条新记录，并得到该记录的Id号
-				int activityId = dbc.AddNewAcivity(ab);
-				if(0 != activityId)
+				//在成员表中添加一条新记录，并得到该记录的Id号
+				int membersId = AddNewMembersTable(memberName);
+				if(membersId>0)
 				{
-					ArrayList<String> alMembersList = dbc.GetAllMembersById(membersId);
-					if(null != alMembersList && alMembersList.size()>0)
+					DBConnect dbc = new DBConnect();
+					ActivityBean ab = new ActivityBean();
+					ab.setTitle(activityTitle);
+					ab.setDetails(activityDetails);
+					ab.setMembersId(membersId);
+					ab.setStartTime(activityStartTime);
+					ab.setEndTime(activityEndTime);
+					ab.setRemak("");
+					//在活动内容表中添加一条新记录，并得到该记录的Id号
+					int activityId = dbc.AddNewAcivity(ab);
+					if(0 != activityId)
 					{
-						/*int i=0;
-						for(; i<alMembersList.size(); i++)
+						ArrayList<String> alMembersList = dbc.GetAllMembersById(membersId);
+						if(null != alMembersList && alMembersList.size()>0)
 						{
-							ActivityContentBean acb = new ActivityContentBean();
-							acb.setMembersId(membersId);
-							acb.setMemberId(Integer.parseInt(alMembersList.get(i)));
-							acb.setTitle(new String("双击编辑我的标题".getBytes("utf-8"),"ISO-8859-1"));
-							acb.setFilePath("");
-							acb.setUploadFlag("0");
-							acb.setRemark("");
-							//在活动内容详情表中列出所有参加该活动的成员的默认信息
-							if(dbc.AddNewAcivityContent(acb) == true)
-								continue;
-							else
-								break;//此处应该返回存储数据库失败的提示信息
-						}
-						if(i == alMembersList.size())
-						{
-							//获取所有互动列表
 							request.setAttribute("activityTitleList", dbc.GetActivityTitle());
-							//System.out.println(dbc.GetActivityTitle().size());
-							//response.sendRedirect("Main.jsp");
 							request.getRequestDispatcher("Main.jsp").forward(request,response);
 						}
 						else
-							response.sendRedirect("NewActivity.jsp");*/
-						request.setAttribute("activityTitleList", dbc.GetActivityTitle());
-						request.getRequestDispatcher("Main.jsp").forward(request,response);
+							response.sendRedirect("NewActivity.jsp");
 					}
 					else
 						response.sendRedirect("NewActivity.jsp");
@@ -112,11 +88,23 @@ public class NewActivityCl extends HttpServlet {
 					response.sendRedirect("NewActivity.jsp");
 			}
 			else
-				response.sendRedirect("NewActivity.jsp");
+			{
+				request.setAttribute("activityTitleList", new DBConnect().GetActivityTitle());
+				request.getRequestDispatcher("Main.jsp").forward(request,response);
+			}
 		}
-		else
-			response.sendRedirect("NewActivity.jsp");
-		
+		else//否则是ajax交互，判断标题的合法性（是否在数据库存在相同记录）
+		{
+			//不存在记录
+			if(!new DBConnect().CheckActivityExistorNot(title))
+			{
+				response.getWriter().write("success");
+			}
+			else//存在相同记录
+			{
+				response.getWriter().write("failed");
+			}
+		}
 	}
 	
 	//在members表中添加新记录(该次活动的Id号，和参加活动的人员Id列表),返回新添加的记录的Id号

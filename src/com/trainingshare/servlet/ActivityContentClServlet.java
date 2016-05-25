@@ -47,7 +47,7 @@ public class ActivityContentClServlet extends HttpServlet {
 		String activityContentBefore = request.getParameter("activityContentBefore");
 		String activityContent = request.getParameter("activityContent");
 		
-		if(null!=membersId && null!= memberName && null != activityContentBefore && null != activityContent)
+		/*if(null!=membersId && null!= memberName && null != activityContentBefore && null != activityContent)
 		{
 			DBConnect dbc = new DBConnect();
 			Boolean ret=false;
@@ -60,7 +60,7 @@ public class ActivityContentClServlet extends HttpServlet {
 			{
 				response.getWriter().print(activityContentBefore);
 			}
-		}
+		}*/
 		
 		String fileName = (String)request.getParameter("fileName");
 		if(null!=membersId && null!= memberName && null != fileName && null != activityContent)

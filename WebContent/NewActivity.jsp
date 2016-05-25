@@ -10,6 +10,13 @@
 
 <title>创建新活动</title>
 <script type="text/javascript">
+	function ForbidFreshPage() {
+	    if ((window.event.ctrlKey && window.event.keyCode == 116) || window.event.keyCode == 116) {
+	       window.event.keyCode = 0;
+	       window.event.returnValue = false;
+	   } 
+	}
+	document.onkeydown = ForbidFreshPage;
     function window_load()
     {
     	var myDate = new Date();
@@ -61,10 +68,83 @@
 			}	
 		}
     }
+    function Save()
+    {
+    	var title = document.getElementById("activitytitle");
+    	var details = document.getElementById("activitydetails");
+    	var startTime = document.getElementById("datepicker1");
+    	var endTime = document.getElementById("datepicker2");
+    	var div = document.getElementById("activity_members");
+	    var oInput = div.getElementsByTagName("input");
+    	var i;
+    	for(i = 1; i < oInput.length; i++)
+   		{
+   			if(oInput[i].checked)
+   			{
+   				break;
+   			}
+   		}
+    	
+    	if(title.value == "")
+    		alert("标题不能为空！");
+    	else if(details.value == "")
+    		alert("内容不能为空！");
+    	else if(startTime.value == "")
+    		alert("开始时间不能为空！");
+    	else if(endTime.value == "")
+    		alert("结束时间不能为空！");
+    	else if(startTime.value > endTime.value)
+    		alert("开始时间必须在结束时间之前！");
+    	else if(i>=oInput.length)
+    	{
+    		alert("至少选择一名参与人员！");
+    	}
+    	else
+    	{
+    		Validate();
+    	}
+    }
+    
+    //验证待提交信息的合法性（是否在数据库有相同记录）
+    function Validate()
+    {
+    	var xhr;
+		if(window.XMLHttpRequest)
+		{
+			xhr = new XMLHttpRequest();
+		}
+		else if(window.ActiveXObject)
+		{
+			xhr = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		
+		var title = document.getElementById("activitytitle").value;
+		titlename = encodeURI(encodeURI(title));
+		xhr.onreadystatechange = function()
+		{
+			if(xhr.readyState==4)
+			{
+				if(xhr.status == 200)
+				{
+					if(xhr.responseText == "success")
+					{
+						//提交表单
+			    		document.form.submit();
+					}
+					else
+					{
+						alert("不能建立重复的主题！");
+					}
+				}
+			}
+		}
+		xhr.open('POST', "newactivitycl?title="+title);
+		xhr.send();
+    }
 </script>
 </head>
-<body">
-    <form action="newactivitycl" method="post">
+<body onload="window_load()">
+    <form name="form" action="newactivitycl" method="post">
 	    <div style="float:right;margin-right:10px;">
 			<a href="Login.jsp?relogin=true" style="font-size:14px;text-decoration:none">退出登录</a>
 		</div>
@@ -74,11 +154,11 @@
 	    <div id="wrapper">
 	    	<div class="activity_title">
 	    		<label style="margin-left: 15px;margin-top:5px;color: black;font-size: 25px">标题</label><br>
-	    		<textarea name="activitytitle" style="width:95%;height:40%;bottom:5px; margin-left:15px;margin-top:5px;font-size:20px"></textarea>
+	    		<textarea id="activitytitle" name="activitytitle" style="width:95%;height:40%;bottom:5px; margin-left:15px;margin-top:5px;font-size:20px"></textarea>
 	    	</div>
 	    	<div class="activity_content">
 	    		 <label style="margin-left: 15px;margin-top:5px;color: black;font-size: 25px">内容</label><br>
-	    		<textarea name="activitydetails" style="width: 95%;height: 75%;bottom: 5px; margin-left:15px;margin-top: 5px;font-size: 20px"></textarea>
+	    		<textarea id="activitydetails" name="activitydetails" style="width: 95%;height: 75%;bottom: 5px; margin-left:15px;margin-top: 5px;font-size: 20px"></textarea>
 	    	</div>
 	    	<div class="activity_time">
 	    		<label style="margin-left: 15px;margin-top:5px;color: black;font-size: 25px">时间</label>
@@ -95,7 +175,7 @@
 	    	    <br><br>
 	    	</div>
 	    	<div class="activity_button">
-	    		<button type="submit"  class="button" style="margin-right: 30px" >保存</button>
+	    		<button type="button"  class="button" style="margin-right: 30px" onclick="Save();">保存</button>
 	    		<button type="button" class="button" onclick="javascript:history.go(-1);">取消</button>
 	    	</div>
 	

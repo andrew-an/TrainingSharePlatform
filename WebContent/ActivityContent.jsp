@@ -43,6 +43,7 @@
 				  ,true);
 		  xmlhttp.send();
       }
+      
 	function editRowCell(obj,membersId,loginUser) 
 	{
 	    var tag = obj.firstChild.tagName;
@@ -209,6 +210,12 @@
 				+',width='+550+',innerWidth='+550+',top='+window.screen.height/5+',left='
 				+window.screen.width/3+',toolbar=no,menubar=no,scrollbars=auto,resizeable=no,location=no,status=no'); 
 	}
+	function EditNewContent(src)
+	{
+		var openee = window.open (src,"newwindow", 'height='+400+',,innerHeight='+400
+				+',width='+550+',innerWidth='+550+',top='+window.screen.height/5+',left='
+				+window.screen.width/3+',toolbar=no,menubar=no,scrollbars=auto,resizeable=no,location=no,status=no'); 
+	}
 </script>
 </head>
 <body>
@@ -231,8 +238,8 @@
 			<% 
 			    String MembersId = (String)request.getAttribute("membersId");
 			    ArrayList<ArrayList<String>> al = (ArrayList<ArrayList<String>>)(request.getAttribute("activityContentList"));
-			    System.out.print("活动Id号："+MembersId);
-			    System.out.print("总的活动数量是："+al.size());
+			    //System.out.print("活动Id号："+MembersId);
+			    //System.out.print("总的活动数量是："+al.size());
 			    if(null!=al && al.size()>0)
 			    {
 				    Iterator<ArrayList<String>> it = al.iterator();
@@ -242,20 +249,22 @@
 				    	activityContentList = (ArrayList<String>)it.next();
 				    	String memberName = activityContentList.get(0);
 				    	String titleName = activityContentList.get(1);
-				    	String filePath = activityContentList.get(2);
-				    	String uploadFlag = activityContentList.get(3);
+				    	String meetingRoom = activityContentList.get(2);
+				    	String startTime = activityContentList.get(3).substring(0,16);
+				    	String filePath = activityContentList.get(4);
+				    	String uploadFlag = activityContentList.get(5);
 				%>
 						<form name="upForm<%=memberName.equals(uname)?uname:"" %>" method="post" enctype="multipart/form-data">    	
 						    <tr>
 								<td id="membername"><%=memberName%></td>
 								<td id="titlename<%=memberName.equals(uname)?uname:"" %>"
-									style="font-size:20px;color:<%=memberName.equals(uname)?"red":"black" %>" 
-									ondblclick="editRowCell(this,'<%=MembersId %>','<%=uname %>')"; >
-									<%= titleName %>
+									ondblclick="EditNewContent('MyNewTitle.jsp?membersId=<%=MembersId%>&title=<%=titleName %>&meetingroom=<%=meetingRoom %>&starttime=<%=startTime %>')"; >
+									<label id="title" style="font-size:20px;font-weight:600;color:<%=memberName.equals(uname)?"red":"blue" %>"> <%= titleName %> </label><br>
+									<label id="location" style="display:inline-block;margin-top:8px;font-size:14px;color:black;font-style:italic">会议室: <%=meetingRoom %></label>
+									<label id="starttime" style="display:inline-block;margin-top:8px;font-size:14px;color:black;font-style:italic">开始时间: <%=startTime %></label>
 								</td>
 					<%
 								String name = "未上传";
-								//String imagename = "";
 								String buttonName = "点击上传";
 						        if(uploadFlag.equals("1"))
 						        {
@@ -278,8 +287,8 @@
 			%>
 		</table>
 		<br>
-		<a href="" onclick="AddNewContent('MyNewTitle.jsp?membersId=<%=MembersId%>')"><img alt="" src="images/addnewcontent.png" style="float:left;margin-left:42%;margin-top:10px"></a>
-		<form action="zipdownloadservlet?membersId=<%=MembersId%>" method="post">
+		<a href="" style="display:inline-block;margin-left:42%;margin-top:10px" onclick="AddNewContent('MyNewTitle.jsp?membersId=<%=MembersId%>')"><img alt="" src="images/addnewcontent.png" style=""></a>
+		<form style="float:right;margin-top:30px"  action="zipdownloadservlet?membersId=<%=MembersId%>" method="post">
 			<button id="LoadAllPackage">下载全部附件 </button>
 		</form>
     </div>

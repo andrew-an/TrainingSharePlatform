@@ -170,7 +170,27 @@ public class DBConnect {
     	}
     	return ret;
     }
-    
+    //判断是否存在相同标题的项
+    public Boolean CheckActivityExistorNot(String title)
+    {
+    	Boolean ret=true;
+    	try{
+        	String strsql = "SELECT COUNT(*) FROM activity WHERE Title='"+title+"'";
+        	strsql = new String(strsql.getBytes("iso-8859-1"),"utf-8");
+        	psmt = ct.prepareStatement(strsql);
+        	ResultSet rs = psmt.executeQuery();
+        	if(rs.next())
+        	{
+        		if(rs.getInt(1) == 0)//不存在记录
+        			ret = false;
+        	}
+    	}
+    	catch(Exception ex)
+    	{
+    		ex.printStackTrace();
+    	}
+    	return ret;
+    }
     //添加一个新的活动内容详情
     public Boolean AddNewAcivityContent(ActivityContentBean acb)
     {
@@ -306,7 +326,7 @@ public class DBConnect {
     	ArrayList<ArrayList<String>> contentList = new ArrayList<ArrayList<String>>();
     	try
     	{
-    		String strsql = "select MemberId,Title,FilePath,UploadFlag from activitycontent where MembersId="+membersId + " order by RecordTime desc";
+    		String strsql = "select MemberId,Title,MeetingRoomId,StartTime,FilePath,UploadFlag from activitycontent where MembersId="+membersId + " order by RecordTime desc";
     		
     		psmt = ct.prepareStatement(strsql);
     		ResultSet rs = psmt.executeQuery();
@@ -316,8 +336,10 @@ public class DBConnect {
     			String memberName = GetMemberName(rs.getInt(1));
     			al.add(memberName);//成员名
     			al.add(rs.getString(2));//主题名称
-    			al.add(rs.getString(3));//上传文件路径
-    			al.add(rs.getString(4));//是否上传标志
+    			al.add(GetMeetingRoomNameById(rs.getInt(3)));//活动地点
+    			al.add(rs.getString(4));//开始时间
+    			al.add(rs.getString(5));//上传文件路径
+    			al.add(rs.getString(6));//是否上传标志
     			contentList.add(al);
     		}
     	}
@@ -349,7 +371,7 @@ public class DBConnect {
     }
     
     //更新某成员的活动主题
-    public Boolean UpdateActivityContent(String membersId, String memberName,String activityContentBefore, String activityContent)
+    /*public Boolean UpdateActivityContent(String membersId, String memberName,String activityContentBefore, String activityContent)
     {
     	Boolean ret=false;
     	try{
@@ -358,6 +380,32 @@ public class DBConnect {
         			    +"' where MembersId="+membersId
         			    +" and memberId="+userId
         			    +" and Title='"+activityContentBefore+"'";
+        	sql = new String(sql.getBytes("iso-8859-1"),"utf-8");
+        	psmt = ct.prepareStatement(sql);  
+        	int result = psmt.executeUpdate();
+        	if(result>0)
+        	{
+        		ret=true;
+        	}
+    	}
+    	catch(Exception ex)
+    	{
+    		ex.printStackTrace();
+    	}
+    	
+    	return ret;
+    }*/
+    public Boolean UpdateActivityContentByTitle(String titleOriginal, ActivityContentBean acb)
+    {
+    	Boolean ret=false;
+    	try{
+        	String sql = "update activitycontent set Title='"+acb.getTitle()
+        	+"', MeetingRoomId="+acb.getMeetingRoomId()
+        	+", StartTime='"+acb.getStartTime()
+        	+"' where Title='"+titleOriginal
+        	+"' and MembersId="+acb.getMembersId()
+        	+" and MemberId="+acb.getMemberId();
+        	
         	sql = new String(sql.getBytes("iso-8859-1"),"utf-8");
         	psmt = ct.prepareStatement(sql);  
         	int result = psmt.executeUpdate();
@@ -492,6 +540,27 @@ public class DBConnect {
         	while(rs.next())
         	{
         	    ret = rs.getInt(1);
+        	}
+    	}
+    	catch(Exception ex)
+    	{
+    	    ex.printStackTrace();
+    	}
+    	return ret;
+    }
+    
+    //通过Id号获取会议室名
+    public String GetMeetingRoomNameById(int id)
+    {
+    	String ret="";   
+    	try{
+        	String strsql = "select RoomName from meetingroom where Id="+id;
+        	strsql = new String(strsql.getBytes("iso-8859-1"),"utf-8");
+        	psmt = ct.prepareStatement(strsql);
+        	ResultSet rs = psmt.executeQuery();
+        	while(rs.next())
+        	{
+        	    ret = rs.getString(1);
         	}
     	}
     	catch(Exception ex)
