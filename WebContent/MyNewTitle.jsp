@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" import="java.util.*,java.text.*"%>
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" import="java.util.*,java.text.*,com.trainingshare.db.*"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -77,7 +77,52 @@
 		}
 		function DeleteTitle(membersId)
 		{
-			
+			var mytitle = document.getElementById("mytitle").value;
+			if(mytitle=="")
+	    	{
+	    		alert("标题不能为空！");
+	    	}
+			else
+			{
+				if(confirm("确定要删除该主题吗？"))
+				{
+					var xmlhttp;
+					if(window.XMLHttpRequest)
+					{
+						xmlhttp = new XMLHttpRequest();
+					}
+					else
+					{
+						xmlhttp = new ActivityXObject("Microsoft.XMLHTTP");
+					}
+					xmlhttp.onreadystatechange = function()
+					{
+						if(xmlhttp.readyState==4)
+						{
+							if(xmlhttp.status == 200)
+							{
+								var flag=false;
+								switch(xmlhttp.responseText)
+								{
+								case "remove_success":
+									alert("删除成功！");
+									flag=true;
+									break;
+								case "remove_failed":
+									alert("删除失败！");
+									break;
+								default:
+									break;
+								}
+								if(flag)
+									window.close();
+							}
+						}
+					}
+					xmlhttp.open("POST", "newmytitleservlet?removeflag=true&membersId="+membersId+"&mytitle="+mytitle, true);
+					xmlhttp.send();	
+				}
+			}
 		}
 	</script>
 	<% 
@@ -119,19 +164,27 @@
     	</div>
     	
         <div class="location">
-    		<label style="margin-left:5px;margin-top:5px;color: black;font-size: 20px">地点:</label>
-    		<input type="radio" value="A31" name="location" checked style="font-size: 20px;margin-top:10px;"/>A31
-    		<input type="radio" value="A32" name="location"  style="font-size: 20px" <%=meetingRoom.equals("A32")?"checked":"" %>/>A32
-    		<input type="radio" value="A33" name="location"  style="font-size: 20px" <%=meetingRoom.equals("A33")?"checked":"" %>/>A33
-    		<input type="radio" value="A21" name="location"  style="font-size: 20px" <%=meetingRoom.equals("A21")?"checked":"" %>/>A21
-    		<input type="radio" value="A22" name="location"  style="font-size: 20px" <%=meetingRoom.equals("A22")?"checked":"" %>/>A22
-    		<input type="radio" value="A23" name="location"  style="font-size: 20px" <%=meetingRoom.equals("A23")?"checked":"" %>/>A23
-    		<input type="radio" value="待定" name="location"  style="font-size: 20px" <%=meetingRoom.equals("待定")?"checked":"" %>/>待定
+        	<label style="margin-left:5px;margin-top:5px;color: black;font-size: 20px">地点:</label>
+        	<%
+        	    ArrayList<String> meetingRoomList = new ArrayList<String>();
+	        	meetingRoomList = new DBConnect().GetAllMeetingRooms();
+	        	if(meetingRoomList.size()>0)
+	        	{
+	        		for(int i=0; i<meetingRoomList.size(); i++)
+	        		{
+	        			String roomName = meetingRoomList.get(i);
+	        %>
+	        			<input type="radio" value="<%=roomName %>" name="location" style="font-size: 20px;margin-top:10px;" <%=meetingRoom.equals(roomName)?"checked":"" %>/><%=roomName %>
+	        <%
+	        		}
+	        		
+	        	}
+        	%>
     	</div>
     	<div class="mybutton">
 	    	<button type="button"  class="button" style="margin-right:30px;" onclick="Save(<%=membersId%>);">保存</button>
 	    	<button type="button" class="button" style="margin-right:30px;" onclick="javascript:window.close();">取消</button>
-	    	<button type="button" class="button" style="display:<%=!title.equals("")?"":"none"%>; width:120px" onclick="DeleteTitle(<%=membersId%>);">删除该主题</button>
+	    	<button type="button" class="button" style="display:<%=title.equals("")?"none":""%>; width:120px" onclick="DeleteTitle(<%=membersId%>);">删除该主题</button>
 	    </div>
 	</div>
 	<div id="footer">

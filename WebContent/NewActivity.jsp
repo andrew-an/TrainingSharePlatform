@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
-    pageEncoding="utf-8"%>
+    pageEncoding="utf-8" import="java.util.*,com.trainingshare.db.*"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -168,10 +168,24 @@
 	    	<div id="activity_members" class="activity_members">
 	    	    <label style="margin-left: 15px;margin-top:5px;color: black;font-size: 25px">参与人</label>
 	    	    <input type="checkbox" id="item"><label>全选&nbsp</label>
-	    	    <input type="checkbox" id="item" name="item" value="andrew"><label>andrew</label>
+	    	    <%
+	        	    ArrayList<String> memberList = new ArrayList<String>();
+		    	    memberList = new DBConnect().GetAllMembers();
+		        	if(memberList.size()>0)
+		        	{
+		        		for(int i=0; i<memberList.size(); i++)
+		        		{
+		        			String memberName = memberList.get(i);
+			        %>
+			        			<input type="checkbox" id="item" name="item" value=<%=memberName %>><label><%=memberName %></label>
+			        <%
+			        	}
+			        }
+	        	%>
+	    	    <!-- <input type="checkbox" id="item" name="item" value="andrew"><label>andrew</label>
 	    	    <input type="checkbox" id="item" name="item" value="Carl"><label>Carl</label>
 	    	    <input type="checkbox" id="item" name="item" value="vigoss"><label>vigoss</label>
-	    	    <input type="checkbox" id="item" name="item" value="snowy"><label>snowy</label>
+	    	    <input type="checkbox" id="item" name="item" value="snowy"><label>snowy</label> -->
 	    	    <br><br>
 	    	</div>
 	    	<div class="activity_button">

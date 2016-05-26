@@ -326,7 +326,7 @@ public class DBConnect {
     	ArrayList<ArrayList<String>> contentList = new ArrayList<ArrayList<String>>();
     	try
     	{
-    		String strsql = "select MemberId,Title,MeetingRoomId,StartTime,FilePath,UploadFlag from activitycontent where MembersId="+membersId + " order by RecordTime desc";
+    		String strsql = "select MemberId,Title,MeetingRoomId,StartTime,FilePath,UploadFlag from activitycontent where MembersId="+membersId + " and DeleteFlag='"+0+"' order by RecordTime desc";
     		
     		psmt = ct.prepareStatement(strsql);
     		ResultSet rs = psmt.executeQuery();
@@ -566,6 +566,65 @@ public class DBConnect {
     	catch(Exception ex)
     	{
     	    ex.printStackTrace();
+    	}
+    	return ret;
+    }
+    
+    //获取所有会议室
+    public ArrayList<String> GetAllMeetingRooms()
+    {
+    	ArrayList<String> al = new ArrayList<String>();
+    	try{
+    		String strsql = "select RoomName from meetingroom order by Id desc";
+    		psmt = ct.prepareStatement(strsql);
+    		ResultSet rs = psmt.executeQuery();
+    		while(rs.next())
+    		{
+    			al.add(rs.getString(1));
+    		}
+    	}
+    	catch(Exception ex)
+    	{
+    		ex.printStackTrace();
+    	}
+    	return al;
+    }
+    
+    //获取所有人员
+    public ArrayList<String> GetAllMembers()
+    {
+    	ArrayList<String> al = new ArrayList<String>();
+    	try{
+    		String strsql = "select UserName from userinfo";
+    		psmt = ct.prepareStatement(strsql);
+    		ResultSet rs = psmt.executeQuery();
+    		while(rs.next())
+    		{
+    			al.add(rs.getString(1));
+    		}
+    	}
+    	catch(Exception ex)
+    	{
+    		ex.printStackTrace();
+    	}
+    	return al;
+    }
+    
+    //删除某个人员的主题
+    public Boolean DeleteMemberPerson(int membersId, String title)
+    {
+    	Boolean ret=false;
+    	try{
+    		String strsql = "update activitycontent set DeleteFlag=1 where MembersId="+membersId+" and Title='"+title+"'";
+    		strsql = new String(strsql.getBytes("iso-8859-1"),"utf-8");
+    		psmt = ct.prepareStatement(strsql);
+    		int result = psmt.executeUpdate();
+    		if(result>0)
+    			ret=true;
+    	}
+    	catch(Exception ex)
+    	{
+    		ex.printStackTrace();
     	}
     	return ret;
     }

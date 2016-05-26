@@ -257,10 +257,11 @@
 						<form name="upForm<%=memberName.equals(uname)?uname:"" %>" method="post" enctype="multipart/form-data">    	
 						    <tr>
 								<td id="membername"><%=memberName%></td>
-								<td id="titlename<%=memberName.equals(uname)?uname:"" %>"
-									ondblclick="EditNewContent('MyNewTitle.jsp?membersId=<%=MembersId%>&title=<%=titleName %>&meetingroom=<%=meetingRoom %>&starttime=<%=startTime %>')"; >
+								<td id="titlename<%=memberName.equals(uname)?uname:"" %>" 
+									ondblclick="<%=memberName.equals(uname)?"EditNewContent('MyNewTitle.jsp?membersId="+MembersId+"&title="+titleName+"&meetingroom="+meetingRoom+"&starttime="+startTime+"')":null %>"
+								>
 									<label id="title" style="font-size:20px;font-weight:600;color:<%=memberName.equals(uname)?"red":"blue" %>"> <%= titleName %> </label><br>
-									<label id="location" style="display:inline-block;margin-top:8px;font-size:14px;color:black;font-style:italic">会议室: <%=meetingRoom %></label>
+									<label id="location" style="display:inline-block;margin-top:8px;font-size:14px;color:black;font-style:italic">会议室: <%=meetingRoom %> /</label>
 									<label id="starttime" style="display:inline-block;margin-top:8px;font-size:14px;color:black;font-style:italic">开始时间: <%=startTime %></label>
 								</td>
 					<%
