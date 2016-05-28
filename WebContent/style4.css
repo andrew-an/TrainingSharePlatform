@@ -85,7 +85,7 @@ table.imagetable td {
     font-style: normal;
     width: 110px;
     height: 30px;
-    float: right;
+    /*float: right;*/
     margin-right: 6px;
     border-radius: 5px;
     

@@ -24,7 +24,7 @@
 	    {
 	        field: document.getElementById('datepicker1'),
 	        firstDay: 1,
-	        minDate: myDate,
+	        minDate: new Date('2016-01-01'),
 	        maxDate: new Date('2099-12-31'),
 	        yearRange: [2000,2099]
 	    });
@@ -32,7 +32,7 @@
 	    {
 	        field: document.getElementById('datepicker2'),
 	        firstDay: 1,
-	        minDate: myDate,
+	        minDate: new Date('2016-01-10'),
 	        maxDate: new Date('2099-12-31'),
 	        yearRange: [2000,2099]
 	    });
@@ -153,22 +153,23 @@
 	    </div>
 	    <div id="wrapper">
 	    	<div class="activity_title">
-	    		<label style="margin-left: 15px;margin-top:5px;color: black;font-size: 25px">标题</label><br>
+	    		<label style="margin-left: 15px;color: black;font-size: 25px">标题</label><br>
 	    		<textarea id="activitytitle" name="activitytitle" style="width:95%;height:40%;bottom:5px; margin-left:15px;margin-top:5px;font-size:20px"></textarea>
 	    	</div>
 	    	<div class="activity_content">
-	    		 <label style="margin-left: 15px;margin-top:5px;color: black;font-size: 25px">内容</label><br>
+	    		 <label style="margin-left: 15px;color: black;font-size: 25px">内容</label><br>
 	    		<textarea id="activitydetails" name="activitydetails" style="width: 95%;height: 75%;bottom: 5px; margin-left:15px;margin-top: 5px;font-size: 20px"></textarea>
 	    	</div>
 	    	<div class="activity_time">
-	    		<label style="margin-left: 15px;margin-top:5px;color: black;font-size: 25px">时间</label>
+	    		<label style="margin-left: 15px;color: black;font-size: 25px">时间</label>
 	    		开始：<input type="text" id="datepicker1" name="starttime" />
 	    		        结束：<input type="text" id="datepicker2" name="endtime" />
 	    	</div>
 	    	<div id="activity_members" class="activity_members">
-	    	    <label style="margin-left: 15px;margin-top:5px;color: black;font-size: 25px">参与人</label>
-	    	    <input type="checkbox" id="item"><label>全选&nbsp</label>
-	    	    <%
+	    	    <div style="float:left"><label style="margin-left: 15px;margin-top:5px;color: black;font-size: 25px">参与人</label></div>
+	    	    <div style="margin-left:110px;margin-top:0px">
+	    	    	<input type="checkbox" id="item"><label>全选&nbsp</label><br>
+	    	    	<%
 	        	    ArrayList<String> memberList = new ArrayList<String>();
 		    	    memberList = new DBConnect().GetAllMembers();
 		        	if(memberList.size()>0)
@@ -177,16 +178,16 @@
 		        		{
 		        			String memberName = memberList.get(i);
 			        %>
+			        			<span style="display:inline-block">
 			        			<input type="checkbox" id="item" name="item" value=<%=memberName %>><label><%=memberName %></label>
+			        			</span>
 			        <%
 			        	}
 			        }
-	        	%>
-	    	    <!-- <input type="checkbox" id="item" name="item" value="andrew"><label>andrew</label>
-	    	    <input type="checkbox" id="item" name="item" value="Carl"><label>Carl</label>
-	    	    <input type="checkbox" id="item" name="item" value="vigoss"><label>vigoss</label>
-	    	    <input type="checkbox" id="item" name="item" value="snowy"><label>snowy</label> -->
+	        		%>
 	    	    <br><br>
+	    	    </div>
+
 	    	</div>
 	    	<div class="activity_button">
 	    		<button type="button"  class="button" style="margin-right: 30px" onclick="Save();">保存</button>

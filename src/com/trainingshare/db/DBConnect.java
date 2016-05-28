@@ -7,16 +7,25 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
+
 import com.trainingshare.model.*;
 
 public class DBConnect {
+
     Connection ct = null;
     PreparedStatement psmt = null;
     public DBConnect()
     {
+    	
     	try{
-    		Class.forName("com.mysql.jdbc.Driver");
-    		ct = DriverManager.getConnection("jdbc:mysql://localhost:3306/trainshare?user=root&password=123456&useUnicode=true&characterEncoding=utf-8");
+    		
+    		Context ctx=new InitialContext();
+    		Context envContext = (Context)ctx.lookup("java:/comp/env"); 
+    		DataSource ds = (DataSource)envContext.lookup("jdbc/mysqlds"); 
+            ct = ds.getConnection();
     	}
     	catch(Exception ex)
     	{
@@ -191,6 +200,29 @@ public class DBConnect {
     	}
     	return ret;
     }
+    
+    //判断是否存在未删除的相同的个人标题
+    public Boolean CheckActivityContentExistorNot(int membersId, String title)
+    {
+    	Boolean ret=true;
+    	try{
+        	String strsql = "SELECT COUNT(*) FROM activitycontent WHERE Title='"+title+"' and MembersId="+membersId+" and DeleteFlag='"+0+"'";
+        	strsql = new String(strsql.getBytes("iso-8859-1"),"utf-8");
+        	psmt = ct.prepareStatement(strsql);
+        	ResultSet rs = psmt.executeQuery();
+        	if(rs.next())
+        	{
+        		if(rs.getInt(1) == 0)//不存在记录
+        			ret = false;
+        	}
+    	}
+    	catch(Exception ex)
+    	{
+    		ex.printStackTrace();
+    	}
+    	return ret;
+    }
+    
     //添加一个新的活动内容详情
     public Boolean AddNewAcivityContent(ActivityContentBean acb)
     {
@@ -428,11 +460,12 @@ public class DBConnect {
     	Boolean ret=false;
     	try{
     		int userId = GetUserId(memberName);
-    		filePath = "D:\\\\TrainingShare\\\\" + filePath;
+    		filePath = "G:\\\\TrainingShare\\\\" + filePath;
         	String sql = "update activitycontent set FilePath='"+filePath+"', UploadFlag='1'"
         			   +" where MembersId="+membersId
     			       +" and memberId="+userId
-    			       +" and Title='"+activityContent+"'";
+    			       +" and Title='"+activityContent+"'"
+    			       +" and DeleteFlag='"+0+"'";
         	//sql = new String(sql.getBytes("iso-8859-1"),"utf-8");
         	psmt = ct.prepareStatement(sql);  
         	int result = psmt.executeUpdate();
@@ -454,7 +487,7 @@ public class DBConnect {
     	ArrayList<String> al = new ArrayList<String>();
     	try
     	{
-    		String strsql = "select FilePath from activitycontent where MembersId="+membersId;
+    		String strsql = "select FilePath from activitycontent where MembersId="+membersId+" and DeleteFlag='"+0+"'";
     		psmt = ct.prepareStatement(strsql);
     		ResultSet rs = psmt.executeQuery();
     		while(rs.next())

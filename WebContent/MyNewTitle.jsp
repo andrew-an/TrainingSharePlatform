@@ -63,6 +63,9 @@
 							case "edit_failed":
 								alert("更新失败！");
 								break;
+							case "title exist":
+								alert("主题已存在，请勿重复插入！");
+								break;
 							default:
 								break;
 							}
@@ -137,7 +140,7 @@
 		if(null!=meetingRoom)
 			meetingRoom = new String(meetingRoom.getBytes("iso-8859-1"),"utf-8");
 		else
-			meetingRoom = "A31";
+			meetingRoom = "待定";
 		
 		String startTime = request.getParameter("starttime");
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");

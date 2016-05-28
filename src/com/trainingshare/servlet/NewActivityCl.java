@@ -121,8 +121,10 @@ public class NewActivityCl extends HttpServlet {
 				String membersList = "";
 				for(int i=0; i<alUserIdList.size(); i++)
 					membersList += Integer.toString(alUserIdList.get(i)) +",";
+				
 				if(membersList.endsWith(","))
-					membersList.substring(0, membersList.length()-1);
+					membersList = membersList.substring(0, membersList.length()-1);
+				System.out.println(membersList);
 				//在members表中插入一条新记录，并得到新记录的Id值
 				int membersId = dbc.UpdateMembersTable(membersList);
 				if(0 != membersId)

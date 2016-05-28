@@ -69,8 +69,9 @@ public class ActivityContentClServlet extends HttpServlet {
 			fileName = URLDecoder.decode(fileName,"utf-8"); 
 			activityContent = URLDecoder.decode(activityContent,"utf-8"); 
 			byte[] buf = new byte[1024];
+			
 			//接收文件上传并保存到 d:\
-			File file = new File("d:/TrainingShare/" + fileName); 
+			File file = new File("G:/TrainingShare/" + fileName); 
 			BufferedOutputStream fileOut = new BufferedOutputStream(new FileOutputStream(file));
 			int fileReadAllLength = 0;//保存总共传输的字节数，判断文件是否全部传输完成
 			while (true) 

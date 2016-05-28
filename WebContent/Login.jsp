@@ -37,7 +37,7 @@
 		{
 			error=" ";
 			Cookie[] cookies = request.getCookies();
-			if(cookies.length>0)
+			if(null!=cookies && cookies.length>0)
 			{
 				for(Cookie ck:cookies)
 				{

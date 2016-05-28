@@ -56,6 +56,7 @@ public class zipDownloadServlet extends HttpServlet {
 			int fileNums = 0;
 			for(int i=0; i<al.size(); i++)
 			{
+				System.out.println(al.get(i));
 				File file = new File(al.get(i));
 				if(file.exists())
 					fileNums++;

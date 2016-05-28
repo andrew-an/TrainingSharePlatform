@@ -45,7 +45,7 @@ body{
 }
 .activity_content{
     width: 100%;
-    height: 40%;
+    height: 20%;
     /*background-color: #222;*/
 }
 .activity_location{
@@ -56,18 +56,18 @@ body{
 .activity_time{
     width: 100%;
     height: 10%;
+    margin-top:40px;
    /* background-color: #666;*/
 }
 .activity_members{
     width: 100%;
-    height: 10%;
-    /*background-color: #666;*/
 }
 .activity_button{
     width: 100%;
     height: 10%;
     /*background-color: #888;*/
     text-align: center;
+    margin-top:40px;
 }
 .button{
 

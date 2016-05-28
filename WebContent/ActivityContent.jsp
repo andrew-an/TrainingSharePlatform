@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
-    pageEncoding="utf-8" import="java.util.*,com.trainingshare.model.*"%>
+    pageEncoding="utf-8" import="java.util.*,com.trainingshare.model.*,java.text.*"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -30,7 +30,6 @@
 		  }
 		  xmlhttp.onreadystatechange = function()
 		  {
-			  
 			  if(xmlhttp.readyState==4 && xmlhttp.status == 200)
 			  {
 				  obj.innerHTML = str2;//数据库更新完成，则显示更改后的值
@@ -43,178 +42,95 @@
 				  ,true);
 		  xmlhttp.send();
       }
-      
-	function editRowCell(obj,membersId,loginUser) 
-	{
-	    var tag = obj.firstChild.tagName;
-		if (typeof(tag) != "undefined" && (tag == "INPUT" || tag == "TEXTAREA"))
-			return;
-		var org = obj.innerHTML;
-		var orglen = org.replace(/[^\x00-\xff]/g,'**').length;
-		if (obj.offsetHeight <= 22) 
-		{
-			  var val = window.ActiveXObject ? obj.innerText : obj.textContent;
-			  var txt = document.createElement("INPUT");
-			  txt.value = val.trim();
-			  txt.style.background = "#FFC";
-			  txt.style.width = obj.offsetWidth + "px" ;
-			  obj.innerHTML = "";
-			  obj.appendChild(txt);
-			  txt.focus();
-			  txt.onblur = function(e)
-			  {
-				  var txtvalue = txt.value.trim();
-			      if(txtvalue.length>35 || txtvalue.length==0 || txtvalue == "空")
-			      {
-			    	 alert("输入内容不能为空且不能超过35个字符"); 
-			    	 return;
-			      }
-			      else if(val != txtvalue)
-			      {
-			    	  //先插入数据库，再更新到界面上
-			    	  UpdateActivityContent(obj,val,txtvalue,membersId,loginUser);
-			      }
-			      else
-			      {
-			    	  obj.innerHTML = txtvalue;
-			      }
-			  }
-	    }
-	    else
-	    {
-	    	//取出该单元格内容
-			var content = obj.innerHTML;
-			var html = document.createElement('TEXTAREA');
-			html.style.width = obj.offsetWidth + "px";
-			html.style.height = obj.offsetHeight + "px";
-			obj.innerHTML = "";
-			//将大单元格内容付给textarea
-			html.value = content.trim();
-			obj.appendChild(html);
-			html.focus();
-			html.onblur = function(e)
-			{
-				var htmlvalue = html.value.trim(); 
-				if(htmlvalue.length>35 || htmlvalue.length==0 || htmlvalue == "空")
-			    {
-			    	 alert("输入内容不能为空且不能超过35个字符");
-			    	 return;
-			    }
-				else if(content != htmlvalue)
-				{
-					UpdateActivityContent(obj,content,htmlvalue,membersId,loginUser);
-				}
-				else
-				{
-					obj.innerHTML = htmlvalue;
-				}
-	    	}
-	    }
-	}
 	
 	function uploadAndSubmit(membersId,loginUser)
-	{
-		//取得当前用户名称
-		var user = document.getElementById("loginUser").innerHTML;				
-		user = user.slice(user.indexOf(":")+1,user.length);
-		
-		//上传成功后执行
-		var uploadSuccess = function(data,xhr)
-		{
-			if(data == "上传成功!")
+	{	
+		//alert(filename);
+	    var row = document.activeElement.parentNode.parentNode.parentNode;
+	    //alert(document.activeElement);
+	    if(null != row)
+	    {
+	    	//alert(row.cells[1].innerText);
+	    	//取得当前用户名称
+			var user = document.getElementById("loginUser").innerHTML;				
+			user = user.slice(user.indexOf(":")+1,user.length);
+			
+			//上传成功后执行
+			var uploadSuccess = function(data,xhr)
 			{
-				//根据不同用户的label显示选择的文件名
-				document.getElementById("uploadfilename"+user).innerHTML = file.name;
-			}
-			alert(data);
-		}
-		//上传过程中执行
-		var uploadProgress = function(event,position,total,percent)
-		{
-			 //document.getElementById("bytesRead").textContent = event.loaded; 
-			 //alert("上传完成！");
-			 console.log(percent);
-		}
-		
-		//找到当前用户的Form
-		var formId = "upForm"+user;
-		var formData = new FormData();
-		var form = document.forms[formId];
-		var file = form["upFile"].files[0];
-		//alert(form["upFile"].);
-		var filename =  encodeURI(encodeURI(file.name));
-		formData.append('upload', file);
-		
-		var xhr;
-		if(window.XMLHttpRequest)
-		{
-			xhr = new XMLHttpRequest();
-		}
-		else if(window.ActiveXObject)
-		{
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");
-		}
-		
-		var titlename = document.getElementById("titlename"+user).innerHTML;
-		titlename = encodeURI(encodeURI(titlename));
-		
-		xhr.open('POST', "ActivityContentClServlet?membersId="+membersId
-				  +"&loginUser="+loginUser
-				  +"&fileName=" + filename
-				  +"&activityContent="+titlename);
-		xhr.upload.onloadstart = function(){
-			//document.getElementById("bytesTotal").textContent = file.size;
-		}
-		//上传进度
-		xhr.upload.onprogress = function(event)
-		{
-			var percent = 0,position = event.loaded || event.position,total = event.total;
-			if (event.lengthComputable) 
-			{
-				percent = Math.ceil(position / total * 100);
-			}
-			uploadProgress(event,position,total,percent);
-		};
-		//上传结果
-		xhr.onload = function()
-		{
-			if (xhr.readyState === 4)
-			{
-				if (xhr.status === 200)
+				if(data == "上传成功!")
 				{
-					uploadSuccess(xhr.responseText, xhr);
+					row.cells[2].childNodes[1].innerText = file.name;
 				}
+				alert(data);
 			}
-		};
-		xhr.send(formData);
-		return false;
+			//上传过程中执行
+			var uploadProgress = function(event,position,total,percent)
+			{
+				 console.log(percent);
+			}
+			
+			var formData = new FormData();
+			var file = document.activeElement.files[0];
+			var filename = encodeURI(encodeURI(file.name));
+			formData.append('upload', file);
+			var xhr;
+			if(window.XMLHttpRequest)
+			{
+				xhr = new XMLHttpRequest();
+			}
+			else if(window.ActiveXObject)
+			{
+				xhr = new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			var titlename = row.cells[1].innerText;
+			//去掉会议室和时间字段
+			titlename = titlename.substring(0,titlename.indexOf("会议室"));
+			titlename = encodeURI(encodeURI(titlename));
+			xhr.open('POST', "ActivityContentClServlet?membersId="+membersId
+						  +"&loginUser="+loginUser
+						  +"&fileName=" + filename
+						  +"&activityContent="+titlename);
+			xhr.upload.onloadstart = function(){
+					//document.getElementById("bytesTotal").textContent = file.size;
+			}
+			//上传进度
+			xhr.upload.onprogress = function(event)
+			{
+				var percent = 0,position = event.loaded || event.position,total = event.total;
+				if (event.lengthComputable) 
+				{
+					percent = Math.ceil(position / total * 100);
+				}
+				uploadProgress(event,position,total,percent);
+			};
+			//上传结果
+			xhr.onload = function()
+			{
+				if (xhr.readyState === 4)
+				{
+					if (xhr.status === 200)
+					{
+						uploadSuccess(xhr.responseText, xhr);
+					}
+				}
+			};
+			xhr.send(formData);
+			return false;
+	    }
+		
 	}
-	/*function load()
-	{
-		//alert(window.frames["hrong"].location.href);
-		//var str="file:///D:/TrainingShare/RSA.rar";     
-		//window.frames["hrong"].location.href=str;
-		document.getElementById("hrong").src = "file:///D:/TrainingShare/RSA.rar";
-		sa();
-	}
-	function sa()
-	{
-		if(window.frames["hrong"].document.readyState != "complete")   
-	        setTimeout("sa()",   100);   
-	    else   
-	      window.frames["hrong"].document.execCommand('SaveAs');  
-	}*/
 	function AddNewContent(src)
 	{
 		var openee = window.open (src,"newwindow", 'height='+400+',,innerHeight='+400
 				+',width='+550+',innerWidth='+550+',top='+window.screen.height/5+',left='
-				+window.screen.width/3+',toolbar=no,menubar=no,scrollbars=auto,resizeable=no,location=no,status=no'); 
+				+window.screen.width/3.5+',toolbar=no,menubar=no,scrollbars=auto,resizeable=no,location=no,status=no'); 
 	}
 	function EditNewContent(src)
 	{
 		var openee = window.open (src,"newwindow", 'height='+400+',,innerHeight='+400
 				+',width='+550+',innerWidth='+550+',top='+window.screen.height/5+',left='
-				+window.screen.width/3+',toolbar=no,menubar=no,scrollbars=auto,resizeable=no,location=no,status=no'); 
+				+window.screen.width/3.5+',toolbar=no,menubar=no,scrollbars=auto,resizeable=no,location=no,status=no'); 
 	}
 </script>
 </head>
@@ -229,69 +145,96 @@
     	<label id="loginUser">登录用户:<%=uname%></label>
     </div>
     <div id="wrapper">
-		<table class="imagetable" id="mytitle">
-			<tr>
-				<th style="width: 10%;font-size:20px">参与人</th>
-				<th style="width: 70%;font-size:20px">培 训 主 题</th>
-				<th style="width: 20%;font-size:20px">资 料 上 传</th>
-			</tr>
-			<% 
-			    String MembersId = (String)request.getAttribute("membersId");
-			    ArrayList<ArrayList<String>> al = (ArrayList<ArrayList<String>>)(request.getAttribute("activityContentList"));
-			    //System.out.print("活动Id号："+MembersId);
-			    //System.out.print("总的活动数量是："+al.size());
-			    if(null!=al && al.size()>0)
-			    {
-				    Iterator<ArrayList<String>> it = al.iterator();
-				    while(it.hasNext())
+    	<form name="upForm" method="post" enctype="multipart/form-data">    	
+			<table class="imagetable" id="mytable">
+				<tr>
+					<th style="width: 10%;font-size:20px">参与人</th>
+					<th style="width: 70%;font-size:20px">培 训 主 题</th>
+					<th style="width: 20%;font-size:20px">资 料 上 传</th>
+				</tr>
+				<% 
+				    String MembersId = (String)request.getAttribute("membersId");
+				    ArrayList<ArrayList<String>> al = (ArrayList<ArrayList<String>>)(request.getAttribute("activityContentList"));
+				    if(null!=al && al.size()>0)
 				    {
-				    	ArrayList<String> activityContentList = new ArrayList<String>();
-				    	activityContentList = (ArrayList<String>)it.next();
-				    	String memberName = activityContentList.get(0);
-				    	String titleName = activityContentList.get(1);
-				    	String meetingRoom = activityContentList.get(2);
-				    	String startTime = activityContentList.get(3).substring(0,16);
-				    	String filePath = activityContentList.get(4);
-				    	String uploadFlag = activityContentList.get(5);
+				    	SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm"); 
+				    	Date today = new Date();
+				    	String strtoday = sdf.format(today);
+				    	
+					    Iterator<ArrayList<String>> it = al.iterator();
+					    while(it.hasNext())
+					    {
+					    	ArrayList<String> activityContentList = new ArrayList<String>();
+					    	activityContentList = (ArrayList<String>)it.next();
+					    	String memberName = activityContentList.get(0);
+					    	String titleName = activityContentList.get(1);
+					    	String meetingRoom = activityContentList.get(2);
+					    	String startTime = activityContentList.get(3).substring(0,16);
+					    	String filePath = activityContentList.get(4);
+					    	String uploadFlag = activityContentList.get(5);
+					    	
+					    	long minutes=0;
+					    	String strdays="";
+					    	String strhours="";
+					    	String strminutes="";
+					    	if(startTime.compareTo(strtoday)>0)
+					    	{
+					    	  	minutes = (sdf.parse(startTime).getTime()-today.getTime())/1000/60;
+						    	long days = minutes/(60*24);
+						    	strdays = String.valueOf(days);
+						    	long hours = (minutes-days*24*60)/60;
+						    	strhours = String.valueOf(hours);
+						    	minutes = minutes%10;
+						    	strminutes = String.valueOf(minutes);
+					    	}
 				%>
-						<form name="upForm<%=memberName.equals(uname)?uname:"" %>" method="post" enctype="multipart/form-data">    	
-						    <tr>
+						    <tr id="contentname<%=memberName.equals(uname)?uname:"" %>">
 								<td id="membername"><%=memberName%></td>
-								<td id="titlename<%=memberName.equals(uname)?uname:"" %>" 
-									ondblclick="<%=memberName.equals(uname)?"EditNewContent('MyNewTitle.jsp?membersId="+MembersId+"&title="+titleName+"&meetingroom="+meetingRoom+"&starttime="+startTime+"')":null %>"
-								>
+								<td ondblclick="<%=memberName.equals(uname)?"EditNewContent('MyNewTitle.jsp?membersId="+MembersId+"&title="+titleName+"&meetingroom="+meetingRoom+"&starttime="+startTime+"')":null %>">
 									<label id="title" style="font-size:20px;font-weight:600;color:<%=memberName.equals(uname)?"red":"blue" %>"> <%= titleName %> </label><br>
 									<label id="location" style="display:inline-block;margin-top:8px;font-size:14px;color:black;font-style:italic">会议室: <%=meetingRoom %> /</label>
-									<label id="starttime" style="display:inline-block;margin-top:8px;font-size:14px;color:black;font-style:italic">开始时间: <%=startTime %></label>
+									<label id="starttime" style="display:inline-block;margin-top:8px;font-size:14px;color:black;font-style:italic">开始时间: <%=startTime %></label> 
+									<img style="width:10px;margin-left:10px" src="images//<%=startTime.compareTo(strtoday)>=0?"green.png":"red.png"%>">
+									<label style="font-size:10px"><%=startTime.compareTo(strtoday)>=0?"还有"+strdays+"天"+strhours+"小时"+strminutes+"分":"已结束"%></label>
+									</img>
 								</td>
-					<%
-								String name = "未上传";
+				<%
+								String filename = "未上传";
 								String buttonName = "点击上传";
 						        if(uploadFlag.equals("1"))
 						        {
-						        	name = filePath.substring(filePath.lastIndexOf("\\")+1,filePath.length());
+						        	filename = filePath.substring(filePath.lastIndexOf("\\")+1,filePath.length());
 						        	//imagename = "images/file_complete.png";
 						        	buttonName = "点击更新";
 						        }
-					%>			
+				%>			
 								<td>
-									<label id="uploadfilename<%=memberName.equals(uname)?uname:"" %>"><%=name %></label><br>
+									<label id="filepath"><%=filename %></label><br>
 									<a style="display:<%=memberName.equals(uname)?"inline-block":"none" %>" class="a-upload">
-										<input type="file" name="upFile" onchange="uploadAndSubmit('<%=MembersId %>','<%=uname %>');"><%=buttonName %>
+										<input type="file" id="upFile" name="upFile" onchange="uploadAndSubmit('<%=MembersId %>','<%=uname %>','<%= filename%>');"><%=buttonName %>
 									</a>
 								</td>
-							</tr> 
-						</form>
+							</tr>
 				<%
+					    }
 				    }
-			    }
-			%>
-		</table>
-		<br>
-		<a href="" style="display:inline-block;margin-left:42%;margin-top:10px" onclick="AddNewContent('MyNewTitle.jsp?membersId=<%=MembersId%>')"><img alt="" src="images/addnewcontent.png" style=""></a>
-		<form style="float:right;margin-top:30px"  action="zipdownloadservlet?membersId=<%=MembersId%>" method="post">
-			<button id="LoadAllPackage">下载全部附件 </button>
+				%>
+			</table>
 		</form>
+		<br>
+		<div style="width:85%; float:left">
+			<a href="" style="margin-left:50%" 
+			onclick="AddNewContent('MyNewTitle.jsp?membersId=<%=MembersId%>')">
+			<img alt="" src="images/addnewcontent.png">
+			</a>
+		</div>
+		<div style="width:15%; float:right;margin-top:10px;padding-left:0px;">
+			<form  action="zipdownloadservlet?membersId=<%=MembersId%>" method="post">
+				<button id="LoadAllPackage">下载全部附件 </button>
+			</form>
+		</div>
+
+		
     </div>
     
     <div id="footer">
