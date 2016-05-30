@@ -177,6 +177,7 @@
 					    	String strdays="";
 					    	String strhours="";
 					    	String strminutes="";
+					    	String leftTime="";
 					    	if(startTime.compareTo(strtoday)>0)
 					    	{
 					    	  	minutes = (sdf.parse(startTime).getTime()-today.getTime())/1000/60;
@@ -186,6 +187,22 @@
 						    	strhours = String.valueOf(hours);
 						    	minutes = minutes%10;
 						    	strminutes = String.valueOf(minutes);
+						    	leftTime = "距离开始还有:"+(days>0?(strdays+"天"):"");
+						    	leftTime += hours>0?(strhours+"小时"):"";
+						    	leftTime += minutes>0?(strminutes+"分钟"):"";
+					    	}
+					    	else
+					    	{
+					    		minutes = (today.getTime()-sdf.parse(startTime).getTime())/1000/60;
+					    		//默认会议进行3小时
+					    		if(minutes<=180)
+					    		{
+					    			leftTime = "已开始";
+					    		}
+					    		else
+					    		{
+					    			leftTime = "已结束";
+					    		}
 					    	}
 				%>
 						    <tr id="contentname<%=memberName.equals(uname)?uname:"" %>">
@@ -194,8 +211,8 @@
 									<label id="title" style="font-size:20px;font-weight:600;color:<%=memberName.equals(uname)?"red":"blue" %>"> <%= titleName %> </label><br>
 									<label id="location" style="display:inline-block;margin-top:8px;font-size:14px;color:black;font-style:italic">会议室: <%=meetingRoom %> /</label>
 									<label id="starttime" style="display:inline-block;margin-top:8px;font-size:14px;color:black;font-style:italic">开始时间: <%=startTime %></label> 
-									<img style="width:10px;margin-left:10px" src="images//<%=startTime.compareTo(strtoday)>=0?"green.png":"red.png"%>">
-									<label style="font-size:10px"><%=startTime.compareTo(strtoday)>=0?"还有"+strdays+"天"+strhours+"小时"+strminutes+"分":"已结束"%></label>
+									<img style="width:10px;margin-left:10px" src="images//<%=leftTime!="已结束"?"green.png":"red.png"%>">
+									<label style="font-size:10px"><%=leftTime%></label>
 									</img>
 								</td>
 				<%

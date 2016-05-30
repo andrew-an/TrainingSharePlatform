@@ -7,6 +7,8 @@
 	<link rel="stylesheet" type="text/css" href="jquery.datetimepicker.css"/>
 	<title>创建新主题</title>
 	<script>
+	
+		//新建或更新主题
 		function Save(membersId)
 		{
 			var titleoriginal = document.getElementById("titleoriginal").innerHTML;
@@ -47,6 +49,7 @@
 					{
 						if(xmlhttp.status == 200)
 						{
+							opener.location.reload();
 							var flag=false;
 							switch(xmlhttp.responseText)
 							{
@@ -78,6 +81,8 @@
 				xmlhttp.send();
 		    }
 		}
+		
+		//删除主题
 		function DeleteTitle(membersId)
 		{
 			var mytitle = document.getElementById("mytitle").value;
@@ -104,6 +109,7 @@
 						{
 							if(xmlhttp.status == 200)
 							{
+								opener.location.reload();
 								var flag=false;
 								switch(xmlhttp.responseText)
 								{
