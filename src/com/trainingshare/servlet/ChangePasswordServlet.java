@@ -43,31 +43,38 @@ public class ChangePasswordServlet extends HttpServlet {
 		String username = (String)request.getParameter("uname");
 		String password_old = (String)request.getParameter("pwd_old");
 		
-		if(null!=username && !username.equals("") && null!=password_old && !password_old.equals(""))
-		{
-			//判断用户更改密码时输入的原密码是否正确
-			if(dbc.checkUser(username, password_old) != null)
+		try{
+			if(null!=username && !username.equals("") && null!=password_old && !password_old.equals(""))
 			{
-				response.getWriter().write("success");
+				//判断用户更改密码时输入的原密码是否正确
+				if(dbc.checkUser(username, password_old) != null)
+				{
+					response.getWriter().write("success");
+				}
+				else
+				{
+					response.getWriter().write("failed");
+				}
 			}
 			else
 			{
-				response.getWriter().write("failed");
+				String password_new = (String)request.getParameter("pwd_new");
+				if(dbc.UpdatePassword(username, password_new) == true)
+				{
+					response.getWriter().write("success");
+				}
+				else
+				{
+					response.getWriter().write("failed");
+				}
 			}
+			return;
 		}
-		else
+		catch(Exception ex)
 		{
-			String password_new = (String)request.getParameter("pwd_new");
-			if(dbc.UpdatePassword(username, password_new) == true)
-			{
-				response.getWriter().write("success");
-			}
-			else
-			{
-				response.getWriter().write("failed");
-			}
+			System.out.println("ChangePasswordServlet");
+			ex.printStackTrace();
 		}
-		return;
 	}
 
 }

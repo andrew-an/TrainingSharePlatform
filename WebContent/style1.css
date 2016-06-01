@@ -88,8 +88,8 @@ body{
 	float: left;
 }
 .right_center2{
-	height: 100%;
-	width:40%;
+	height: 240px;
+	width:350px;
 	border: 1px;
 	border-color: blue;
 	border-style: dashed;

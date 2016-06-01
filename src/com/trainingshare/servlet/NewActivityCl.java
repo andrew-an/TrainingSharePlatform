@@ -50,33 +50,38 @@ public class NewActivityCl extends HttpServlet {
 		String activityStartTime = request.getParameter("starttime");
 		String activityEndTime = request.getParameter("endtime");
 		String[] memberName = request.getParameterValues("item");
-		//通过传递的参数判断此次是表单提交还是ajax交互，如果“活动内容不为空”则说明是表单提交
-		if(null != activityTitle && !activityTitle.equals(""))
-		{
-			//插入表前，先检查数据库是否存在相同记录，禁止用户F5刷新页面，导致重复提交表单
-			if(!new DBConnect().CheckActivityExistorNot(activityTitle))
+		
+		try{
+			//通过传递的参数判断此次是表单提交还是ajax交互，如果“活动内容不为空”则说明是表单提交
+			if(null != activityTitle && !activityTitle.equals(""))
 			{
-				//在成员表中添加一条新记录，并得到该记录的Id号
-				int membersId = AddNewMembersTable(memberName);
-				if(membersId>0)
+				//插入表前，先检查数据库是否存在相同记录，禁止用户F5刷新页面，导致重复提交表单
+				if(!new DBConnect().CheckActivityExistorNot(activityTitle))
 				{
-					DBConnect dbc = new DBConnect();
-					ActivityBean ab = new ActivityBean();
-					ab.setTitle(activityTitle);
-					ab.setDetails(activityDetails);
-					ab.setMembersId(membersId);
-					ab.setStartTime(activityStartTime);
-					ab.setEndTime(activityEndTime);
-					ab.setRemak("");
-					//在活动内容表中添加一条新记录，并得到该记录的Id号
-					int activityId = dbc.AddNewAcivity(ab);
-					if(0 != activityId)
+					//在成员表中添加一条新记录，并得到该记录的Id号
+					int membersId = AddNewMembersTable(memberName);
+					if(membersId>0)
 					{
-						ArrayList<String> alMembersList = dbc.GetAllMembersById(membersId);
-						if(null != alMembersList && alMembersList.size()>0)
+						DBConnect dbc = new DBConnect();
+						ActivityBean ab = new ActivityBean();
+						ab.setTitle(activityTitle);
+						ab.setDetails(activityDetails);
+						ab.setMembersId(membersId);
+						ab.setStartTime(activityStartTime);
+						ab.setEndTime(activityEndTime);
+						ab.setRemak("");
+						//在活动内容表中添加一条新记录，并得到该记录的Id号
+						int activityId = dbc.AddNewAcivity(ab);
+						if(0 != activityId)
 						{
-							request.setAttribute("activityTitleList", dbc.GetActivityTitle());
-							request.getRequestDispatcher("Main.jsp").forward(request,response);
+							ArrayList<String> alMembersList = dbc.GetAllMembersById(membersId);
+							if(null != alMembersList && alMembersList.size()>0)
+							{
+								request.setAttribute("activityTitleList", dbc.GetActivityTitle());
+								request.getRequestDispatcher("Main.jsp").forward(request,response);
+							}
+							else
+								response.sendRedirect("NewActivity.jsp");
 						}
 						else
 							response.sendRedirect("NewActivity.jsp");
@@ -85,25 +90,28 @@ public class NewActivityCl extends HttpServlet {
 						response.sendRedirect("NewActivity.jsp");
 				}
 				else
-					response.sendRedirect("NewActivity.jsp");
+				{
+					request.setAttribute("activityTitleList", new DBConnect().GetActivityTitle());
+					request.getRequestDispatcher("Main.jsp").forward(request,response);
+				}
 			}
-			else
+			else//否则是ajax交互，判断标题的合法性（是否在数据库存在相同记录）
 			{
-				request.setAttribute("activityTitleList", new DBConnect().GetActivityTitle());
-				request.getRequestDispatcher("Main.jsp").forward(request,response);
+				//不存在记录
+				if(!new DBConnect().CheckActivityExistorNot(title))
+				{
+					response.getWriter().write("success");
+				}
+				else//存在相同记录
+				{
+					response.getWriter().write("failed");
+				}
 			}
 		}
-		else//否则是ajax交互，判断标题的合法性（是否在数据库存在相同记录）
+		catch(Exception ex)
 		{
-			//不存在记录
-			if(!new DBConnect().CheckActivityExistorNot(title))
-			{
-				response.getWriter().write("success");
-			}
-			else//存在相同记录
-			{
-				response.getWriter().write("failed");
-			}
+			System.out.println("NewActivityCl:");
+			ex.printStackTrace();
 		}
 	}
 	
@@ -111,25 +119,31 @@ public class NewActivityCl extends HttpServlet {
 	public int AddNewMembersTable(String[] memberName)
 	{
 		int ret=0;
-		if(memberName.length>0)
-		{
-			DBConnect dbc = new DBConnect();
-			ArrayList<Integer> alUserIdList = dbc.GetMemberIdByName(memberName);
-			if(alUserIdList.size()>0)
+		try{
+			if(memberName.length>0)
 			{
-				//获取参加该次活动的人员Id列表
-				String membersList = "";
-				for(int i=0; i<alUserIdList.size(); i++)
-					membersList += Integer.toString(alUserIdList.get(i)) +",";
-				
-				if(membersList.endsWith(","))
-					membersList = membersList.substring(0, membersList.length()-1);
-				System.out.println(membersList);
-				//在members表中插入一条新记录，并得到新记录的Id值
-				int membersId = dbc.UpdateMembersTable(membersList);
-				if(0 != membersId)
-					ret = membersId;
+				DBConnect dbc = new DBConnect();
+				ArrayList<Integer> alUserIdList = dbc.GetMemberIdByName(memberName);
+				if(alUserIdList.size()>0)
+				{
+					//获取参加该次活动的人员Id列表
+					String membersList = "";
+					for(int i=0; i<alUserIdList.size(); i++)
+						membersList += Integer.toString(alUserIdList.get(i)) +",";
+					
+					if(membersList.endsWith(","))
+						membersList = membersList.substring(0, membersList.length()-1);
+					//在members表中插入一条新记录，并得到新记录的Id值
+					int membersId = dbc.UpdateMembersTable(membersList);
+					if(0 != membersId)
+						ret = membersId;
+				}
 			}
+		}
+		catch(Exception ex)
+		{
+			System.out.println("AddNewMembersTable:");
+			ex.printStackTrace();
 		}
 		return ret;
 	}

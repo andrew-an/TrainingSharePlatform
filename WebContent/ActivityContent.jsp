@@ -16,9 +16,10 @@
 	%>
     <script type="text/javascript" language="javascript" charset="utf-8">
      
+    //更新当前登录人的活动内容
       function UpdateActivityContent(obj,str1,str2,membersId,loginUser)
       {
-	      	//先插入数据库，再更新显示
+	      //先插入数据库，再更新显示
 	      var xmlhttp;
 		  if(window.XMLHttpRequest)
 		  {
@@ -43,6 +44,7 @@
 		  xmlhttp.send();
       }
 	
+      //上传文件并且提交表单
 	function uploadAndSubmit(membersId,loginUser)
 	{	
 		//alert(filename);
@@ -60,6 +62,7 @@
 			{
 				if(data == "上传成功!")
 				{
+					document.activeElement.parentNode.childNodes[3].innerText = "点击更新";
 					row.cells[2].childNodes[1].innerText = file.name;
 				}
 				alert(data);
@@ -120,6 +123,14 @@
 	    }
 		
 	}
+	
+	//下载某成员上传的文件
+	function UploadMemberUploadFile(obj)
+	{
+		var form = obj.parentNode;
+		form.submit();
+	}
+	
 	function AddNewContent(src)
 	{
 		var openee = window.open (src,"newwindow", 'height='+400+',,innerHeight='+400
@@ -221,14 +232,27 @@
 						        if(uploadFlag.equals("1"))
 						        {
 						        	filename = filePath.substring(filePath.lastIndexOf("\\")+1,filePath.length());
-						        	//imagename = "images/file_complete.png";
-						        	buttonName = "点击更新";
+						        	if(memberName.equals(uname))
+						        	{
+						        		buttonName = "点击更新";
+						        	}
+						        	else
+						        	{
+						        		buttonName = "点击下载";
+						        	}
 						        }
 				%>			
 								<td>
-									<label id="filepath"><%=filename %></label><br>
+									<label id="filepath" style="display:inline-block;margin-bottom:5px;"><%=filename %></label><br>
 									<a style="display:<%=memberName.equals(uname)?"inline-block":"none" %>" class="a-upload">
-										<input type="file" id="upFile" name="upFile" onchange="uploadAndSubmit('<%=MembersId %>','<%=uname %>','<%= filename%>');"><%=buttonName %>
+										<input type="file" id="upFile" name="upFile" onchange="uploadAndSubmit('<%=MembersId %>','<%=uname %>','<%= filename%>');">
+										<label id="buttonname"><%=buttonName %></label>
+									</a>
+									<a style="display:<%=!memberName.equals(uname)&&!filename.equals("未上传")?"inline-block":"none" %>" class="a-upload">
+										<form action="zipdownloadservlet?membersId=<%=MembersId%>&membername=<%=memberName %>" method="post">
+											<input type="sbumit" onclick="UploadMemberUploadFile(this)">
+											<label id="buttonname"><%=buttonName %></label>
+										</form>
 									</a>
 								</td>
 							</tr>

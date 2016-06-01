@@ -45,48 +45,75 @@ public class zipDownloadServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
 		// TODO Auto-generated method stub
-		String membersId = request.getParameter("membersId");
 		response.setContentType("APPLICATION/OCTET-STREAM");  
 		response.setHeader("Content-Disposition","attachment; filename="+this.getZipFilename());
+		
+		String membersId = request.getParameter("membersId");
+		String memberName = request.getParameter("membername");
 		ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());
 		DBConnect dbc = new DBConnect();
-		ArrayList<String> al = dbc.GetAllUploadFilePathById(Integer.parseInt(membersId));
-		if(al.size()>0)
-		{
-			int fileNums = 0;
-			for(int i=0; i<al.size(); i++)
+		ArrayList<String> al = new ArrayList<String>();
+		
+		try{
+			if(null != memberName && !memberName.equals(""))
 			{
-				System.out.println(al.get(i));
-				File file = new File(al.get(i));
-				if(file.exists())
-					fileNums++;
+				al = dbc.GetUploadFilePathByMemberName(Integer.parseInt(membersId), memberName);
 			}
-			File[] files = new File[fileNums];
-			for(int i=0; i<fileNums; i++)
+			else
 			{
-				files[i] = new File(al.get(i));
+				al = dbc.GetAllUploadFilePathById(Integer.parseInt(membersId));
 			}
-			zipFile(files, "", zos);     
-			zos.flush();
-			zos.close();
+			if(al.size()>0)
+			{
+				int fileNums = 0;
+				for(int i=0; i<al.size(); i++)
+				{
+					//System.out.println(al.get(i));
+					File file = new File(al.get(i));
+					if(file.exists())
+						fileNums++;
+				}
+				File[] files = new File[fileNums];
+				for(int i=0; i<fileNums; i++)
+				{
+					files[i] = new File(al.get(i));
+				}
+				zipFile(files, "", zos);
+				zos.flush();
+				zos.close();
+			}
 		}
+		catch(Exception ex)
+		{
+			System.out.println("zipDownloadServlet:");
+			ex.printStackTrace();
+		}
+		
 	}
 	private void zipFile(File[] subs, String baseName, ZipOutputStream zos) throws IOException 
-	{       
-		for (int i=0;i<subs.length;i++) 
-	    {  
-			File f=subs[i];  
-			zos.putNextEntry(new ZipEntry(baseName + f.getName()));     
-			FileInputStream fis = new FileInputStream(f);     
-			byte[] buffer = new byte[1024];     
-			int r = 0;     
-			while ((r = fis.read(buffer)) != -1) 
-			{     
-				zos.write(buffer, 0, r);
-			}     
-			fis.close();   
-	    }  
-	 }  
+	{
+		try{
+			for (int i=0; i<subs.length; i++) 
+		    {  
+				File f=subs[i];  
+				zos.putNextEntry(new ZipEntry(baseName + f.getName()));
+				FileInputStream fis = new FileInputStream(f);    
+				byte[] buffer = new byte[1024];     
+				int r = 0; 
+				while ((r = fis.read(buffer)) != -1) 
+				{
+					zos.write(buffer, 0, r);
+				}
+				fis.close();
+		    }  
+		}
+		catch(Exception ex)
+		{
+			System.out.println("zipFile:");
+			ex.printStackTrace();
+		}
+	 } 
+	
 	 private String getZipFilename()
 	 {  
 		Date date=new Date();  

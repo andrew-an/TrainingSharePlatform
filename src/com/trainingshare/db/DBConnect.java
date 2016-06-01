@@ -17,6 +17,7 @@ public class DBConnect {
 
     Connection ct = null;
     PreparedStatement psmt = null;
+    ResultSet rs = null;
     public DBConnect()
     {
     	
@@ -29,10 +30,35 @@ public class DBConnect {
     	}
     	catch(Exception ex)
     	{
+    		System.out.println("DBConnect:");
     		ex.printStackTrace();
     	}
     }
-    
+    protected void finalize()
+    {
+    	try{
+    		if(null != rs)
+    		{
+    			System.out.println("ResultSet close");
+    			rs.close();
+    		}
+        	if(null != psmt)
+        	{
+        		System.out.println("PreparedStatement close");
+        		psmt.close();
+        	}
+        	if(null != ct)
+        	{
+        		System.out.println("Connection close");
+        		ct.close();
+        	}
+    	}
+    	catch(Exception ex)
+    	{
+    		System.out.println("DBConnect:");
+    		ex.printStackTrace();
+    	}
+    }
     //MD5加密算法
     public static String getMD5(String message) {  
         MessageDigest messageDigest = null;  
@@ -50,7 +76,10 @@ public class DBConnect {
                 else 
                     md5StrBuff.append(Integer.toHexString(0xFF & byteArray[i]));  
             }  
-        } catch (Exception e) {  
+        } 
+        catch (Exception e) 
+        {  
+        	System.out.println("DBConnect:");
             throw new RuntimeException();  
         }  
         return md5StrBuff.toString().toUpperCase();//字母大写  
@@ -62,7 +91,7 @@ public class DBConnect {
     	try{
     		psmt = ct.prepareStatement("select * from userinfo where UserName=?");
     		psmt.setString(1, username);
-    		ResultSet rs = psmt.executeQuery();
+    		rs = psmt.executeQuery();
     		if(rs.next())
     		{
     			String pwd = (String)rs.getString("Password");
@@ -80,9 +109,12 @@ public class DBConnect {
     				user.setRemark(rs.getString(9));
     				return user;
     			}
+    			
     		}
     	}
-    	catch(Exception ex){
+    	catch(Exception ex)
+    	{
+    		System.out.println("DBConnect:");
     		ex.printStackTrace();
     	}
 		return null;
@@ -108,6 +140,7 @@ public class DBConnect {
     	}
     	catch(Exception ex)
     	{
+    		System.out.println("DBConnect:");
     		ex.printStackTrace();
     	}
     	return ret;    	
@@ -128,6 +161,7 @@ public class DBConnect {
     	}
     	catch(Exception ex)
     	{
+    		System.out.println("DBConnect:");
     		ex.printStackTrace();
     	}
     	return id;
@@ -146,6 +180,7 @@ public class DBConnect {
     		}
     	}
     	catch(Exception ex){
+    		System.out.println("DBConnect:");
     		ex.printStackTrace();
     	}
 		return al;
@@ -172,9 +207,11 @@ public class DBConnect {
             		ret = rs.getInt("Id");
             	}
             }
+            
     	}
     	catch(Exception ex)
     	{
+    		System.out.println("DBConnect:");
     		ex.printStackTrace();
     	}
     	return ret;
@@ -196,6 +233,7 @@ public class DBConnect {
     	}
     	catch(Exception ex)
     	{
+    		System.out.println("DBConnect:");
     		ex.printStackTrace();
     	}
     	return ret;
@@ -218,6 +256,7 @@ public class DBConnect {
     	}
     	catch(Exception ex)
     	{
+    		System.out.println("DBConnect:");
     		ex.printStackTrace();
     	}
     	return ret;
@@ -242,6 +281,7 @@ public class DBConnect {
     	}
     	catch(Exception ex)
     	{
+    		System.out.println("DBConnect:");
     		ex.printStackTrace();
     	}
     	return ret;
@@ -262,6 +302,7 @@ public class DBConnect {
     	}
     	catch(Exception ex)
     	{
+    		System.out.println("DBConnect:");
     		ex.printStackTrace();
     	}
     	return id;
@@ -283,6 +324,7 @@ public class DBConnect {
     	}
     	catch(Exception ex)
     	{
+    		System.out.println("DBConnect:");
     		ex.printStackTrace();
     	}
     	return id;
@@ -303,8 +345,10 @@ public class DBConnect {
     	}
     	catch(Exception ex)
     	{
+    		System.out.println("DBConnect:");
     		ex.printStackTrace();
     	}
+    	
     	return id;
     }
     //根据活动标题获取人员列表Id号
@@ -347,6 +391,7 @@ public class DBConnect {
     	}
     	catch(Exception ex)
     	{
+    		System.out.println("DBConnect:");
     		ex.printStackTrace();
     	}
     	return membersList;
@@ -377,6 +422,7 @@ public class DBConnect {
     	}
     	catch(Exception ex)
     	{
+    		System.out.println("DBConnect:");
     		ex.printStackTrace();
     	}
     	return contentList;
@@ -402,31 +448,6 @@ public class DBConnect {
     	return memberName;
     }
     
-    //更新某成员的活动主题
-    /*public Boolean UpdateActivityContent(String membersId, String memberName,String activityContentBefore, String activityContent)
-    {
-    	Boolean ret=false;
-    	try{
-    		int userId = GetUserId(memberName);
-        	String sql = "update activitycontent set Title='"+activityContent
-        			    +"' where MembersId="+membersId
-        			    +" and memberId="+userId
-        			    +" and Title='"+activityContentBefore+"'";
-        	sql = new String(sql.getBytes("iso-8859-1"),"utf-8");
-        	psmt = ct.prepareStatement(sql);  
-        	int result = psmt.executeUpdate();
-        	if(result>0)
-        	{
-        		ret=true;
-        	}
-    	}
-    	catch(Exception ex)
-    	{
-    		ex.printStackTrace();
-    	}
-    	
-    	return ret;
-    }*/
     public Boolean UpdateActivityContentByTitle(String titleOriginal, ActivityContentBean acb)
     {
     	Boolean ret=false;
@@ -448,6 +469,7 @@ public class DBConnect {
     	}
     	catch(Exception ex)
     	{
+    		System.out.println("DBConnect:");
     		ex.printStackTrace();
     	}
     	
@@ -476,6 +498,7 @@ public class DBConnect {
     	}
     	catch(Exception ex)
     	{
+    		System.out.println("DBConnect:");
     		ex.printStackTrace();
     	}
     	return ret;
@@ -499,6 +522,36 @@ public class DBConnect {
     	}
     	catch(Exception ex)
     	{
+    		System.out.println("DBConnect:");
+    		ex.printStackTrace();
+    	}
+    	return al;
+    }
+    
+    //获取某次活动的某个成员上传文件路径
+    public ArrayList<String> GetUploadFilePathByMemberName(int membersId, String memberName)
+    {
+    	ArrayList<String> al = new ArrayList<String>();
+    	try
+    	{
+    		String strsql = "select T1.FilePath from activitycontent as T1 "
+    				+ "inner join userinfo as T2 on T1.MemberId=T2.Id "
+    				+ "where T1.MembersId=" + membersId+" "
+    				+ "and T2.UserName='" + memberName
+    				+ "' and DeleteFlag='" + 0 + "'";
+    		
+    		psmt = ct.prepareStatement(strsql);
+    		ResultSet rs = psmt.executeQuery();
+    		while(rs.next())
+    		{
+    			String filePath = rs.getString(1);
+    			if(null != filePath && !filePath.equals(""))
+    				al.add(filePath);
+    		}
+    	}
+    	catch(Exception ex)
+    	{
+    		System.out.println("DBConnect:");
     		ex.printStackTrace();
     	}
     	return al;
@@ -529,6 +582,7 @@ public class DBConnect {
     	}
     	catch(Exception ex)
     	{
+    		System.out.println("DBConnect:");
     		ex.printStackTrace();
     	}
     	return al;
@@ -556,6 +610,7 @@ public class DBConnect {
     	}
     	catch(Exception ex)
     	{
+    		System.out.println("DBConnect:");
     	    ex.printStackTrace();
     	}
     	return ret;
@@ -577,6 +632,7 @@ public class DBConnect {
     	}
     	catch(Exception ex)
     	{
+    		System.out.println("DBConnect:");
     	    ex.printStackTrace();
     	}
     	return ret;
@@ -598,6 +654,7 @@ public class DBConnect {
     	}
     	catch(Exception ex)
     	{
+    		System.out.println("DBConnect:");
     	    ex.printStackTrace();
     	}
     	return ret;
@@ -618,6 +675,7 @@ public class DBConnect {
     	}
     	catch(Exception ex)
     	{
+    		System.out.println("DBConnect:");
     		ex.printStackTrace();
     	}
     	return al;
@@ -638,6 +696,7 @@ public class DBConnect {
     	}
     	catch(Exception ex)
     	{
+    		System.out.println("DBConnect:");
     		ex.printStackTrace();
     	}
     	return al;
@@ -657,6 +716,7 @@ public class DBConnect {
     	}
     	catch(Exception ex)
     	{
+    		System.out.println("DBConnect:");
     		ex.printStackTrace();
     	}
     	return ret;

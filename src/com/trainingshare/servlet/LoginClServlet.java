@@ -109,6 +109,7 @@ public class LoginClServlet extends HttpServlet {
 		}
 		catch(Exception ex)
 		{
+			System.out.println("LoginClServlet:");
 			ex.printStackTrace();
 		}
 	}
