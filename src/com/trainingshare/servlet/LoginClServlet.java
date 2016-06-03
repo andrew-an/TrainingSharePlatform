@@ -42,8 +42,10 @@ public class LoginClServlet extends HttpServlet {
 		try{
 			
 			HttpSession session = request.getSession();
-			String name = request.getParameter("username");
-			String pwd = request.getParameter("password");
+			String name = "";
+			String pwd = "";
+			name = request.getParameter("username");
+			pwd = request.getParameter("password");
 			DBConnect dbc = new DBConnect();
 			UserInfoBean user = dbc.checkUser(name, pwd);
 			//用户名密码验证成功

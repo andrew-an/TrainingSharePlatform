@@ -104,8 +104,9 @@
 					    	var autologin = document.getElementById("checkbox_autologin");
 					    	if(null != autologin && autologin.checked == true)
 					    	{
-					    		if(null!=uname&&uname!="" && null!=pwd&&pwd!="")
+					    		if(null!=uname && uname!="" && null!=pwd && pwd!="")
 					    			document.forms[0].submit();
+					    			
 					    	}
 					    </script>
 					</div>

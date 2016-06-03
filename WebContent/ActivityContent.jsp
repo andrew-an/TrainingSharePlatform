@@ -49,8 +49,8 @@
 	{	
 		//alert(filename);
 	    var row = document.activeElement.parentNode.parentNode.parentNode;
-	    //alert(document.activeElement);
-	    if(null != row)
+	    //alert(row.nodeName);
+	    if(null != row && row.nodeName == "TR")
 	    {
 	    	//alert(row.cells[1].innerText);
 	    	//取得当前用户名称
@@ -125,10 +125,14 @@
 	}
 	
 	//下载某成员上传的文件
-	function UploadMemberUploadFile(obj)
+	function UploadMemberUploadFile(membersid,membername)
 	{
-		var form = obj.parentNode;
-		form.submit();
+		var form = document.forms[0];
+		if(null !== form && undefined !==form)
+		{
+			form.action = "zipdownloadservlet?membersId="+membersid+"&membername="+membername;
+			form.submit();
+		}
 	}
 	
 	function AddNewContent(src)
@@ -196,11 +200,12 @@
 						    	strdays = String.valueOf(days);
 						    	long hours = (minutes-days*24*60)/60;
 						    	strhours = String.valueOf(hours);
-						    	minutes = minutes%10;
+						    	minutes = minutes%60;
 						    	strminutes = String.valueOf(minutes);
 						    	leftTime = "距离开始还有:"+(days>0?(strdays+"天"):"");
 						    	leftTime += hours>0?(strhours+"小时"):"";
 						    	leftTime += minutes>0?(strminutes+"分钟"):"";
+						    	
 					    	}
 					    	else
 					    	{
@@ -217,7 +222,7 @@
 					    	}
 				%>
 						    <tr id="contentname<%=memberName.equals(uname)?uname:"" %>">
-								<td id="membername"><%=memberName%></td>
+								<td id="membername"><strong><%=memberName%></strong></td>
 								<td ondblclick="<%=memberName.equals(uname)?"EditNewContent('MyNewTitle.jsp?membersId="+MembersId+"&title="+titleName+"&meetingroom="+meetingRoom+"&starttime="+startTime+"')":null %>">
 									<label id="title" style="font-size:20px;font-weight:600;color:<%=memberName.equals(uname)?"red":"blue" %>"> <%= titleName %> </label><br>
 									<label id="location" style="display:inline-block;margin-top:8px;font-size:14px;color:black;font-style:italic">会议室: <%=meetingRoom %> /</label>
@@ -244,16 +249,17 @@
 				%>			
 								<td>
 									<label id="filepath" style="display:inline-block;margin-bottom:5px;"><%=filename %></label><br>
+									
 									<a style="display:<%=memberName.equals(uname)?"inline-block":"none" %>" class="a-upload">
 										<input type="file" id="upFile" name="upFile" onchange="uploadAndSubmit('<%=MembersId %>','<%=uname %>','<%= filename%>');">
 										<label id="buttonname"><%=buttonName %></label>
 									</a>
-									<a style="display:<%=!memberName.equals(uname)&&!filename.equals("未上传")?"inline-block":"none" %>" class="a-upload">
-										<form action="zipdownloadservlet?membersId=<%=MembersId%>&membername=<%=memberName %>" method="post">
-											<input type="sbumit" onclick="UploadMemberUploadFile(this)">
-											<label id="buttonname"><%=buttonName %></label>
-										</form>
+									
+									<a style="display:<%=!memberName.equals(uname)&&!filename.equals("未上传")?"inline-block":"none" %>" class="a-upload">										
+											<input type="submit" onclick="UploadMemberUploadFile('<%=MembersId %>','<%=memberName %>')"/>
+											<label><%=buttonName %></label>
 									</a>
+									
 								</td>
 							</tr>
 				<%

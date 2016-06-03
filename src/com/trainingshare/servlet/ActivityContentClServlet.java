@@ -58,10 +58,10 @@ public class ActivityContentClServlet extends HttpServlet {
 				
 				//接收文件上传并保存到指定路径
 				File file = new File("G:/TrainingShare/" + fileName); 
-				if(!file.exists())
-				{
-					file.createNewFile();
-				}
+//				if(!file.exists())
+//				{
+//					file.createNewFile();
+//				}
 				BufferedOutputStream fileOut = new BufferedOutputStream(new FileOutputStream(file));
 				int fileReadAllLength = 0;//保存总共传输的字节数，判断文件是否全部传输完成
 				while (true) 

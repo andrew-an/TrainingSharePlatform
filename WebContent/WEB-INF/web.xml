@@ -66,12 +66,16 @@
     <url-pattern>/newmytitleservlet</url-pattern>
   </servlet-mapping>
   <resource-ref>
-      <description>mysql数据库连接池</description>
-      <!-- 参考数据源名字,同Tomcat中配置的Resource节点中name属性值"jdbc/mysqlds"一致 -->
-      <res-ref-name>jdbc/mysqlds</res-ref-name>
-      <!-- 资源类型 -->
-      <res-type>javax.sql.DataSource</res-type>
-      <res-auth>Container</res-auth>
-      <res-sharing-scope>Shareable</res-sharing-scope>
-</resource-ref>
+    <description>mysql数据库连接池</description>
+    <res-ref-name>jdbc/mysqlds</res-ref-name>
+    <res-type>javax.sql.DataSource</res-type>
+    <res-auth>Container</res-auth>
+    <res-sharing-scope>Shareable</res-sharing-scope>
+  </resource-ref>
+  
+  <!-- 监听器，启动定时器在活动开始前发送邮件 -->  
+    <!-- 监听器类的路径 -->  
+    <listener>  
+        <listener-class>com.trainingshare.servlet.SendMailTimerListener</listener-class>  
+     </listener>
 </web-app>
