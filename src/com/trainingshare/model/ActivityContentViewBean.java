@@ -6,6 +6,7 @@ public class ActivityContentViewBean {
 	private String location;
 	private String startTime;
 	private String Title;
+	private String sendMailFlag;
 	public String getMemberList() {
 		return memberList;
 	}
@@ -36,5 +37,12 @@ public class ActivityContentViewBean {
 	public void setTitle(String title) {
 		Title = title;
 	}
+	public String getSendMailFlag() {
+		return sendMailFlag;
+	}
+	public void setSendMailFlag(String sendMailFlag) {
+		this.sendMailFlag = sendMailFlag;
+	}
+	
 	
 }

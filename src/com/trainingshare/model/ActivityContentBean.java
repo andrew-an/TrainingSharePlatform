@@ -9,6 +9,7 @@ public class ActivityContentBean {
     private String StartTime;
     private String filePath;
     private String uploadFlag;
+    private String sendMailFlag;
     private String deleteFlag;
     private String remark;
     private String recordTime;
@@ -60,6 +61,12 @@ public class ActivityContentBean {
 	public void setUploadFlag(String uploadFlag) {
 		this.uploadFlag = uploadFlag;
 	}
+	public String getSendMailFlag() {
+		return sendMailFlag;
+	}
+	public void setSendMailFlag(String sendMailFlag) {
+		this.sendMailFlag = sendMailFlag;
+	}
 	public String getDeleteFlag() {
 		return deleteFlag;
 	}
@@ -78,5 +85,6 @@ public class ActivityContentBean {
 	public void setRecordTime(String recordTime) {
 		this.recordTime = recordTime;
 	}
+	
 	
 }

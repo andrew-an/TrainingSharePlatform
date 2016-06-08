@@ -134,6 +134,7 @@
 						if(xmlhttp.responseText == "success")
 						{
 							alert("密码修改成功");
+							window.close();
 						}
 						else
 						{

@@ -163,7 +163,7 @@
 	<div id="wrapper">
 		<div class="mytitle">
 	    	<label style="margin-left: 5px;margin-top:5px;color: black;font-size: 20px">主题名称:</label><br>
-	    	<textarea id="mytitle" name="title" rows="1" style="margin-left:5px;width:95%;margin-top:10px;font-size:20px;"><%=title %></textarea>
+	    	<textarea id="mytitle" name="title"  style="margin-left:5px;width:95%;margin-top:10px;font-size:20px;height:35%"><%=title %></textarea>
 	    	<label id="titleoriginal" style="display:none"><%=title %></label>
 	    </div>
 	    <div class="starttime">

@@ -57,7 +57,7 @@ public class ActivityContentClServlet extends HttpServlet {
 				byte[] buf = new byte[1024];
 				
 				//接收文件上传并保存到指定路径
-				File file = new File("G:/TrainingShare/" + fileName); 
+				File file = new File("G:/UpLoadFiles/" + fileName); 
 //				if(!file.exists())
 //				{
 //					file.createNewFile();

@@ -65,9 +65,9 @@ public class NewMyTitleServlet extends HttpServlet {
 				acb.setTitle(title);
 				acb.setMeetingRoomId(dbc.GetMeetingRoomIdByName(location));
 				acb.setStartTime(time.replace("/", "-"));
-				acb.setFilePath("");
-				acb.setUploadFlag("0");
-				acb.setRemark("");
+				//acb.setFilePath("");
+				//acb.setUploadFlag("0");
+				//acb.setRemark("");
 				//如果原标题为空，则说明此时正在新建标题业务，应该执行插入操作
 				if(titleoriginal.equals(""))
 				{

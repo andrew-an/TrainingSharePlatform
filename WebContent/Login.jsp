@@ -87,13 +87,13 @@
 				<div class="right_center1"></div>
 				<div class="right_center2">
 					<div style="padding: 10px;"></div>
-					<div class="logincontent">
+					<div class="logincontent" style="font-family:'宋体'">
 					    <form action="loginclservlet" method="post" >
 						           欢迎登录<br><br>
-							用户名：<input type="text" id="username" name="username" value=<%=userName %>><br><br>
-							密&nbsp码：<input type="password" style="margin-bottom:10px" id="password" name="password" value=<%=password %>><br>
+							用户名：<input type="text" id="username" name="username" style="margin-bottom:10px;" value=<%=userName %>><br>
+							密&nbsp;码：<input type="password" style="margin-top:10px;" id="password" name="password" value=<%=password %>><br>
 							<label style="display:inline-block;color:red;margin-bottom:5px;padding:0px"><%=error %></label><br>
-							<input type="checkbox" value="on" id= "checkbox_keeppwd" name="checkbox_keeppwd" <%=userName!=""?"checked":"" %>>记住密码
+							<input type="checkbox" value="on" id= "checkbox_keeppwd" name="checkbox_keeppwd" style="margin-top:15px" <%=userName!=""?"checked":"" %>>记住密码
 							<input type="checkbox" value="on" id="checkbox_autologin" name="checkbox_autologin" <%=autoLogin.equals("true")?"checked":"" %>>两周内自动登录<br><br>
 							<input type="submit" value="登   录" style="width:80px;height:30px;font-size: 15;margin-right:30px" >
 							<input type="button" value="修改密码" style="width:80px;height:30px;font-size: 15" onclick="ChangePassword('ChangePassword.jsp')">	    	
@@ -106,7 +106,6 @@
 					    	{
 					    		if(null!=uname && uname!="" && null!=pwd && pwd!="")
 					    			document.forms[0].submit();
-					    			
 					    	}
 					    </script>
 					</div>

@@ -326,10 +326,9 @@ public class DBConnect {
     	Boolean ret = false;
     	try{
     		ct = getDBConnection();
-    		String strsql = "insert into activitycontent(MembersId,MemberId,Title,MeetingRoomId,StartTime,FilePath,UploadFlag,Remark)values("
+    		String strsql = "insert into activitycontent(MembersId,MemberId,Title,MeetingRoomId,StartTime)values("
             		+acb.getMembersId()+","+acb.getMemberId()+",'"+acb.getTitle()+"',"
-            		+acb.getMeetingRoomId()+",'"+acb.getStartTime()+"','"
-            		+acb.getFilePath()+"','"+acb.getUploadFlag()+"','"+acb.getRemark()+"')";
+            		+acb.getMeetingRoomId()+",'"+acb.getStartTime()+"')";
     		strsql = new String(strsql.getBytes("iso-8859-1"),"utf-8");
             psmt = ct.prepareStatement(strsql);
             int rows = psmt.executeUpdate();
@@ -557,6 +556,7 @@ public class DBConnect {
     	return memberName;
     }
     
+    //根据原标题更新个人主题信息
     public Boolean UpdateActivityContentByTitle(String titleOriginal, ActivityContentBean acb)
     {
     	Connection ct = null;
@@ -601,7 +601,7 @@ public class DBConnect {
     	try{
     		ct = getDBConnection();
     		int userId = GetUserId(memberName);
-    		filePath = "G:\\\\TrainingShare\\\\" + filePath;
+    		filePath = "G:\\\\UpLoadFiles\\\\" + filePath;
         	String sql = "update activitycontent set FilePath='"+filePath+"', UploadFlag='1'"
         			   +" where MembersId="+membersId
     			       +" and memberId="+userId
@@ -925,8 +925,8 @@ public class DBConnect {
     		//将时间转换为String
     		String strCurrentTime = sdf.format(cal.getTime());
     		//从数据库中取出比当前时间大于2小时的最近一次的活动开始时间
-    		String strsql = "select * from activitycontentview where StartTime>'" + strCurrentTime + "' limit 1";
-    		System.out.println(strsql);
+    		String strsql = "select * from activitycontentview where StartTime>'" + strCurrentTime + "' and SendMailFlag='"+0+"' limit 1";
+    		//System.out.println(strsql);
     		//strsql = new String(strsql.getBytes("iso-8859-1"),"utf-8");
     		psmt = ct.prepareStatement(strsql);
     		rs = psmt.executeQuery();
@@ -948,5 +948,33 @@ public class DBConnect {
     		Release(ct,psmt,rs);
     	}
     	return acvb;
+    }
+    
+    public Boolean UpdateSendMailFlag(String activityTitle)
+    {
+    	Boolean ret = false;
+    	Connection ct = null;
+    	PreparedStatement psmt = null;
+    	ResultSet rs = null;
+    	try{
+    		ct = getDBConnection();
+    		String strsql = "update activitycontent set SendMailFlag='"+1+"' where Title='"+activityTitle+"'";
+    		//strsql = new String(strsql.getBytes("iso-8859-1"),"utf-8");
+    		psmt = ct.prepareStatement(strsql);
+    		int res = psmt.executeUpdate();
+    		if(res > 0)
+    		{
+    			ret = true;
+    		}    		
+    	}
+    	catch(Exception ex)
+    	{
+    		System.out.println("DBConnect:UpdateSendMailFlag");
+    		ex.printStackTrace();
+    	}
+    	finally{
+    		Release(ct,psmt,rs);
+    	}
+    	return ret;
     }
 }

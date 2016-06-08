@@ -14,22 +14,26 @@ public class SendMail {
 			if(null != acvb.getMemberList())
 			{
 				String[] members = acvb.getMemberList().split(",");
-				System.out.println("准备提取发送人列表...");
+				//System.out.println("准备提取发送人列表...");
 				if(members.length>0)
 				{
 					for(String member : members)
 					{
 						String memberAddress = dbc.GetMemberName(Integer.parseInt(member)) + "@goertek.com";
-						String mailTitle = "Wearable第一轮内部培训开讲通知";
-						String mailContent = "此次培训详情如下：\n"
-						+"培训题目："+acvb.getTitle()+"\n"
-						+"培训人    ："+acvb.getMemberName()+"\n"
-						+"培训时间："+acvb.getStartTime()+"\n"
-						+"培训地点："+acvb.getLocation()+"\n\n"
-						+"培训平台地址："+"http://192.168.75.112:8888/TrainingSharePlatform/Login.jsp"+"\n"
-						+"注：此邮件为系统自动发送！";
-						System.out.println("准备给"+memberAddress+"发送邮件...");
-						SendMailTo(memberAddress,mailTitle,mailContent);
+						String memberName = acvb.getMemberName();
+						String mailTitle = "Wearable内部培训开讲通知";
+						String mailContent = "Dear All,\n\n"
+						+ memberName.substring(0, memberName.lastIndexOf("."))
+						+ "将于"+acvb.getStartTime()
+						+ "进行 “"+acvb.getTitle()
+						+ "” 的培训，欢迎大家登录培训分享平台，下载相关资料。\n\n"
+						+ "培训平台网址："+"http://192.168.75.112:8888/TrainingSharePlatform/Login.jsp"+"\n\n\n\n"
+						+ "注：此邮件为系统自动发送！";
+						//System.out.println("准备给"+memberAddress+"发送邮件...");
+						ret = SendMailTo(memberAddress,mailTitle,mailContent);
+						//如果有用户发送邮件失败，则退出发送循环
+						if(!ret)
+							break;
 					}
 				}
 			}
@@ -71,17 +75,17 @@ public class SendMail {
 			transport.connect("andrew.an@goertek.com","Ajch2097498");
 			if(transport.isConnected())
 			{
-				System.out.println("邮件服务器连接成功！");
+				//System.out.println("邮件服务器连接成功！");
+				ret = true;
 				//发送邮件
 				transport.sendMessage(msg, new Address[]{new InternetAddress(memberAddress)});
 			}
 			else
 			{
-				System.out.println("邮件服务器连接不成功！");
+				//System.out.println("邮件服务器连接不成功！");
 			}
 			//关闭链接
 			transport.close();
-			
 		}
 		catch(Exception ex)
 		{
