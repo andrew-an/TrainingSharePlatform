@@ -243,7 +243,7 @@
 						        	}
 						        	else
 						        	{
-						        		buttonName = "点击下载";
+						        		buttonName = "点击下载"; 
 						        	}
 						        }
 				%>			
