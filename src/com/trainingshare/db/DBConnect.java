@@ -601,7 +601,7 @@ public class DBConnect {
     	try{
     		ct = getDBConnection();
     		int userId = GetUserId(memberName);
-    		filePath = "G:\\\\UpLoadFiles\\\\" + filePath;
+    		filePath = "D:\\\\UpLoadFiles\\\\" + filePath;
         	String sql = "update activitycontent set FilePath='"+filePath+"', UploadFlag='1'"
         			   +" where MembersId="+membersId
     			       +" and memberId="+userId
