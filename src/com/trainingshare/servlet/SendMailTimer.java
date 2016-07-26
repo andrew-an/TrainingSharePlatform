@@ -54,7 +54,7 @@ public class SendMailTimer {
 					//System.out.println("距发送邮件还有"+(second-7200)+"秒");
 					if(second > 0 && second <= intervalSeconds)
 					{
-						//if(!timer2StartFlag)
+						//if(!timer2StartFlag)定时器正在运行
 						//{
 							//timer2StartFlag = true;
 							//启动定时器2.用来发送邮件,定时器2只启动一次
@@ -78,7 +78,7 @@ public class SendMailTimer {
 			};
 
 			//启动定时器
-			scheduler1.scheduleAtFixedRate(task1, 10, seconds, TimeUnit.SECONDS);
+			scheduler1.scheduleAtFixedRate(task1, 1, seconds, TimeUnit.SECONDS);
 			System.out.println("定时器已启动");
 		}
 		catch(Exception ex)

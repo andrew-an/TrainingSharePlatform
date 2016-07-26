@@ -12,7 +12,9 @@
 		function Save(membersId)
 		{
 			var titleoriginal = document.getElementById("titleoriginal").innerHTML;
+			titleoriginal = encodeURI(titleoriginal);
 			var mytitle = document.getElementById("mytitle").value;
+			mytitle = encodeURI(mytitle);
 			var time = document.getElementById("datetimepicker").value;
 			var meetingroom="";
 			var radio = document.getElementsByName("location");  
@@ -23,11 +25,17 @@
 		        	break;
 		        }  
 		    }
+		    meetingroom = encodeURI(meetingroom);
+		    
 		    //检查输入项的合法性
 		    if(mytitle=="")
 	    	{
 	    		alert("请先输入标题！");
 	    	}
+		    //else if(mytitle.indexOf(/%/)>0)禁止输入百分号，待测试
+		    //{
+		    //	alert("标题不能包含‘%’字符！");
+		    //}
 		    else if(time=="")
 	    	{
 	    		alert("开始时间不能为空！");
@@ -86,6 +94,7 @@
 		function DeleteTitle(membersId)
 		{
 			var mytitle = document.getElementById("mytitle").value;
+			mytitle = encodeURI(mytitle);
 			if(mytitle=="")
 	    	{
 	    		alert("标题不能为空！");
@@ -137,6 +146,7 @@
 	<% 
 	    String membersId = request.getParameter("membersId");
 		String title = request.getParameter("title");
+		
 		if(null!=title)
 			title = new String(title.getBytes("iso-8859-1"),"utf-8");
 		else

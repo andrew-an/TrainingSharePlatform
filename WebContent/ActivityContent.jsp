@@ -269,8 +269,8 @@
 			</table>
 		</form>
 		<br>
-		<div style="width:85%; float:left">
-			<a href="" style="margin-left:50%" 
+		<div style="width:85%; float:left;">
+			<a style="margin-left:50%;cursor:pointer;display:inline-block" 
 			onclick="AddNewContent('MyNewTitle.jsp?membersId=<%=MembersId%>')">
 			<img alt="" src="images/addnewcontent.png">
 			</a>
@@ -284,7 +284,6 @@
 		
     </div>
     
-    <div id="footer">
-    </div>
+    
 </body>
 </html>
