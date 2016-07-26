@@ -16,8 +16,8 @@ body{
 	top: 88px;
 	bottom: 60px;
 	left: 10.5%;
-    /*background-color: white;*/
-    margin: auto;
+    /*background-color: white;
+    margin: auto;*/
 }
 
 #footer{
@@ -25,9 +25,10 @@ body{
 	height: 60px;
 	position: fixed;
 	bottom: 0px;
+	left: 10.5%;
 	/*background-color: gray;*/
 	margin: auto;
-	left: 10.5%;
+
 }
 
 #activitytitle{
@@ -123,3 +124,4 @@ table.imagetable td {
     border-color: #ccc;
     text-decoration: none
 }
+

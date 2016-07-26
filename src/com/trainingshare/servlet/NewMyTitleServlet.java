@@ -45,6 +45,7 @@ public class NewMyTitleServlet extends HttpServlet {
 		int membersId = Integer.parseInt(request.getParameter("membersId"));
 		String username = (String)request.getSession().getAttribute("username");
 		String title = request.getParameter("mytitle");
+		
 		String titleoriginal = request.getParameter("titleoriginal");//修改前的标题名称，根据此字段判断是插入操作还是更新操作
 		String time = request.getParameter("time");
 		String location = request.getParameter("roomnumber");
